@@ -5,6 +5,13 @@
  */
 package medfile;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+import medxfiles.classes.Record;
+
 /**
  *
  * @author ashwinrameshkumar
@@ -14,7 +21,7 @@ public class RecordDetails extends javax.swing.JFrame {
     /**
      * Creates new form RecordDetails
      */
-    public RecordDetails() {
+    public RecordDetails() throws SQLException {
         initComponents();
     }
 
@@ -25,8 +32,11 @@ public class RecordDetails extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents() throws SQLException {
 
+        Record record = new Record();
+        ArrayList<Record> records = record.selectRecords(1);
+        
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
@@ -34,15 +44,36 @@ public class RecordDetails extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Record Details");
-
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        DefaultTableModel dtm = new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Date", "Doctor", "Location", "Reason for Visit", "Doctor's Diagnosis", "Weight", "Height", "Blood Pressure", "Cholestrol", "Additional Notes", "Doctor", "Lab"
+                "Date", "Doctor", "Location", "Reason for Visit", "Doctor's Diagnosis", "Weight", "Height", "Blood Pressure", "Cholestrol", "Additional Notes", "Lab"
             }
-        ));
+        );
+        jTable2.setModel(dtm);
+        
+        if(!(records.isEmpty())) {
+            for(int i = 0; i < records.size(); i++) {
+                Record tmp = records.get(i);
+                dtm.addRow(new Object[]{
+                    tmp.getServiceDate(),
+                    tmp.getDoctor().getFName() + " " + tmp.getDoctor().getLName(),
+                    tmp.getDoctor().getFullAddress(),
+                    tmp.getReason(),
+                    tmp.getDiagnoses(),
+                    tmp.getWeight(),
+                    tmp.getHeight(),
+                    tmp.getBloodPress(),
+                    tmp.getCholest(),
+                    tmp.getDocNotes(),
+                    tmp.getLabNotes()
+                });
+            }
+        }
+        
+        
         jScrollPane2.setViewportView(jTable2);
 
         jButton1.setText("Download Report");
@@ -123,7 +154,11 @@ public class RecordDetails extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new RecordDetails().setVisible(true);
+                try {
+                    new RecordDetails().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(RecordDetails.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

@@ -29,7 +29,7 @@ public class DBconnect {
     private Logger log;
 
     public DBconnect() {
-        this.dbName = "medx";
+        this.dbName = "medfiles";
         this.dbUser = "root";
         this.dbPassword = "a";
     }
@@ -40,10 +40,24 @@ public class DBconnect {
         this.dbPassword = dbPassword;
     }
     
+    /**
+     * @return the dbName
+     */
+    public String getDbName() {
+        return dbName;
+    }
+    
+    /**
+     * @return the conn
+     */
+    public Connection getCon() {
+        return con;
+    }
+    
     public boolean connect() {
        try {
             Class.forName("com.mysql.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + dbName, dbUser, dbPassword);
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + getDbName(), dbUser, dbPassword);
             return true;
        } catch (Exception e) {
         //    e.printStackTrace();
@@ -59,12 +73,10 @@ public class DBconnect {
         try { con.close(); } catch (Exception e) { /* ignored */ } 
     }
     
-    public ResultSet select(String table) {
+    public ResultSet select(PreparedStatement query) {
         if (this.connect()) {
-            String query = "SELECT * FROM " + dbName + "." + table;
             try {
-                state = con.createStatement();
-                resultSet = state.executeQuery(query);
+                resultSet = query.executeQuery();
             } catch (SQLException ex) {
                 Logger lgr = Logger.getLogger(Version.class.getName());
                 lgr.log(Level.SEVERE, ex.getMessage(), ex);
@@ -74,26 +86,10 @@ public class DBconnect {
         }
         return resultSet;
     }
-    
-    public ResultSet select(String table, String where) {
-        if (this.connect()) {
-            String query = "SELECT * FROM " + dbName + "." + table
-                    + "WHERE " + where;
-            try {
-                state = con.createStatement();
-                resultSet = state.executeQuery(query);
-            } catch (SQLException ex) {
-                Logger lgr = Logger.getLogger(Version.class.getName());
-                lgr.log(Level.SEVERE, ex.getMessage(), ex);
-                JOptionPane.showMessageDialog(null, "" + ex.getMessage(), "Communication Error", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-        return resultSet;
-    }
-    
+        
     public int insertUpdate(String table, String insert, String update) {
         if (this.connect()) {
-            String query = "INSERT INTO " + dbName + "." + table
+            String query = "INSERT INTO " + getDbName() + "." + table
                     + "ON DUPLICATE KEY UPDATE " + update;
             try {
                 state = con.createStatement();
@@ -109,7 +105,7 @@ public class DBconnect {
     
     public int delete(String table) {
         if (this.connect()) {
-            String query = "DELETE FROM " + dbName + "." + table;
+            String query = "DELETE FROM " + getDbName() + "." + table;
             try {
                 state = con.createStatement();
                 result = state.executeUpdate(query);
@@ -124,7 +120,7 @@ public class DBconnect {
     
     public int delete(String table, String where) {
         if (this.connect()) {
-            String query = "DELETE FROM " + dbName + "." + table
+            String query = "DELETE FROM " + getDbName() + "." + table
                     + "WHERE " + where;
             try {
                 state = con.createStatement();
@@ -136,6 +132,5 @@ public class DBconnect {
             }
         }
         return result;
-    }
-  
+    }  
 }

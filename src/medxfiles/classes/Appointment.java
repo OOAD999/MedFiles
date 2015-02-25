@@ -5,6 +5,10 @@
  */
 package medxfiles.classes;
 
+import DBClasses.DBconnect;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 
 /**
@@ -17,6 +21,7 @@ public class Appointment {
     private Date apptTime;
     private Date createdTime;
     private User creator;
+    private String table = "appointment";
 
     public Appointment() {
     }
@@ -94,5 +99,34 @@ public class Appointment {
      */
     public void setCreator(User creator) {
         this.creator = creator;
+    }
+
+    public Appointment selectAppt(int patientID) throws SQLException {
+        String where = "pateintID = " + patientID;
+        DBconnect dbo = new DBconnect();
+        dbo.connect();
+        PreparedStatement query = dbo.getCon().prepareStatement("SELECT * FROM " + dbo.getDbName() + "." + table
+            + " WHERE patientID = ?");
+        query.setInt(1, patientID);
+        ResultSet results = dbo.select(query);
+        writeResultSet(results);
+        dbo.disconnect();
+        
+        if(this.apptTime != null) {
+            patient.selectPatient();
+            doctor.selectUser();
+            creator.selectUser();
+        }
+        return this;
+    }
+    
+    private void writeResultSet(ResultSet resultSet) throws SQLException {
+        while (resultSet.next()) {
+            this.patient = new Patient(resultSet.getInt("ID"));
+            this.doctor = new User(resultSet.getInt("doctorID"));
+            this.apptTime = resultSet.getDate("appointmentTime");
+            this.createdTime = resultSet.getDate("timeCreated");
+            this.creator = new Patient(resultSet.getInt("creatorID"));
+        }
     }
 }

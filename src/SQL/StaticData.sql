@@ -10,3 +10,6 @@ INSERT INTO user (fname, lname, pnumber, address, ssn, securityID, emailID, user
 INSERT INTO patient (userID, dob, insuranceProvider, insuranceMemberID)
     VALUES (1, '1985-10-30', 'Afflack', 'AAA')
 
+INSERT INTO record (pateintID, recordDate, doctorID, location, height, weight, bloodPressure, cholesterol, reasonforVisit, doctorDiagnosis, doctorNote, labNote)
+    VALUES(1,'2014-02-01', 2, '321 Grape Rd|Dallas|Tx|75081', '72', '170','120\\70', '180', 'Yearly Check Up', 'In good health', 'None', 'High glucose')
+

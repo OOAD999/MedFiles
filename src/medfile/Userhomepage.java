@@ -5,6 +5,12 @@
  */
 package medfile;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import medxfiles.classes.Patient;
+import medxfiles.classes.Appointment;
+
 /**
  *
  * @author ashwinrameshkumar
@@ -14,7 +20,7 @@ public class Userhomepage extends javax.swing.JFrame {
     /**
      * Creates new form Userhomepage
      */
-    public Userhomepage() {
+    public Userhomepage() throws SQLException {
         initComponents();
     }
 
@@ -25,8 +31,13 @@ public class Userhomepage extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
+    private void initComponents() throws SQLException {
+        Patient patient = new Patient(1);
+        patient = patient.selectPatient();
+        
+        Appointment appt = new Appointment();
+        appt = appt.selectAppt(1);
+        
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -46,18 +57,23 @@ public class Userhomepage extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MedXFiles");
 
-        jLabel1.setText("Username");
+        jLabel1.setText(patient.getFName() + " " + patient.getLName());
 
         jButton1.setText("LogOut");
+        
+        if(appt.getApptTime() != null) {
+            jLabel2.setText(appt.getDoctor().getFName() + " " +
+                appt.getDoctor().getLName());
 
-        jLabel2.setText("Doctor");
+            jLabel3.setText(appt.getApptTime().toString());
 
-        jLabel3.setText("Date");
+            jLabel4.setText(Long.toString(appt.getApptTime().getTime()));
 
-        jLabel4.setText("Time");
-
-        jLabel5.setText("Location");
-
+            jLabel5.setText(appt.getDoctor().getFullAddress());
+        }
+        else {
+            jLabel6.setText("No Appointments Scheduled");
+        }
         jButton2.setText("Edit");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -80,15 +96,17 @@ public class Userhomepage extends javax.swing.JFrame {
         });
 
         jLabel6.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
-        jLabel6.setText("Next Appointment");
+        if(appt.getApptTime() != null) {
+            jLabel6.setText("Next Appointment");
 
-        jLabel7.setText("Doctor's name");
+            jLabel7.setText("Doctor's name");
 
-        jLabel8.setText("Date");
+            jLabel8.setText("Date");
 
-        jLabel9.setText("Time ");
+            jLabel9.setText("Time ");
 
-        jLabel10.setText("Location");
+            jLabel10.setText("Location");
+        }
 
         jButton5.setText("Create appointment");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -218,7 +236,11 @@ public class Userhomepage extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Userhomepage().setVisible(true);
+                try {
+                    new Userhomepage().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Userhomepage.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

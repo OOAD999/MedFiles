@@ -5,6 +5,11 @@
  */
 package medxfiles.classes;
 
+import DBClasses.DBconnect;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  *
  * @author softwareProject
@@ -14,6 +19,7 @@ public class SecurityProfile {
     private int appointmentLvl;
     private int recordLvl;
     private int userManLvl;
+    String table = "securityprofile";
 
     public SecurityProfile() {
     }
@@ -76,5 +82,25 @@ public class SecurityProfile {
      */
     public void setUserManLvl(int userManLvl) {
         this.userManLvl = userManLvl;
+    }
+    
+    public SecurityProfile selectSecurity() throws SQLException {
+        DBconnect dbo = new DBconnect();
+        dbo.connect();
+        PreparedStatement query = dbo.getCon().prepareStatement("SELECT * FROM " + dbo.getDbName() + "." + table
+            + " WHERE ID = ?");
+        query.setInt(1, this.id);
+        ResultSet results = dbo.select(query);
+        dbo.disconnect();
+        return this;
+    }
+    
+    private void writeResultSet(ResultSet resultSet) throws SQLException {
+        while (resultSet.next()) {
+            this.id = resultSet.getInt("ID");
+            this.appointmentLvl = resultSet.getInt("appointmentSecurity");
+            this.recordLvl = resultSet.getInt("appointmentSecurity");
+            this.userManLvl = resultSet.getInt("appointmentSecurity");
+        }
     }
 }

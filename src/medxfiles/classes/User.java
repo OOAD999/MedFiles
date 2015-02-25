@@ -5,31 +5,55 @@
  */
 package medxfiles.classes;
 
+import DBClasses.DBconnect;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  *
  * @author softwareProject
  */
 public class User {
+    private int id;
     private String email;
     private String password;
-    private String name;
-    private int SSN;
-    private int phone;
+    private String fname;
+    private String lname;
+    private String SSN;
+    private String phone;
     private String addr1;
     private String addr2;
     private String city;
     private String state;
-    private int zip;
+    private String zip;
     private SecurityProfile securityID;
+    private String table = "user";
 
     public User() {
     }
-
+    
+    public User(int id) {
+        this.id = id;
+    }
     public User(String email, String password) {
         this.email = email;
         this.password = password;
     }
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
 
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     /**
      * @return the email
      */
@@ -61,42 +85,74 @@ public class User {
     /**
      * @return the name
      */
-    public String getName() {
-        return name;
+    public String getFName() {
+        return fname;
     }
 
     /**
      * @param name the name to set
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setFName(String name) {
+        this.fname = name;
+    }
+    
+        /**
+     * @return the name
+     */
+    public String getLName() {
+        return lname;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setLName(String name) {
+        this.lname = name;
     }
 
     /**
      * @return the SSN
      */
-    public int getSSN() {
+    public String getSSN() {
         return SSN;
+    }
+    
+    /**
+     * @return the SSN
+     */
+    public String getMaskSSN() {
+        return "***-**-" + SSN.charAt(SSN.length() - 4) + SSN.charAt(SSN.length() - 3) 
+                + SSN.charAt(SSN.length() - 2) + SSN.charAt(SSN.length() - 1);
+
     }
 
     /**
      * @param SSN the SSN to set
      */
-    public void setSSN(int SSN) {
+    public void setSSN(String SSN) {
         this.SSN = SSN;
     }
 
     /**
      * @return the phone
      */
-    public int getPhone() {
+    public String getPhone() {
         return phone;
+    }
+    
+    /**
+     * @return the phone
+     */
+    public String getFormatPhone() {
+        return "(" + phone.charAt(0) + phone.charAt(1) + phone.charAt(2) + ") " +
+                phone.charAt(3) + phone.charAt(4) + phone.charAt(5) + " - " +
+                phone.charAt(6) + phone.charAt(7) + phone.charAt(8) + phone.charAt(9);
     }
 
     /**
      * @param phone the phone to set
      */
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
@@ -173,18 +229,14 @@ public class User {
     /**
      * @return the zip
      */
-    public int getZip() {
+    public String getZip() {
         return zip;
-    }
-    
-    public String getStringZip() {
-        return Integer.toString(zip);
     }
 
     /**
      * @param zip the zip to set
      */
-    public void setZip(int zip) {
+    public void setZip(String zip) {
         this.zip = zip;
     }
     
@@ -194,7 +246,37 @@ public class User {
     public String getFullAddress() {
         return this.getAddr1() + " " + this.getAddr2() + " " + 
                 this.getCity() + " " + this.getState() + " " + 
-                this.getStringZip();
+                this.getZip();
     }
 
+    public User selectUser() throws SQLException {
+        DBconnect dbo = new DBconnect();       
+        dbo.connect();
+        PreparedStatement query = dbo.getCon().prepareStatement("SELECT * FROM " + dbo.getDbName() + "." + table
+            + " WHERE ID = ?");
+        query.setInt(1, this.id);
+        ResultSet results = dbo.select(query);
+        writeResultSet(results);
+        dbo.disconnect();
+        return this;
+    }
+    
+    private void writeResultSet(ResultSet resultSet) throws SQLException {
+        while (resultSet.next()) {
+            this.id = resultSet.getInt("ID");
+            this.fname = resultSet.getString("fname");
+            this.lname = resultSet.getString("lname");
+            this.phone = resultSet.getString("pnumber");
+            this.SSN = resultSet.getString("ssn");
+            this.securityID = new SecurityProfile(resultSet.getInt("securityID"));
+            this.email = resultSet.getString("emailID");
+            this.password = resultSet.getString("userPassword");
+            
+            String[] address = resultSet.getString("address").split("|");
+            this.addr1 = address[0];
+            this.city = address[1];
+            this.state = address[2];
+            this.zip = address[3];
+        }
+    }
 }

@@ -5,6 +5,11 @@
  */
 package medxfiles.classes;
 
+import DBClasses.DBconnect;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -17,18 +22,22 @@ public class Record {
     private Date serviceDate;
     private User doctor;
     private String height;
-    private double weight;
+    private String weight;
     private String bloodPress;
-    private int cholest;
+    private String cholest;
     private String reason;
     private String diagnoses;
     private String docNotes;
     private String labNotes;
+    private String table = "record";
+    private ArrayList<Record> records;
 
     public Record() {
+        this.records = new ArrayList<Record>();
     }
 
     public Record(int id, Patient patient) {
+        this.records = new ArrayList<Record>();
         this.id = id;
         this.patient = patient;
     }
@@ -106,14 +115,14 @@ public class Record {
     /**
      * @return the weight
      */
-    public double getWeight() {
+    public String getWeight() {
         return weight;
     }
 
     /**
      * @param weight the weight to set
      */
-    public void setWeight(double weight) {
+    public void setWeight(String weight) {
         this.weight = weight;
     }
 
@@ -134,14 +143,14 @@ public class Record {
     /**
      * @return the cholest
      */
-    public int getCholest() {
+    public String getCholest() {
         return cholest;
     }
 
     /**
      * @param cholest the cholest to set
      */
-    public void setCholest(int cholest) {
+    public void setCholest(String cholest) {
         this.cholest = cholest;
     }
 
@@ -199,5 +208,44 @@ public class Record {
      */
     public void setLabNotes(String labNotes) {
         this.labNotes = labNotes;
+    }
+    
+    public ArrayList<Record> selectRecords(int patientID) throws SQLException {
+        DBconnect dbo = new DBconnect();
+        dbo.connect();
+        PreparedStatement query = dbo.getCon().prepareStatement("SELECT * FROM " + dbo.getDbName() + "." + table
+            + " WHERE pateintID = ?");
+        query.setInt(1, patientID);
+        ResultSet results = dbo.select(query);
+        writeResultSet(results);
+        dbo.disconnect();
+        if(!(this.records.isEmpty())) {
+            for(int i = 0; i < records.size(); i++) {
+                records.get(i).getPatient().selectPatient();
+                records.get(i).getDoctor().selectUser();
+            }
+        }
+        
+        return this.records;
+    }
+    
+    private void writeResultSet(ResultSet resultSet) throws SQLException {
+        while (resultSet.next()) {
+            Record temp = new Record();
+            temp.id = resultSet.getInt("ID");
+            temp.patient = new Patient(resultSet.getInt("ID"));
+            temp.serviceDate = resultSet.getDate("recordDate");
+            temp.doctor = new User(resultSet.getInt("doctorID"));
+            temp.height = resultSet.getString("height");
+            temp.weight = resultSet.getString("weight");
+            temp.bloodPress = resultSet.getString("bloodPressure");
+            temp.cholest = resultSet.getString("cholesterol");
+            temp.reason = resultSet.getString("reasonforVisit");
+            temp.diagnoses = resultSet.getString("doctorDiagnosis");
+            temp.docNotes = resultSet.getString("doctorNote");
+            temp.labNotes = resultSet.getString("labNote");
+            
+            this.records.add(temp);
+        }
     }
 }

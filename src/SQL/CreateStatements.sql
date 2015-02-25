@@ -30,7 +30,7 @@ insuranceMemberID varchar(10)
 create table `MedFiles`.`appointment`
 (
 patientID int NOT NULL PRIMARY KEY,
-doctorID int NOT NULL PRIMARY KEY,
+doctorID int NOT NULL UNIQUE KEY,
 appointmentTime time,
 timecreated time,
 creatorID int
