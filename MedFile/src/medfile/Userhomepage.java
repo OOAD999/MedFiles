@@ -5,17 +5,30 @@
  */
 package medfile;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ashwinrameshkumar
  */
 public class Userhomepage extends javax.swing.JFrame {
 
+    PreparedStatement stmt = null;
+    static Connection conn;
+//        DefaultTableModel model = null;
+
     /**
      * Creates new form Userhomepage
      */
     public Userhomepage() {
         initComponents();
+        conn = Connect.getConnect();
     }
 
     /**
@@ -27,7 +40,7 @@ public class Userhomepage extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        usernamepass = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -45,8 +58,6 @@ public class Userhomepage extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MedXFiles");
-
-        jLabel1.setText("Username");
 
         jButton1.setText("LogOut");
 
@@ -103,8 +114,6 @@ public class Userhomepage extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
                 .addComponent(jButton1)
                 .addGap(15, 15, 15))
             .addGroup(layout.createSequentialGroup()
@@ -112,7 +121,6 @@ public class Userhomepage extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -128,7 +136,10 @@ public class Userhomepage extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(usernamepass, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -138,9 +149,9 @@ public class Userhomepage extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jButton1))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1)
+                    .addComponent(usernamepass, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
                 .addComponent(jLabel6)
                 .addGap(18, 18, 18)
@@ -173,9 +184,66 @@ public class Userhomepage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+        try {
+            // TODO add your handling code here:
+            String username = usernamepass.getText().toString().trim().substring(10);
+            
+            String SQL = "SELECT ID,fname,lname,pnumber,address,ssn,securityID,emailID,userPassword from MedFiles.user where emailID = '"+username.trim()+"';";
+            System.out.println(SQL);
+            stmt = conn.prepareStatement(SQL);
+            System.out.println("SQL is " + stmt);
 
+            ResultSet rs = null;
+            //  System.out.println(stmt);
+            String ID = null;
+            String fname = null;
+            String lname = null;
+            String pnumber = null;
+            String address = null;
+            String ssn = null;
+            String securityid = null;
+            String userid = null;
+            String password = null;
+
+            rs = stmt.executeQuery();
+            //System.out.println(rs);
+
+            while (rs.next()) {
+                ID = rs.getString("ID");
+                fname = rs.getString("fname");
+                lname = rs.getString("lname");
+                pnumber = rs.getString("pnumber");
+                address = rs.getString("address");
+                ssn = rs.getString("ssn");
+                securityid = rs.getString("ssn");
+                userid = rs.getString("emailID");
+                password = rs.getString("userPassword");
+
+//             Resulttab.setValueAt(Book_id, z, 0);
+//             Resulttab.setValueAt(Title, z, 1);
+//             Resulttab.setValueAt(Author_name, z, 2);
+//             Resulttab.setValueAt(Branch_id, z, 3);
+//             Resulttab.setValueAt(Total, z, 4);
+//             Resulttab.setValueAt(Avail, z, 5);
+                Profile profile = new Profile();
+                profile.Id.setText(ID);
+                profile.Fname.setText(fname);
+                profile.Lname.setText(lname);
+                profile.Pnumber.setText(pnumber);
+                profile.Address.setText(address);
+                profile.Ssn.setText(ssn);
+                profile.Securityid.setText(securityid);
+                profile.EmailID.setText(userid);
+                profile.Userpassword.setText(password);
+
+                profile.setVisible(true);
+
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Userhomepage.class.getName()).log(Level.SEVERE, null, ex);
+    }//GEN-LAST:event_jButton4ActionPerformed
+    }
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -229,7 +297,6 @@ public class Userhomepage extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -239,5 +306,6 @@ public class Userhomepage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    public javax.swing.JLabel usernamepass;
     // End of variables declaration//GEN-END:variables
 }
