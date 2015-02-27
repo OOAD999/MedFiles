@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import static medfile.Userhomepage.conn;
 
 /**
@@ -188,7 +189,10 @@ public class Login extends javax.swing.JFrame {
                 
 //                success.setText("Login Success"); 
                 Login login = new Login();
+                
+                JOptionPane.showMessageDialog(this, "Login Success");
                 login.dispose();
+                
                 Userhomepage userhomepage = new Userhomepage();
                 
                 userhomepage.usernamepass.setText("Username"+" : "+userid);

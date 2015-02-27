@@ -22,6 +22,7 @@ public class Userhomepage extends javax.swing.JFrame {
     PreparedStatement stmt = null;
     static Connection conn;
 //        DefaultTableModel model = null;
+           static String patientID = null;
 
     /**
      * Creates new form Userhomepage
@@ -137,9 +138,8 @@ public class Userhomepage extends javax.swing.JFrame {
                                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(usernamepass, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(usernamepass, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -188,36 +188,34 @@ public class Userhomepage extends javax.swing.JFrame {
             // TODO add your handling code here:
             String username = usernamepass.getText().toString().trim().substring(10);
             
-            String SQL = "SELECT ID,fname,lname,pnumber,address,ssn,securityID,emailID,userPassword from MedFiles.user where emailID = '"+username.trim()+"';";
+            String SQL = "SELECT a.fname,a.lname,a.pnumber,a.address,b.patientID,b.dob,b.insuranceProvider,b.insuranceMemberID from MedFiles.user a join MedFiles.patient b on a.ID = b.userID where emailID = '"+username.trim()+"';";
+
             System.out.println(SQL);
             stmt = conn.prepareStatement(SQL);
             System.out.println("SQL is " + stmt);
 
             ResultSet rs = null;
             //  System.out.println(stmt);
-            String ID = null;
             String fname = null;
             String lname = null;
             String pnumber = null;
             String address = null;
-            String ssn = null;
-            String securityid = null;
-            String userid = null;
-            String password = null;
+            String dob = null;
+            String insuranceprovider = null;
+            String insurancememberid = null;
 
             rs = stmt.executeQuery();
             //System.out.println(rs);
 
             while (rs.next()) {
-                ID = rs.getString("ID");
+                patientID = rs.getString("patientID");
                 fname = rs.getString("fname");
                 lname = rs.getString("lname");
                 pnumber = rs.getString("pnumber");
                 address = rs.getString("address");
-                ssn = rs.getString("ssn");
-                securityid = rs.getString("ssn");
-                userid = rs.getString("emailID");
-                password = rs.getString("userPassword");
+                dob = rs.getString("dob");
+                insuranceprovider = rs.getString("insuranceProvider");
+                insurancememberid = rs.getString("insuranceMemberID");
 
 //             Resulttab.setValueAt(Book_id, z, 0);
 //             Resulttab.setValueAt(Title, z, 1);
@@ -226,15 +224,13 @@ public class Userhomepage extends javax.swing.JFrame {
 //             Resulttab.setValueAt(Total, z, 4);
 //             Resulttab.setValueAt(Avail, z, 5);
                 Profile profile = new Profile();
-                profile.Id.setText(ID);
                 profile.Fname.setText(fname);
                 profile.Lname.setText(lname);
-                profile.Pnumber.setText(pnumber);
                 profile.Address.setText(address);
-                profile.Ssn.setText(ssn);
-                profile.Securityid.setText(securityid);
-                profile.EmailID.setText(userid);
-                profile.Userpassword.setText(password);
+                profile.Pnumber.setText(pnumber);
+                profile.dob.setText(dob);
+                profile.Insuranceprovider.setText(insuranceprovider);
+                profile.InsuranceID.setText(insurancememberid);
 
                 profile.setVisible(true);
 

@@ -54,10 +54,8 @@
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="jButton2" min="-2" pref="76" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                              <Component id="usernamepass" min="-2" pref="119" max="-2" attributes="0"/>
-                              <Component id="jLabel6" min="-2" pref="220" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="jLabel6" alignment="0" min="-2" pref="220" max="-2" attributes="0"/>
+                          <Component id="usernamepass" alignment="1" min="-2" pref="146" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jButton3" min="-2" pref="74" max="-2" attributes="0"/>

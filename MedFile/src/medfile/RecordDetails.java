@@ -5,16 +5,27 @@
  */
 package medfile;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ashwinrameshkumar
  */
 public class RecordDetails extends javax.swing.JFrame {
 
+    PreparedStatement stmt = null;
+    DefaultTableModel model = null;
+    Connection conn = null;
+
     /**
      * Creates new form RecordDetails
      */
     public RecordDetails() {
+        conn = Connect.getConnect();
+        model = (DefaultTableModel)recordstable.getModel();
+
         initComponents();
     }
 
@@ -28,22 +39,22 @@ public class RecordDetails extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        recordstable = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Record Details");
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        recordstable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Date", "Doctor", "Location", "Reason for Visit", "Doctor's Diagnosis", "Weight", "Height", "Blood Pressure", "Cholestrol", "Additional Notes", "Doctor", "Lab"
+                "Date", "Patient ID", "Record Date", "Doctor ID ", "Location", "Height", "Weight", "Cholesterol", "Reason for Visit", "Doctor Diagnosis", "Doctor Note", "Lab Note"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(recordstable);
 
         jButton1.setText("Download Report");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -124,6 +135,7 @@ public class RecordDetails extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new RecordDetails().setVisible(true);
+                
             }
         });
     }
@@ -132,6 +144,6 @@ public class RecordDetails extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable2;
+    public static javax.swing.JTable recordstable;
     // End of variables declaration//GEN-END:variables
 }
