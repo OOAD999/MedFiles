@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package DBClasses;
+package Classes;
     
 
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.Version;
 import javax.swing.JOptionPane;
+import jdk.nashorn.internal.runtime.Version;
 
 
 /**
