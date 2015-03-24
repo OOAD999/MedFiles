@@ -87,13 +87,26 @@ public class DBconnect {
         return resultSet;
     }
         
-    public int insertUpdate(String table, String insert, String update) {
+    public ResultSet insertUpdate(PreparedStatement query) {
         if (this.connect()) {
-            String query = "INSERT INTO " + getDbName() + "." + table
-                    + "ON DUPLICATE KEY UPDATE " + update;
             try {
-                state = con.createStatement();
-                result = state.executeUpdate(query);
+                query.executeUpdate();
+                resultSet = state.getGeneratedKeys();
+            } catch (SQLException ex) {
+                Logger lgr = Logger.getLogger(Version.class.getName());
+                lgr.log(Level.SEVERE, ex.getMessage(), ex);
+                JOptionPane.showMessageDialog(null, "" + ex.getMessage(), "Communication Error", JOptionPane.WARNING_MESSAGE);
+            }
+        }
+        return resultSet;
+    }
+    
+    public boolean delete(PreparedStatement query) {
+        boolean result = false;
+        if (this.connect()) {
+            try {
+                query.executeUpdate();
+                result = true;
             } catch (SQLException ex) {
                 Logger lgr = Logger.getLogger(Version.class.getName());
                 lgr.log(Level.SEVERE, ex.getMessage(), ex);
@@ -102,35 +115,4 @@ public class DBconnect {
         }
         return result;
     }
-    
-    public int delete(String table) {
-        if (this.connect()) {
-            String query = "DELETE FROM " + getDbName() + "." + table;
-            try {
-                state = con.createStatement();
-                result = state.executeUpdate(query);
-            } catch (SQLException ex) {
-                Logger lgr = Logger.getLogger(Version.class.getName());
-                lgr.log(Level.SEVERE, ex.getMessage(), ex);
-                JOptionPane.showMessageDialog(null, "" + ex.getMessage(), "Communication Error", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-        return result;
-    }
-    
-    public int delete(String table, String where) {
-        if (this.connect()) {
-            String query = "DELETE FROM " + getDbName() + "." + table
-                    + "WHERE " + where;
-            try {
-                state = con.createStatement();
-                result = state.executeUpdate(query);
-            } catch (SQLException ex) {
-                Logger lgr = Logger.getLogger(Version.class.getName());
-                lgr.log(Level.SEVERE, ex.getMessage(), ex);
-                JOptionPane.showMessageDialog(null, "" + ex.getMessage(), "Communication Error", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-        return result;
-    }  
 }

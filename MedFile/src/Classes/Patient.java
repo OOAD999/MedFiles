@@ -300,6 +300,52 @@ public class Patient extends User{
         return this;
     }
     
+    public Patient insertPatient() throws SQLException {
+        
+        DBconnect dbo = new DBconnect();
+        dbo.connect();
+        PreparedStatement query = dbo.getCon().prepareStatement("INSERT INTO " + dbo.getDbName() + "." + table
+            + "(userID, dob, insuranceProvider, insuranceMemberID) VALUES (?,?,?,?)");
+        query.setInt(1, this.getId());
+        query.setDate(2, new java.sql.Date(this.dob.getTime()));
+        query.setString(3, this.insuranceProvider);
+        query.setString(4, this.insuranceID);
+        ResultSet results = dbo.insertUpdate(query);
+        if(results.next()) {
+            this.patientID = results.getInt(1);
+        }
+        dbo.disconnect();
+        return this;
+    }
+    
+    public Patient updatePatient() throws SQLException {
+        
+        DBconnect dbo = new DBconnect();
+        dbo.connect();
+        PreparedStatement query = dbo.getCon().prepareStatement("UPDATE " + dbo.getDbName() + "." + table
+            + "SET dob = ?, insuranceProvider = ?, insuranceMemberID = ? WHERE patientID = ?");
+
+        query.setDate(1, new java.sql.Date(this.dob.getTime()));
+        query.setString(2, this.insuranceProvider);
+        query.setString(3, this.insuranceID);
+        query.setInt(4, this.patientID);
+        ResultSet results = dbo.insertUpdate(query);
+        dbo.disconnect();
+        return this;
+    }
+    public Patient deletePatient() throws SQLException {
+        
+        DBconnect dbo = new DBconnect();
+        dbo.connect();
+        PreparedStatement query = dbo.getCon().prepareStatement("DELETE FROM " + dbo.getDbName() + "." + table +
+            " WHERE patientID = ?");
+
+        query.setInt(1, this.patientID);
+        dbo.delete(query);
+        dbo.disconnect();
+        return this;
+    }
+    
     private void writeResultSet(ResultSet resultSet) throws SQLException {
         while (resultSet.next()) {
             this.patientID = resultSet.getInt("patientID");

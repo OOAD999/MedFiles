@@ -120,6 +120,51 @@ public class Appointment {
         return this;
     }
     
+    public Appointment insertAppointment() throws SQLException {
+        
+        DBconnect dbo = new DBconnect();
+        dbo.connect();
+        PreparedStatement query = dbo.getCon().prepareStatement("INSERT INTO " + dbo.getDbName() + "." + table
+            + "(patientID, doctorID, appointmentTime, timecreated, creatorID) VALUES (?,?,?,?.?)");
+        query.setInt(1, this.patient.getPatientID());
+        query.setInt(2, this.doctor.getId());
+        query.setDate(3, new java.sql.Date(this.apptTime.getTime()));
+        query.setDate(4, new java.sql.Date(this.createdTime.getTime()));
+        query.setInt(5, this.creator.getId());
+        ResultSet results = dbo.insertUpdate(query);
+        dbo.disconnect();
+        return this;
+    }
+    
+    public Appointment updateAppointment() throws SQLException {
+        
+        DBconnect dbo = new DBconnect();
+        dbo.connect();
+        PreparedStatement query = dbo.getCon().prepareStatement("UPDATE " + dbo.getDbName() + "." + table
+            + "SET doctorID = ?, appointmentTime = ?, timecreated = ?, creatorID = ? " +
+            "WHERE patientID = ?");
+        
+        query.setInt(1, this.doctor.getId());
+        query.setDate(2, new java.sql.Date(this.apptTime.getTime()));
+        query.setDate(3, new java.sql.Date(this.createdTime.getTime()));
+        query.setInt(4, this.creator.getId());
+        query.setInt(5, this.patient.getPatientID());
+        ResultSet results = dbo.insertUpdate(query);
+        dbo.disconnect();
+        return this;
+    }
+    public Appointment deleteAppointment() throws SQLException {
+        
+        DBconnect dbo = new DBconnect();
+        dbo.connect();
+        PreparedStatement query = dbo.getCon().prepareStatement("DELETE FROM " + dbo.getDbName() + "." + table +
+            " WHERE patientID = ?");
+
+        query.setInt(1, this.patient.getPatientID());
+        dbo.delete(query);
+        dbo.disconnect();
+        return this;
+    }
     private void writeResultSet(ResultSet resultSet) throws SQLException {
         while (resultSet.next()) {
             this.patient = new Patient(resultSet.getInt("ID"));
