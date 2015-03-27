@@ -5,13 +5,10 @@
  */
 package medfile;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static medfile.Userhomepage.conn;
+import Classes.Patient;
 
 /**
  *
@@ -19,17 +16,24 @@ import static medfile.Userhomepage.conn;
  */
 public class Profile extends javax.swing.JFrame {
 
-    PreparedStatement stmt = null;
-
-    Connection conn = null;
-
     /**
      * Creates new form Profile
      */
-    public Profile() {
-
-        conn = Connect.getConnect();
+    public Profile() throws SQLException {
         initComponents();
+        
+        Patient patient = new Patient(1);
+        patient = patient.selectPatient();
+        
+        EmailID.setText(patient.getEmail());
+        Address.setText(patient.getFullAddress());
+        Fname.setText(patient.getFName());
+        Lname.setText(patient.getLName());
+        InsuranceID.setText(patient.getInsuranceID());
+        Insuranceprovider.setText(patient.getInsuranceProvider());
+        Pnumber.setText(patient.getFormatPhone());
+        dob.setText(patient.getDob().toString());      
+
     }
 
     /**
@@ -55,11 +59,11 @@ public class Profile extends javax.swing.JFrame {
         Insuranceprovider = new javax.swing.JLabel();
         InsuranceID = new javax.swing.JLabel();
         EmailID = new javax.swing.JLabel();
-        Userpassword = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        viewreport = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         Pnumber = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Profile");
@@ -78,13 +82,14 @@ public class Profile extends javax.swing.JFrame {
 
         jLabel7.setText("Insurance Member ID");
 
-        jButton1.setText("View Report");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        viewreport.setText("View Report");
+        viewreport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                viewreportActionPerformed(evt);
             }
         });
 
+        jLabel9.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel9.setText("Profile Details");
 
@@ -95,12 +100,14 @@ public class Profile extends javax.swing.JFrame {
             }
         });
 
+        jLabel8.setText("Email ID");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(43, 43, 43)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -111,38 +118,37 @@ public class Profile extends javax.swing.JFrame {
                                 .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(216, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(59, 59, 59))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(104, 104, 104)))))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(Fname, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Lname, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Address, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(dob, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Insuranceprovider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(InsuranceID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(EmailID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Userpassword, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                    .addComponent(Pnumber, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(Fname, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                            .addComponent(Lname, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(Address, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(dob, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(Insuranceprovider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(InsuranceID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(EmailID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(Pnumber, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(108, Short.MAX_VALUE)
+                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3)))
                 .addGap(44, 44, 44))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(238, 238, 238)
+                .addComponent(viewreport, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(jButton3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
+                .addGap(35, 35, 35)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton3)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel1)
                     .addComponent(Fname, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -171,113 +177,34 @@ public class Profile extends javax.swing.JFrame {
                     .addComponent(jLabel7)
                     .addComponent(InsuranceID, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(EmailID, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(Userpassword, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(84, 84, 84))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(62, 62, 62))))
+                    .addComponent(EmailID, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addGap(51, 51, 51)
+                .addComponent(viewreport)
+                .addGap(54, 54, 54))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-
-        Profile prof = new Profile();
-        prof.dispose();
+            // TODO add your handling code here:            
+            dispose();
+      
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void viewreportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewreportActionPerformed
+        Userhomepage user = new Userhomepage();
+        String patientpass = user.patientID;
         try {
-            // TODO add your handling code here:
-
-            Userhomepage user = new Userhomepage();
-            String patientpass = user.patientID.toString();
             RecordDetails recorddet = new RecordDetails();
-
-            String address = dob.getText();
-            int z = 0;
-            String SQL = "SELECT ID,patientID,recordDate,doctorID,location,height,weight,bloodPressure,cholesterol,reasonforVisit,doctorDiagnosis,doctorNote,labNote from MedFiles.record where patientID = '" + patientpass + "';";
-            System.out.println(SQL);
-            stmt = conn.prepareStatement(SQL);
-            System.out.println("SQL is " + stmt);
-
-            ResultSet rs = null;
-
-            String ID = null;
-            String patientid = null;
-            String recorddate = null;
-            String doctorID = null;
-            String location = null;
-            String height = null;
-            String weight = null;
-            String bloodpressure = null;
-            String cholesterol = null;
-            String visitreason = null;
-            String doctordiagnosis = null;
-            String doctorvisit = null;
-            String labnote = null;
-
-            rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                ID = rs.getString("ID");
-                patientid = rs.getString("patientID");
-                recorddate = rs.getString("recordDate");
-                doctorID = rs.getString("doctorID");
-                location = rs.getString("location");
-                height = rs.getString("height");
-                weight = rs.getString("weight");
-                bloodpressure = rs.getString("bloodPressure");
-                cholesterol = rs.getString("cholesterol");
-                visitreason = rs.getString("reasonforVisit");
-                doctordiagnosis = rs.getString("doctorDiagnosis");
-                doctorvisit = rs.getString("doctorNote");
-                labnote = rs.getString("labNote");
-                
-                recorddet.model.addRow(new Object[]{
-                ID,
-                patientid ,
-                recorddate, 
-                doctorID,
-                location,
-                height ,
-                weight ,
-                bloodpressure ,
-                cholesterol ,
-                visitreason ,
-                doctordiagnosis, 
-                doctorvisit ,
-                labnote ,
-                });
-
-                recorddet.recordstable.setValueAt(ID, z, 0);
-                recorddet.recordstable.setValueAt(patientid, z, 1);
-                recorddet.recordstable.setValueAt(recorddate, z, 2);
-                recorddet.recordstable.setValueAt(doctorID, z, 3);
-                recorddet.recordstable.setValueAt(location, z, 4);
-                recorddet.recordstable.setValueAt(height, z, 5);
-                recorddet.recordstable.setValueAt(weight, z, 6);
-                recorddet.recordstable.setValueAt(bloodpressure, z, 7);
-                recorddet.recordstable.setValueAt(cholesterol, z, 8);
-                recorddet.recordstable.setValueAt(visitreason, z, 9);
-                recorddet.recordstable.setValueAt(doctordiagnosis, z, 10);
-                recorddet.recordstable.setValueAt(doctorvisit, z, 11);
-                recorddet.recordstable.setValueAt(labnote, z, 12);
-
-                z++;
-                recorddet.setVisible(true);
-
-            }
+            dispose();
+            recorddet.setVisible(true);
         } catch (SQLException ex) {
             Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_viewreportActionPerformed
 
     /**
      * @param args the command line arguments
@@ -295,21 +222,21 @@ public class Profile extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Profile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Profile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Profile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Profile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Profile().setVisible(true);
+                try {
+                    new Profile().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -322,9 +249,7 @@ public class Profile extends javax.swing.JFrame {
     public javax.swing.JLabel Insuranceprovider;
     public javax.swing.JLabel Lname;
     public javax.swing.JLabel Pnumber;
-    public javax.swing.JLabel Userpassword;
     public javax.swing.JLabel dob;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -333,6 +258,8 @@ public class Profile extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JButton viewreport;
     // End of variables declaration//GEN-END:variables
 }

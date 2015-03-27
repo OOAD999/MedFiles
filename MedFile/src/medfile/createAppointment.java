@@ -5,16 +5,34 @@
  */
 package medfile;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Samhita
  */
 public class createAppointment extends javax.swing.JFrame {
 
+    PreparedStatement stmt = null;
+    Connection conn = null;
+
     /**
      * Creates new form createAppointment
      */
     public createAppointment() {
+
+        conn = Connect.getConnect();
         initComponents();
     }
 
@@ -38,8 +56,11 @@ public class createAppointment extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("New Appointment");
+        setName("createAppointment\n"); // NOI18N
 
+        jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         jLabel1.setText("New Appointment ");
 
         jLabel2.setText("Patient ID");
@@ -51,6 +72,8 @@ public class createAppointment extends javax.swing.JFrame {
                 patientidActionPerformed(evt);
             }
         });
+
+        jDateChooser1.setDateFormatString("yyyy-MM-dd");
 
         jLabel4.setText("Appointment");
 
@@ -84,7 +107,7 @@ public class createAppointment extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1)
-                .addGap(24, 24, 24))
+                .addGap(23, 23, 23))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -140,20 +163,52 @@ public class createAppointment extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        dispose();
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+
+            Date dates = jDateChooser1.getDate();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            Date today = new Date();
+
+            String todaydate = dateFormat.format(today);
+            String appointmentdate = dateFormat.format(dates);
+            System.out.println(todaydate);
+            System.out.println(appointmentdate);
+
+            String SQL = "INSERT into MedFiles.appointment (patientID,doctorID,appointmentTime,timecreated,creatorID)values('" + patientid.getText() + "','" + doctorid.getText() + "','" + appointmentdate + "','" + todaydate + "','" + patientid.getText() + "');";
+            System.out.println(SQL);
+            if(appointmentdate.compareTo(todaydate)<00)
+            {
+              JOptionPane.showMessageDialog(this, "Appointment date is before current date" , "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
+            else
+            {
+                 stmt = conn.prepareStatement(SQL);
+
+            stmt.executeUpdate();
+            JOptionPane.showMessageDialog(this, "Appointment Successfully created");
+            dispose();
+            }
+           
+        } catch (SQLException ex) {
+            Logger.getLogger(createAppointment.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
-        String date = jDateChooser1.getDate().toString();
-        System.out.println(date);
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         patientid.setText("");
         doctorid.setText("");
-//        jDateChooser
+        jDateChooser1.setCalendar(null);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**

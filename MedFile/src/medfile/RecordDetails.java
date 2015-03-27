@@ -5,9 +5,13 @@
  */
 package medfile;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+
 import javax.swing.table.DefaultTableModel;
+import Classes.Record;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,18 +19,33 @@ import javax.swing.table.DefaultTableModel;
  */
 public class RecordDetails extends javax.swing.JFrame {
 
-    PreparedStatement stmt = null;
     DefaultTableModel model = null;
-    Connection conn = null;
-
     /**
      * Creates new form RecordDetails
      */
-    public RecordDetails() {
-        conn = Connect.getConnect();
-        model = (DefaultTableModel)recordstable.getModel();
-
+    public RecordDetails() throws SQLException {
         initComponents();
+        model = (DefaultTableModel)recordstable.getModel();
+        Record record = new Record();
+        ArrayList<Record> records = record.selectRecords(1);
+        if(!(records.isEmpty())) {
+            for(int i = 0; i < records.size(); i++) {
+                Record tmp = records.get(i);
+                model.addRow(new Object[]{
+                    tmp.getServiceDate().toString(),
+                    tmp.getDoctor().getFName() + " " + tmp.getDoctor().getLName(),
+                    tmp.getDoctor().getFullAddress(),
+                    tmp.getReason(),
+                    tmp.getDiagnoses(),
+                    tmp.getWeight(),
+                    tmp.getHeight(),
+                    tmp.getBloodPress(),
+                    tmp.getCholest(),
+                    tmp.getDocNotes(),
+                    tmp.getLabNotes()
+                });
+            }
+        }
     }
 
     /**
@@ -42,6 +61,7 @@ public class RecordDetails extends javax.swing.JFrame {
         recordstable = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Record Details");
@@ -63,7 +83,16 @@ public class RecordDetails extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Patient's Record");
+        jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Patient Records");
+
+        jButton2.setText("Exit");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -77,20 +106,23 @@ public class RecordDetails extends javax.swing.JFrame {
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 370, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(369, 369, 369))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(351, 351, 351))))))
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(369, 369, 369))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(232, 232, 232)
+                .addComponent(jButton2)
+                .addGap(37, 37, 37))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2))
                 .addGap(27, 27, 27)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
@@ -103,6 +135,14 @@ public class RecordDetails extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        dispose();
+                
+                
+                
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -134,7 +174,11 @@ public class RecordDetails extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new RecordDetails().setVisible(true);
+                try {
+                    new RecordDetails().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(RecordDetails.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 
             }
         });
@@ -142,6 +186,7 @@ public class RecordDetails extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
     public static javax.swing.JTable recordstable;
