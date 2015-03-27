@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
 
 /**
@@ -25,8 +26,18 @@ PreparedStatement stmt = null;
     public createProfileDetails() {
         initComponents();
                         conn = Connect.getConnect();
+                        groupButton();
 
     }
+private void groupButton( ) {
+
+ButtonGroup bg1 = new ButtonGroup( );
+
+bg1.add(admin);
+bg1.add(patient);
+
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -52,12 +63,13 @@ PreparedStatement stmt = null;
         pnumber = new javax.swing.JTextField();
         address = new javax.swing.JTextField();
         ssn = new javax.swing.JTextField();
-        securityid = new javax.swing.JTextField();
         emailid = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         password = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
+        admin = new javax.swing.JRadioButton();
+        patient = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -110,12 +122,6 @@ PreparedStatement stmt = null;
             }
         });
 
-        securityid.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                securityidActionPerformed(evt);
-            }
-        });
-
         emailid.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 emailidActionPerformed(evt);
@@ -138,6 +144,20 @@ PreparedStatement stmt = null;
 
         jLabel10.setText("User Password");
 
+        admin.setText("Admin");
+        admin.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                adminMouseClicked(evt);
+            }
+        });
+        admin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                adminActionPerformed(evt);
+            }
+        });
+
+        patient.setText("Patient");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -149,7 +169,7 @@ PreparedStatement stmt = null;
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton3)
-                        .addGap(6, 6, 6))
+                        .addGap(9, 9, 9))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(80, 80, 80)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -166,15 +186,18 @@ PreparedStatement stmt = null;
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel8)
-                                    .addComponent(jLabel7)
                                     .addComponent(jLabel9)
                                     .addComponent(jLabel10)
-                                    .addComponent(jLabel5))
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel7))
                                 .addGap(166, 166, 166)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(address)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(admin)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(patient))
                                     .addComponent(ssn, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(securityid, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(address)
                                     .addComponent(emailid, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(password)))))
                     .addGroup(layout.createSequentialGroup()
@@ -185,8 +208,8 @@ PreparedStatement stmt = null;
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
-                .addGap(61, 61, 61))
+                                .addGap(0, 3, Short.MAX_VALUE)))))
+                .addGap(58, 58, 58))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,14 +235,19 @@ PreparedStatement stmt = null;
                         .addGap(29, 29, 29)
                         .addComponent(jLabel5))
                     .addComponent(address, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(34, 34, 34)
+                        .addComponent(jLabel7)
+                        .addGap(32, 32, 32))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ssn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(ssn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(securityid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
+                    .addComponent(jLabel8)
+                    .addComponent(admin)
+                    .addComponent(patient))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(emailid, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -234,7 +262,7 @@ PreparedStatement stmt = null;
                     .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4)
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         pack();
@@ -243,13 +271,31 @@ PreparedStatement stmt = null;
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
     try {
         // TODO add your handling code here:
-      
-        String SQL = "INSERT into MedFiles.user (fname,lname,pnumber,address,ssn,securityID,emailID,userPassword)values('" + fname.getText() + "','" + lname.getText() + "','" + pnumber.getText() + "','" + address.getText()+"','" + ssn.getText()+"','" + securityid.getText()+"','" +emailid.getText()+"','" + password.getText()+"' );";
+      String radioval = null;
+      if(admin.isSelected())
+      {
+          radioval = admin.getText();
+          radioval = "2";
+          String SQL = "INSERT into MedFiles.user (fname,lname,pnumber,address,ssn,securityID,emailID,userPassword)values('" + fname.getText() + "','" + lname.getText() + "','" + pnumber.getText() + "','" + address.getText()+"','" + radioval+"','" + ssn.getText()+"','" +emailid.getText()+"','" + password.getText()+"' );";
         stmt = conn.prepareStatement(SQL);
         
         stmt.executeUpdate();
         JOptionPane.showMessageDialog(this, "Profile Successfully created");
         dispose();
+      }
+      
+      else if (patient.isSelected())
+      {
+          radioval = patient.getText();
+          radioval = "1";
+          String SQL = "INSERT into MedFiles.user (fname,lname,pnumber,address,ssn,securityID,emailID,userPassword)values('" + fname.getText() + "','" + lname.getText() + "','" + pnumber.getText() + "','" + address.getText()+"','" + ssn.getText()+"','" + radioval+"','" +emailid.getText()+"','" + password.getText()+"' );";
+        stmt = conn.prepareStatement(SQL);
+        
+        stmt.executeUpdate();
+        JOptionPane.showMessageDialog(this, "Profile Successfully created");
+        dispose();
+      }
+        
     } catch (SQLException ex) {
         Logger.getLogger(createProfileDetails.class.getName()).log(Level.SEVERE, null, ex);
     }
@@ -262,7 +308,7 @@ PreparedStatement stmt = null;
         address.setText("");
         pnumber.setText("");
         emailid.setText("");
-        securityid.setText("");
+        ssn.setText("");
         ssn.setText("");
                 
                 
@@ -276,10 +322,6 @@ PreparedStatement stmt = null;
     private void ssnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ssnActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_ssnActionPerformed
-
-    private void securityidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_securityidActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_securityidActionPerformed
 
     private void emailidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailidActionPerformed
         // TODO add your handling code here:
@@ -301,6 +343,15 @@ PreparedStatement stmt = null;
         createProfileDetails profdet = new createProfileDetails();
         profdet.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void adminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adminActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_adminActionPerformed
+
+    private void adminMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_adminMouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_adminMouseClicked
 
     /**
      * @param args the command line arguments
@@ -340,6 +391,7 @@ PreparedStatement stmt = null;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField address;
+    private javax.swing.JRadioButton admin;
     private javax.swing.JTextField emailid;
     private javax.swing.JTextField fname;
     private javax.swing.JButton jButton1;
@@ -357,8 +409,8 @@ PreparedStatement stmt = null;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JTextField lname;
     private javax.swing.JTextField password;
+    private javax.swing.JRadioButton patient;
     private javax.swing.JTextField pnumber;
-    private javax.swing.JTextField securityid;
     private javax.swing.JTextField ssn;
     // End of variables declaration//GEN-END:variables
 }
