@@ -94,7 +94,22 @@ public class SecurityProfile {
         dbo.disconnect();
         return this;
     }
-    
+    public SecurityProfile insertProfile() throws SQLException {
+        
+        DBconnect dbo = new DBconnect();
+        dbo.connect();
+        PreparedStatement query = dbo.getCon().prepareStatement("INSERT INTO " + dbo.getDbName() + "." + table
+            + "(appointmentSecurity, recordSecurity, userManagmentSecurity) VALUES (?,?,?)");
+        query.setInt(1, this.appointmentLvl);
+        query.setInt(2, this.recordLvl);
+        query.setInt(3, this.userManLvl);
+        ResultSet results = dbo.insertUpdate(query);
+        if(results.next()) {
+            this.id = results.getInt(1);
+        }
+        dbo.disconnect();
+        return this;
+    }
     private void writeResultSet(ResultSet resultSet) throws SQLException {
         while (resultSet.next()) {
             this.id = resultSet.getInt("ID");

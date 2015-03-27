@@ -9,6 +9,7 @@ import Classes.DBconnect;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.StringJoiner;
 
 /**
  *
@@ -27,6 +28,7 @@ public class User {
     private String city;
     private String state;
     private String zip;
+    private String fullAddress;
     private SecurityProfile securityID;
     private String table = "user";
 
@@ -248,6 +250,16 @@ public class User {
                 this.getCity() + " " + this.getState() + " " + 
                 this.getZip();
     }
+    
+    public String getDelimitedAddress() {
+        String[] address = {this.getAddr1(),this.getCity(),this.getState(), this.getZip()};
+        StringJoiner joiner = new StringJoiner("|");
+        joiner.add(this.getAddr1());
+        joiner.add(this.getCity());
+        joiner.add(this.getState());
+        joiner.add(this.getZip());
+        return joiner.toString();
+    }
 
     public User selectUser() throws SQLException {
         DBconnect dbo = new DBconnect();       
@@ -260,7 +272,62 @@ public class User {
         dbo.disconnect();
         return this;
     }
+    public User insertUser() throws SQLException {
+        
+        DBconnect dbo = new DBconnect();
+        dbo.connect();
+        PreparedStatement query = dbo.getCon().prepareStatement("INSERT INTO " + dbo.getDbName() + "." + table
+            + "(fname, lname, pnumber, address, ssn, securityID, emailID, userPassword) VALUES (?,?,?,?,?,?,?,?)");
+        query.setString(1, this.fname);
+        query.setString(2, this.lname);
+        query.setString(3, this.phone);
+        query.setString(4, this.getDelimitedAddress());
+        query.setString(5, this.SSN);
+        query.setInt(6, this.securityID.getId());
+        query.setString(7, this.email);
+        query.setString(8, this.password);
+
+        ResultSet results = dbo.insertUpdate(query);
+        if(results.next()) {
+            this.id = results.getInt(1);
+        }
+        dbo.disconnect();
+        return this;
+    }
     
+    public User updateUser() throws SQLException {
+        
+        DBconnect dbo = new DBconnect();
+        dbo.connect();
+        PreparedStatement query = dbo.getCon().prepareStatement("UPDATE" + dbo.getDbName() + "." + table
+            + "SET fname = ?, lname = ?, pnumber = ?, address = ?, ssn = ?, securityID = ?, " +
+            "emailID = ?, userPassword = ? WHERE ID = ?");
+        query.setString(1, this.fname);
+        query.setString(2, this.lname);
+        query.setString(3, this.phone);
+        query.setString(4, this.getDelimitedAddress());
+        query.setString(5, this.SSN);
+        query.setInt(6, this.securityID.getId());
+        query.setString(7, this.email);
+        query.setString(8, this.password);
+        query.setInt(9, this.id);
+
+        ResultSet results = dbo.insertUpdate(query);
+        dbo.disconnect();
+        return this;
+    }
+    public User deleteUser() throws SQLException {
+        
+        DBconnect dbo = new DBconnect();
+        dbo.connect();
+        PreparedStatement query = dbo.getCon().prepareStatement("DELETE FROM " + dbo.getDbName() + "." + table +
+            " WHERE ID = ?");
+
+        query.setInt(1, this.id);
+        dbo.delete(query);
+        dbo.disconnect();
+        return this;
+    }
     private void writeResultSet(ResultSet resultSet) throws SQLException {
         while (resultSet.next()) {
             this.id = resultSet.getInt("ID");
