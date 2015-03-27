@@ -5,6 +5,9 @@
  */
 package medfile;
 
+import Classes.Appointment;
+import Classes.Patient;
+import Classes.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import static medfile.patientSearch.conn;
+
 
 /**
  *
@@ -29,12 +32,12 @@ static Connection conn = null;
         String time = null;
         String created=null;
         String creator=null;
+        Appointment search = new Appointment();
     /**
      * Creates new form viewAppointment
      */
     public viewAppointment() {
         initComponents();
-          conn = Connect.getConnect();
         model = (DefaultTableModel) ResultTab.getModel();
     }
 
@@ -154,7 +157,7 @@ static Connection conn = null;
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(11, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jButton1))
@@ -194,55 +197,28 @@ static Connection conn = null;
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
     try {
-        // TODO add your handling code here:
         model.setRowCount(0);
-        // TODO add your handling code here:
-//        String PatientID = null;
-//        String DOB = null;
-//        String InsuranceProvider = null;
-//        String InsuranceID = null;
-//       
-//        if(!fname.getText().trim().equals(""))
-//        {    
-//            fname= fname.getText().toString();
-//             
-//        }
-//        if(!lname.getText().trim().equals(""))
-//        {
-//            lname = Book_title.getText().toString();
-//        }
-//                          
-//        if(!pnumber.getText().trim().equals(""))
-//        { 
-//                pnumber= Author_name.getText().toString();
-//        }
-//         if(!emailid.getText().trim().equals("")) 
-//
-//        { 
-//                emailid= Author_Fname.getText().toString();
-//        }
-          
-        String SQL= "SELECT a.patientID, a .doctorID,a.appointmentTime,a.timecreated,a.creatorID  FROM MedFiles.appointment AS a Where a.patientID like '%"+patientid.getText()+"%' and  a.doctorID like '%"+doctorid.getText()+"%' ;";
-        stmt = conn.prepareStatement(SQL);
-//        System.out.println("SQL is "+stmt);
-        
-        ResultSet rs = null;
-        //  System.out.println(stmt);
+
+        if(!patientid.getText().equals("")) {
+            search.setPatient(new Patient(Integer.parseInt(patientid.getText())));
+        }
+        if(!doctorid.getText().equals("")) {
+            search.setDoctor(new User(Integer.parseInt(doctorid.getText())));
+        }
+        search.searchAppt();
         String patientid=null;
         String doctorid=null;
         String appointmenttime = null;
         String timecreated=null;
         String creatorid=null;
         int z=0;
-        rs = stmt.executeQuery();
-        //System.out.println(rs);
-        
-        while (rs.next()) {
-            patientid = rs.getString("patientID");
-            doctorid = rs.getString("doctorID");
-            appointmenttime = rs.getString("appointmentTime");
-            timecreated = rs.getString("timecreated");
-            creatorid = rs.getString("creatorID");
+        for (int i = 0; i < search.getListOfAppts().size(); i++) {
+            Appointment tmp = search.getListOfAppts().get(i);
+            patientid = Integer.toString(tmp.getPatient().getPatientID());
+            doctorid = Integer.toString(tmp.getDoctor().getId());
+            appointmenttime = tmp.getApptTime().toString();
+            timecreated = tmp.getCreatedTime().toString();
+            creatorid = Integer.toString(tmp.getCreator().getId());
             
             model.addRow(new Object[]{
                 patientid,
@@ -343,7 +319,7 @@ static Connection conn = null;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable ResultTab;
-    private javax.swing.JTextField doctorid;
+    public static javax.swing.JTextField doctorid;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -354,6 +330,6 @@ static Connection conn = null;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField patientid;
+    public static javax.swing.JTextField patientid;
     // End of variables declaration//GEN-END:variables
 }

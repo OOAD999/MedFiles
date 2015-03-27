@@ -6,6 +6,7 @@
 package Classes;
 
 import Classes.DBconnect;
+import com.mysql.jdbc.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,6 +30,7 @@ public class User {
     private String state;
     private String zip;
     private String fullAddress;
+    private String address;
     private SecurityProfile securityID;
     private String table = "user";
 
@@ -96,6 +98,16 @@ public class User {
      */
     public void setFName(String name) {
         this.fname = name;
+    }
+    public String getAddress() {
+        return this.address;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setAddress(String address) {
+        this.address = address;
     }
     
         /**
@@ -260,7 +272,7 @@ public class User {
         joiner.add(this.getZip());
         return joiner.toString();
     }
-
+    
     public User selectUser() throws SQLException {
         DBconnect dbo = new DBconnect();       
         dbo.connect();
@@ -277,11 +289,11 @@ public class User {
         DBconnect dbo = new DBconnect();
         dbo.connect();
         PreparedStatement query = dbo.getCon().prepareStatement("INSERT INTO " + dbo.getDbName() + "." + table
-            + "(fname, lname, pnumber, address, ssn, securityID, emailID, userPassword) VALUES (?,?,?,?,?,?,?,?)");
+            + " (fname, lname, pnumber, address, ssn, securityID, emailID, userPassword) VALUES (?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
         query.setString(1, this.fname);
         query.setString(2, this.lname);
         query.setString(3, this.phone);
-        query.setString(4, this.getDelimitedAddress());
+        query.setString(4, this.address);
         query.setString(5, this.SSN);
         query.setInt(6, this.securityID.getId());
         query.setString(7, this.email);
@@ -305,7 +317,7 @@ public class User {
         query.setString(1, this.fname);
         query.setString(2, this.lname);
         query.setString(3, this.phone);
-        query.setString(4, this.getDelimitedAddress());
+        query.setString(4, this.address);
         query.setString(5, this.SSN);
         query.setInt(6, this.securityID.getId());
         query.setString(7, this.email);

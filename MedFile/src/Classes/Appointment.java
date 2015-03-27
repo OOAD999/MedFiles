@@ -9,6 +9,7 @@ import Classes.DBconnect;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -22,6 +23,7 @@ public class Appointment {
     private Date createdTime;
     private User creator;
     private String table = "appointment";
+    private ArrayList<Appointment> listOfAppts;
 
     public Appointment() {
     }
@@ -101,6 +103,34 @@ public class Appointment {
         this.creator = creator;
     }
 
+    public Appointment searchAppt() throws SQLException {
+        DBconnect dbo = new DBconnect();
+        dbo.connect();
+        PreparedStatement query = dbo.getCon().prepareStatement("SELECT * FROM " + dbo.getDbName() + "." + table
+            + " WHERE patientID = ? OR doctorID = ?");
+        if(this.patient != null) {
+            query.setInt(1, this.patient.getPatientID());
+        }
+        else {
+            query.setInt(1, 0);
+        }
+        if(this.doctor != null) {
+            query.setInt(2, this.doctor.getId());
+        }
+        else {
+            query.setInt(2, 0);
+        }
+        ResultSet results = dbo.select(query);
+        writeResultSetList(results);
+        dbo.disconnect();
+        
+        for(int i = 0; i < this.listOfAppts.size(); i++) {
+            this.listOfAppts.get(i).getPatient().selectPatient();
+            this.listOfAppts.get(i).getDoctor().selectUser();
+            this.listOfAppts.get(i).getCreator().selectUser();
+        }
+        return this;
+    }
     public Appointment selectAppt(int patientID) throws SQLException {
         String where = "pateintID = " + patientID;
         DBconnect dbo = new DBconnect();
@@ -171,7 +201,33 @@ public class Appointment {
             this.doctor = new User(resultSet.getInt("doctorID"));
             this.apptTime = resultSet.getDate("appointmentTime");
             this.createdTime = resultSet.getDate("timeCreated");
-            this.creator = new Patient(resultSet.getInt("creatorID"));
+            this.creator = new User(resultSet.getInt("creatorID"));
         }
+    }
+    private void writeResultSetList(ResultSet resultSet) throws SQLException {
+        this.listOfAppts = new ArrayList<Appointment>();
+        while (resultSet.next()) {
+            Appointment tmp = new Appointment();
+            tmp.setPatient(new Patient(resultSet.getInt("ID")));
+            tmp.setDoctor(new User(resultSet.getInt("doctorID")));
+            tmp.setApptTime(resultSet.getDate("appointmentTime"));
+            tmp.setCreatedTime(resultSet.getDate("timeCreated"));
+            tmp.setCreator(new Patient(resultSet.getInt("creatorID")));
+            this.listOfAppts.add(tmp);
+        }
+    }
+
+    /**
+     * @return the listOfAppts
+     */
+    public ArrayList<Appointment> getListOfAppts() {
+        return listOfAppts;
+    }
+
+    /**
+     * @param listOfAppts the listOfAppts to set
+     */
+    public void setListOfAppts(ArrayList<Appointment> listOfAppts) {
+        this.listOfAppts = listOfAppts;
     }
 }

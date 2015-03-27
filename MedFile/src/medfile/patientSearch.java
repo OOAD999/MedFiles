@@ -5,10 +5,13 @@
  */
 package medfile;
 
+import Classes.Patient;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
@@ -18,16 +21,13 @@ import javax.swing.table.DefaultTableModel;
  * @author ashwinrameshkumar
  */
 public class patientSearch extends javax.swing.JFrame {
-static Connection conn = null;
         DefaultTableModel model = null;
-            PreparedStatement stmt = null;
 
     /**
      * Creates new form patientSearch
      */
     public patientSearch() {
         initComponents();
-        conn = Connect.getConnect();
         model = (DefaultTableModel) ResultTab.getModel();
     }
 
@@ -199,53 +199,36 @@ static Connection conn = null;
     try {
         // TODO add your handling code here:
         model.setRowCount(0);
-        // TODO add your handling code here:
-//        String PatientID = null;
-//        String DOB = null;
-//        String InsuranceProvider = null;
-//        String InsuranceID = null;
-//       
-//        if(!fname.getText().trim().equals(""))
-//        {    
-//            fname= fname.getText().toString();
-//             
-//        }
-//        if(!lname.getText().trim().equals(""))
-//        {
-//            lname = Book_title.getText().toString();
-//        }
-//                          
-//        if(!pnumber.getText().trim().equals(""))
-//        { 
-//                pnumber= Author_name.getText().toString();
-//        }
-//         if(!emailid.getText().trim().equals("")) 
-//
-//        { 
-//                emailid= Author_Fname.getText().toString();
-//        }
-          
-        String SQL= "SELECT a.patientID, a .userID,a.dob,a.insuranceProvider,a.insuranceMemberID  FROM MedFiles.patient AS a Where a.patientID like '%"+PatientID.getText()+"%' and  a.dob like '%"+DOB.getText()+"%' and a.insuranceProvider like '%"+InsuranceProvider.getText()+"%' and a.insuranceMemberID like '%"+InsuranceID.getText()+"%' ;";
-        stmt = conn.prepareStatement(SQL);
-//        System.out.println("SQL is "+stmt);
+        Patient search = new Patient();
+        if(!PatientID.getText().equals("")) {
+            search.setPatientID(Integer.parseInt(PatientID.getText()));
+        }
+        if(!(DOB.getText().equals(""))) {
+            search.setDob(new Date(DOB.getText()));
+        }
+        if(!InsuranceProvider.getText().equals("")) {
+            search.setInsuranceProvider(InsuranceProvider.getText());
+        }
+        if(!InsuranceID.getText().equals("")) {
+            search.setInsuranceID(InsuranceID.getText());
+        }
+        search.search();
         
-        ResultSet rs = null;
-        //  System.out.println(stmt);
         String patientid=null;
         String userid=null;
         String dob = null;
         String insuranceprovider=null;
         String insuranceid=null;
         int z=0;
-        rs = stmt.executeQuery();
         //System.out.println(rs);
-        
-        while (rs.next()) {
-            patientid = rs.getString("patientID");
-            userid = rs.getString("userID");
-            dob = rs.getString("dob");
-            insuranceprovider = rs.getString("insuranceProvider");
-            insuranceid = rs.getString("insuranceMemberID");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+        for (int i = 0; i < search.getListOfPatients().size(); i++) {
+            Patient tmp = search.getListOfPatients().get(i);
+            patientid = Integer.toString(tmp.getPatientID());
+            userid = Integer.toString(tmp.getId());
+            dob = dateFormat.format(tmp.getDob());
+            insuranceprovider = tmp.getInsuranceProvider();
+            insuranceid = tmp.getInsuranceID();
             
             model.addRow(new Object[]{
                 patientid,
@@ -306,10 +289,10 @@ static Connection conn = null;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField DOB;
-    private javax.swing.JTextField InsuranceID;
-    private javax.swing.JTextField InsuranceProvider;
-    private javax.swing.JTextField PatientID;
+    public static javax.swing.JTextField DOB;
+    public static javax.swing.JTextField InsuranceID;
+    public static javax.swing.JTextField InsuranceProvider;
+    public static javax.swing.JTextField PatientID;
     private javax.swing.JTable ResultTab;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

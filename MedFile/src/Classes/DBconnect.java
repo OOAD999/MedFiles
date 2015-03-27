@@ -91,7 +91,7 @@ public class DBconnect {
         if (this.connect()) {
             try {
                 query.executeUpdate();
-                resultSet = state.getGeneratedKeys();
+                resultSet = query.getGeneratedKeys();
             } catch (SQLException ex) {
                 Logger lgr = Logger.getLogger(Version.class.getName());
                 lgr.log(Level.SEVERE, ex.getMessage(), ex);

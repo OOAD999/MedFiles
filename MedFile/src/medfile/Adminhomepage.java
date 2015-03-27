@@ -5,17 +5,20 @@
  */
 package medfile;
 
+import Classes.Patient;
+
 /**
  *
  * @author ashwinrameshkumar
  */
 public class Adminhomepage extends javax.swing.JFrame {
-
+    static Patient user;
     /**
      * Creates new form Adminhomepage
      */
-    public Adminhomepage() {
+    public Adminhomepage(Patient user) {
         initComponents();
+        this.user = user;
     }
 
     /**
@@ -149,7 +152,7 @@ public class Adminhomepage extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Adminhomepage().setVisible(true);
+                new Adminhomepage(user).setVisible(true);
             }
         });
     }

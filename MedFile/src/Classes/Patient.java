@@ -6,9 +6,11 @@
 package Classes;
 
 import Classes.DBconnect;
+import com.mysql.jdbc.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -21,6 +23,7 @@ public class Patient extends User{
     private String insuranceProvider;
     private String insuranceID;
     private String table = "patient";
+    private ArrayList<Patient> listOfPatients;
 
     public Patient() {
     }
@@ -299,13 +302,39 @@ public class Patient extends User{
         
         return this;
     }
-    
+    public Patient search() throws SQLException {
+        
+        DBconnect dbo = new DBconnect();
+        dbo.connect();
+        PreparedStatement query = dbo.getCon().prepareStatement("SELECT * FROM " + dbo.getDbName() + "." + table
+            + " WHERE patientID = ? OR dob = ?" 
+            + " OR insuranceProvider like ? OR insuranceMemberID like ?");
+        
+        query.setInt(1, this.patientID);  
+        if(this.dob != null) {
+            query.setDate(2, new java.sql.Date(this.dob.getTime()));
+        }
+        else {
+            query.setDate(2, new java.sql.Date(new Date().getTime()));
+        }
+        query.setString(3, "%" + this.insuranceProvider);
+        query.setString(4, "%" + this.insuranceID);
+        ResultSet results = dbo.select(query);
+        writeResultSetList(results);
+        dbo.disconnect();
+        
+        for(int i = 0; i < this.listOfPatients.size(); i++) {
+            this.listOfPatients.get(i).selectUser();
+        }
+       
+        return this;
+    }
     public Patient insertPatient() throws SQLException {
         
         DBconnect dbo = new DBconnect();
         dbo.connect();
         PreparedStatement query = dbo.getCon().prepareStatement("INSERT INTO " + dbo.getDbName() + "." + table
-            + "(userID, dob, insuranceProvider, insuranceMemberID) VALUES (?,?,?,?)");
+            + "(userID, dob, insuranceProvider, insuranceMemberID) VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
         query.setInt(1, this.getId());
         query.setDate(2, new java.sql.Date(this.dob.getTime()));
         query.setString(3, this.insuranceProvider);
@@ -352,7 +381,31 @@ public class Patient extends User{
             super.setId(resultSet.getInt("userID"));
             this.dob = resultSet.getDate("dob");
             this.insuranceProvider = resultSet.getString("insuranceProvider");
-            this.insuranceID = resultSet.getString("insuranceMemberID");
+            this.insuranceID = resultSet.getString("insuranceMemberID");                  
         }
+    }
+    private void writeResultSetList(ResultSet resultSet) throws SQLException {
+        this.listOfPatients = new ArrayList<Patient>();
+        while (resultSet.next()) {
+            Patient tmp = new Patient(resultSet.getInt("patientID"));
+            tmp.setId(resultSet.getInt("userID"));
+            tmp.setDob(resultSet.getDate("dob"));
+            tmp.setInsuranceProvider(resultSet.getString("insuranceProvider"));
+            tmp.setInsuranceID(resultSet.getString("insuranceMemberID"));
+            this.listOfPatients.add(tmp);
+        }
+    }
+    /**
+     * @return the listOfPatients
+     */
+    public ArrayList<Patient> getListOfPatients() {
+        return listOfPatients;
+    }
+
+    /**
+     * @param listOfPatients the listOfPatients to set
+     */
+    public void setListOfPatients(ArrayList<Patient> listOfPatients) {
+        this.listOfPatients = listOfPatients;
     }
 }

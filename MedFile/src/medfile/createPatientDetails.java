@@ -5,9 +5,13 @@
  */
 package medfile;
 
+import Classes.Patient;
+import Classes.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -17,15 +21,14 @@ import javax.swing.JOptionPane;
  * @author ashwinrameshkumar
  */
 public class createPatientDetails extends javax.swing.JFrame {
-  PreparedStatement stmt = null;
-    Connection conn = null;
+    static Patient patient;
 
     /**
      * Creates new form createPatientDetails
      */
-    public createPatientDetails() {
+    public createPatientDetails(Patient user) {
         initComponents();
-                conn = Connect.getConnect();
+                patient = user;
 
     }
 
@@ -157,12 +160,17 @@ public class createPatientDetails extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
       try {
           // TODO add your handling code here:
-          String SQL = "INSERT into MedFiles.patient (userID,dob,insuranceProvider,insuranceMemberID)values('" + userid.getText() + "','" + dob.getText() + "','" + insuranceprovider.getText() + "','" + insuranceid.getText()+"' );";
-          stmt = conn.prepareStatement(SQL);
+          SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
           
-          stmt.executeUpdate();
+          patient.setDob(new Date(dob.getText()));
+          patient.setInsuranceID(insuranceid.getText());
+          patient.setInsuranceProvider(insuranceprovider.getText());
+          
+          patient.insertPatient();
           JOptionPane.showMessageDialog(this, "Patient record Successfully created");
           dispose();
+          Adminhomepage home = new Adminhomepage(patient);
+          home.setVisible(true);
       } catch (SQLException ex) {
           Logger.getLogger(createPatientDetails.class.getName()).log(Level.SEVERE, null, ex);
       }
@@ -212,7 +220,7 @@ public class createPatientDetails extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new createPatientDetails().setVisible(true);
+                new createPatientDetails(patient).setVisible(true);
             }
         });
     }

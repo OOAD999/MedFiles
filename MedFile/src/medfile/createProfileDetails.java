@@ -5,6 +5,8 @@
  */
 package medfile;
 
+import Classes.Patient;
+import Classes.SecurityProfile;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -18,15 +20,13 @@ import javax.swing.JOptionPane;
  * @author ashwinrameshkumar
  */
 public class createProfileDetails extends javax.swing.JFrame {
-PreparedStatement stmt = null;
-    Connection conn = null;
+    Patient newUser;
     /**
      * Creates new form createPatientDetails
      */
     public createProfileDetails() {
         initComponents();
-                        conn = Connect.getConnect();
-                        groupButton();
+        groupButton();
 
     }
 private void groupButton( ) {
@@ -271,31 +271,26 @@ bg1.add(patient);
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
     try {
         // TODO add your handling code here:
-      String radioval = null;
+        newUser = new Patient();
+        newUser.setFName(fname.getText());
+        newUser.setLName(lname.getText());
+        newUser.setPhone(pnumber.getText());
+        newUser.setAddress(address.getText());
+        newUser.setSSN(ssn.getText());
+        newUser.setEmail(emailid.getText());
+        newUser.setPassword(password.getText());
+        
       if(admin.isSelected())
       {
-          radioval = admin.getText();
-          radioval = "2";
-          String SQL = "INSERT into MedFiles.user (fname,lname,pnumber,address,ssn,securityID,emailID,userPassword)values('" + fname.getText() + "','" + lname.getText() + "','" + pnumber.getText() + "','" + address.getText()+"','" + radioval+"','" + ssn.getText()+"','" +emailid.getText()+"','" + password.getText()+"' );";
-        stmt = conn.prepareStatement(SQL);
-        
-        stmt.executeUpdate();
-        JOptionPane.showMessageDialog(this, "Profile Successfully created");
-        dispose();
-      }
-      
+          newUser.setSecurityID(new SecurityProfile(2));
+      }     
       else if (patient.isSelected())
       {
-          radioval = patient.getText();
-          radioval = "1";
-          String SQL = "INSERT into MedFiles.user (fname,lname,pnumber,address,ssn,securityID,emailID,userPassword)values('" + fname.getText() + "','" + lname.getText() + "','" + pnumber.getText() + "','" + address.getText()+"','" + ssn.getText()+"','" + radioval+"','" +emailid.getText()+"','" + password.getText()+"' );";
-        stmt = conn.prepareStatement(SQL);
-        
-        stmt.executeUpdate();
-        JOptionPane.showMessageDialog(this, "Profile Successfully created");
-        dispose();
+          newUser.setSecurityID(new SecurityProfile(1));
       }
-        
+      newUser.insertUser();
+       JOptionPane.showMessageDialog(this, "Profile Successfully created");
+
     } catch (SQLException ex) {
         Logger.getLogger(createProfileDetails.class.getName()).log(Level.SEVERE, null, ex);
     }
@@ -340,7 +335,7 @@ bg1.add(patient);
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         dispose();
-        createProfileDetails profdet = new createProfileDetails();
+        createPatientDetails profdet = new createPatientDetails(newUser);
         profdet.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
 

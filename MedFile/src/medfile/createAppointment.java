@@ -5,6 +5,9 @@
  */
 package medfile;
 
+import Classes.Appointment;
+import Classes.Patient;
+import Classes.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -50,11 +53,11 @@ public class createAppointment extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         patientid = new javax.swing.JTextField();
         doctorid = new javax.swing.JTextField();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("New Appointment");
@@ -72,8 +75,6 @@ public class createAppointment extends javax.swing.JFrame {
                 patientidActionPerformed(evt);
             }
         });
-
-        jDateChooser1.setDateFormatString("yyyy-MM-dd");
 
         jLabel4.setText("Appointment");
 
@@ -105,7 +106,7 @@ public class createAppointment extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(259, 259, 259)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 194, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(23, 23, 23))
             .addGroup(layout.createSequentialGroup()
@@ -119,13 +120,17 @@ public class createAppointment extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(234, 234, 234)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(doctorid)
-                        .addComponent(patientid)
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(doctorid, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                                .addComponent(patientid))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(160, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -143,11 +148,11 @@ public class createAppointment extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(doctorid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -178,11 +183,13 @@ public class createAppointment extends javax.swing.JFrame {
 
             String todaydate = dateFormat.format(today);
             String appointmentdate = dateFormat.format(dates);
-            System.out.println(todaydate);
-            System.out.println(appointmentdate);
+            
+            Appointment appt = new Appointment();
+            appt.setCreatedTime(today);
+            appt.setApptTime(jDateChooser1.getDate());
+            appt.setPatient(new Patient(Integer.parseInt(patientid.getText())));
+            appt.setDoctor(new User(Integer.parseInt(doctorid.getText())));
 
-            String SQL = "INSERT into MedFiles.appointment (patientID,doctorID,appointmentTime,timecreated,creatorID)values('" + patientid.getText() + "','" + doctorid.getText() + "','" + appointmentdate + "','" + todaydate + "','" + patientid.getText() + "');";
-            System.out.println(SQL);
             if(appointmentdate.compareTo(todaydate)<00)
             {
               JOptionPane.showMessageDialog(this, "Appointment date is before current date" , "Error", JOptionPane.ERROR_MESSAGE);
@@ -190,11 +197,9 @@ public class createAppointment extends javax.swing.JFrame {
             }
             else
             {
-                 stmt = conn.prepareStatement(SQL);
-
-            stmt.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Appointment Successfully created");
-            dispose();
+                appt.insertAppointment();
+                JOptionPane.showMessageDialog(this, "Appointment Successfully created");
+                dispose();
             }
            
         } catch (SQLException ex) {
