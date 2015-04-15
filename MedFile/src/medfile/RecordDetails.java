@@ -8,6 +8,8 @@ package medfile;
 
 import javax.swing.table.DefaultTableModel;
 import Classes.Record;
+import Classes.DBconnect;
+import Classes.Patient;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -23,11 +25,13 @@ public class RecordDetails extends javax.swing.JFrame {
     /**
      * Creates new form RecordDetails
      */
-    public RecordDetails() throws SQLException {
+    public static Patient patient;
+    public RecordDetails(Patient patient) throws SQLException {
+        this.patient = patient;
         initComponents();
         model = (DefaultTableModel)recordstable.getModel();
-        Record record = new Record();
-        ArrayList<Record> records = record.selectRecords(1);
+        
+        ArrayList<Record> records = patient.getAllRecords();
         if(!(records.isEmpty())) {
             for(int i = 0; i < records.size(); i++) {
                 Record tmp = records.get(i);
@@ -59,7 +63,7 @@ public class RecordDetails extends javax.swing.JFrame {
 
         jScrollPane2 = new javax.swing.JScrollPane();
         recordstable = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        downloadReport = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
 
@@ -76,10 +80,10 @@ public class RecordDetails extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(recordstable);
 
-        jButton1.setText("Download Report");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        downloadReport.setText("Download Report");
+        downloadReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                downloadReportActionPerformed(evt);
             }
         });
 
@@ -106,7 +110,7 @@ public class RecordDetails extends javax.swing.JFrame {
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 370, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(downloadReport, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(369, 369, 369))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -125,16 +129,16 @@ public class RecordDetails extends javax.swing.JFrame {
                 .addGap(27, 27, 27)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
+                .addComponent(downloadReport)
                 .addGap(48, 48, 48))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void downloadReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadReportActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_downloadReportActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
@@ -174,18 +178,17 @@ public class RecordDetails extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    new RecordDetails().setVisible(true);
+                try {                
+                    new RecordDetails(patient).setVisible(true);
                 } catch (SQLException ex) {
                     Logger.getLogger(RecordDetails.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton downloadReport;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;

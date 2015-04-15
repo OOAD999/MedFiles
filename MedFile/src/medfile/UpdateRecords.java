@@ -8,7 +8,6 @@ package medfile;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
-import static medfile.createRecords.conn;
 
 /**
  *
@@ -158,17 +157,16 @@ static Connection conn ;
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(bp)
                             .addComponent(date, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(id, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(patientid)
-                                .addComponent(doctorid)
-                                .addComponent(height)
-                                .addComponent(weight)
-                                .addComponent(visit)
-                                .addComponent(cholesterol)
-                                .addComponent(note)
-                                .addComponent(diag)
-                                .addComponent(labnote, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
+                            .addComponent(id, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(patientid)
+                            .addComponent(doctorid)
+                            .addComponent(height)
+                            .addComponent(weight)
+                            .addComponent(visit)
+                            .addComponent(cholesterol)
+                            .addComponent(note)
+                            .addComponent(diag)
+                            .addComponent(labnote, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
                             .addComponent(location))))
                 .addContainerGap(108, Short.MAX_VALUE))
         );
@@ -180,9 +178,9 @@ static Connection conn ;
                     .addComponent(jLabel1)
                     .addComponent(jButton1))
                 .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(id, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(id, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -251,7 +249,7 @@ static Connection conn ;
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-         patientid.setText("");
+        patientid.setText("");
         doctorid.setText("");
         height.setText("");
         weight.setText("");
@@ -260,18 +258,12 @@ static Connection conn ;
         cholesterol.setText("");
         visit.setText("");
         diag.setText("");
-       note.setText("");
+        note.setText("");
         labnote.setText("");
         date.setCalendar(null);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-            String sql= "UPDATE MedFiles.record patientID = '"+patientid.getText()+"' ,recordDate = '"+date.getDate()+"',doctorID ='"+doctorid.getText()+"' ,location = '"+location.getText()+"' ,height = '"+height.getText()+"',weight = '"+weight.getText()+"',bloodPressure ='"+bp.getText()+"' ,cholesterol = '"+cholesterol.getText()+"',reasonforVisit = '"+visit.getText()+"',doctorDiagnosis = '"+diag.getText()+"',doctorNote = '"+note.getText()+"',labNote = '"+labnote.getText()+"'WHERE id = "+id.getText()+" ;";
-                               stmt = conn.prepareStatement(sql);
-                               System.out.println(stmt);
-                                stmt.executeUpdate();
-                                            JOptionPane.showMessageDialog(this,"Record successfuly uodated");
 
     }//GEN-LAST:event_jButton2ActionPerformed
 

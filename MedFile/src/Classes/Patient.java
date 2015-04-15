@@ -23,13 +23,16 @@ public class Patient extends User{
     private String insuranceProvider;
     private String insuranceID;
     private String table = "patient";
-    private ArrayList<Patient> listOfPatients;
+    private ArrayList<Record> records;
+    private DBconnect dbo = new DBconnect();
 
     public Patient() {
+        this.records = new ArrayList<Record>();
     }
 
-    public Patient(int patientID) {
-        this.patientID = patientID;
+    public Patient(int ID) {
+        super.setId(ID);
+        this.records = new ArrayList<Record>();
     }
 
     /**
@@ -286,126 +289,21 @@ public class Patient extends User{
     public String getFullAddress() {
         return super.getFullAddress();
     }
-    
-    public Patient selectPatient() throws SQLException {
-        
-        DBconnect dbo = new DBconnect();
-        dbo.connect();
-        PreparedStatement query = dbo.getCon().prepareStatement("SELECT * FROM " + dbo.getDbName() + "." + table
-            + " WHERE patientID = ?");
-        query.setInt(1, this.patientID);             
-        ResultSet results = dbo.select(query);
-        writeResultSet(results);
-        dbo.disconnect();
-        
-        super.selectUser();
-        
-        return this;
-    }
-    public Patient search() throws SQLException {
-        
-        DBconnect dbo = new DBconnect();
-        dbo.connect();
-        PreparedStatement query = dbo.getCon().prepareStatement("SELECT * FROM " + dbo.getDbName() + "." + table
-            + " WHERE patientID = ? OR dob = ?" 
-            + " OR insuranceProvider like ? OR insuranceMemberID like ?");
-        
-        query.setInt(1, this.patientID);  
-        if(this.dob != null) {
-            query.setDate(2, new java.sql.Date(this.dob.getTime()));
-        }
-        else {
-            query.setDate(2, new java.sql.Date(new Date().getTime()));
-        }
-        query.setString(3, "%" + this.insuranceProvider);
-        query.setString(4, "%" + this.insuranceID);
-        ResultSet results = dbo.select(query);
-        writeResultSetList(results);
-        dbo.disconnect();
-        
-        for(int i = 0; i < this.listOfPatients.size(); i++) {
-            this.listOfPatients.get(i).selectUser();
-        }
-       
-        return this;
-    }
-    public Patient insertPatient() throws SQLException {
-        
-        DBconnect dbo = new DBconnect();
-        dbo.connect();
-        PreparedStatement query = dbo.getCon().prepareStatement("INSERT INTO " + dbo.getDbName() + "." + table
-            + "(userID, dob, insuranceProvider, insuranceMemberID) VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-        query.setInt(1, this.getId());
-        query.setDate(2, new java.sql.Date(this.dob.getTime()));
-        query.setString(3, this.insuranceProvider);
-        query.setString(4, this.insuranceID);
-        ResultSet results = dbo.insertUpdate(query);
-        if(results.next()) {
-            this.patientID = results.getInt(1);
-        }
-        dbo.disconnect();
-        return this;
-    }
-    
-    public Patient updatePatient() throws SQLException {
-        
-        DBconnect dbo = new DBconnect();
-        dbo.connect();
-        PreparedStatement query = dbo.getCon().prepareStatement("UPDATE " + dbo.getDbName() + "." + table
-            + "SET dob = ?, insuranceProvider = ?, insuranceMemberID = ? WHERE patientID = ?");
-
-        query.setDate(1, new java.sql.Date(this.dob.getTime()));
-        query.setString(2, this.insuranceProvider);
-        query.setString(3, this.insuranceID);
-        query.setInt(4, this.patientID);
-        ResultSet results = dbo.insertUpdate(query);
-        dbo.disconnect();
-        return this;
-    }
-    public Patient deletePatient() throws SQLException {
-        
-        DBconnect dbo = new DBconnect();
-        dbo.connect();
-        PreparedStatement query = dbo.getCon().prepareStatement("DELETE FROM " + dbo.getDbName() + "." + table +
-            " WHERE patientID = ?");
-
-        query.setInt(1, this.patientID);
-        dbo.delete(query);
-        dbo.disconnect();
-        return this;
-    }
-    
-    private void writeResultSet(ResultSet resultSet) throws SQLException {
-        while (resultSet.next()) {
-            this.patientID = resultSet.getInt("patientID");
-            super.setId(resultSet.getInt("userID"));
-            this.dob = resultSet.getDate("dob");
-            this.insuranceProvider = resultSet.getString("insuranceProvider");
-            this.insuranceID = resultSet.getString("insuranceMemberID");                  
-        }
-    }
-    private void writeResultSetList(ResultSet resultSet) throws SQLException {
-        this.listOfPatients = new ArrayList<Patient>();
-        while (resultSet.next()) {
-            Patient tmp = new Patient(resultSet.getInt("patientID"));
-            tmp.setId(resultSet.getInt("userID"));
-            tmp.setDob(resultSet.getDate("dob"));
-            tmp.setInsuranceProvider(resultSet.getString("insuranceProvider"));
-            tmp.setInsuranceID(resultSet.getString("insuranceMemberID"));
-            this.listOfPatients.add(tmp);
-        }
+    public String getDBTable() {
+        return this.table;
     }
     /**
      * @return the listOfPatients
      */
-    public ArrayList<Patient> getListOfPatients() {
-        return listOfPatients;
+    public ArrayList<Record> getRecords() {
+        return this.records;
+    }
+    public void setRecords(ArrayList<Record> records) {
+        this.records = records;
+    }
+    public ArrayList<Record> getAllRecords() throws SQLException {
+        this.records = dbo.selectRecords(this);
+        return this.records;
     }
 
-    /**
-     * @param listOfPatients the listOfPatients to set
-     */
-    public void setListOfPatients(ArrayList<Patient> listOfPatients) {
-        this.listOfPatients = listOfPatients;
-    }
 }

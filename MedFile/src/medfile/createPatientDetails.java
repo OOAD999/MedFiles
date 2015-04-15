@@ -7,9 +7,7 @@ package medfile;
 
 import Classes.Patient;
 import Classes.User;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import Classes.DBconnect;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
@@ -158,7 +156,6 @@ public class createPatientDetails extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-      try {
           // TODO add your handling code here:
           SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
           
@@ -166,14 +163,11 @@ public class createPatientDetails extends javax.swing.JFrame {
           patient.setInsuranceID(insuranceid.getText());
           patient.setInsuranceProvider(insuranceprovider.getText());
           
-          patient.insertPatient();
+       //   patient.insertPatient();
           JOptionPane.showMessageDialog(this, "Patient record Successfully created");
           dispose();
           Adminhomepage home = new Adminhomepage(patient);
           home.setVisible(true);
-      } catch (SQLException ex) {
-          Logger.getLogger(createPatientDetails.class.getName()).log(Level.SEVERE, null, ex);
-      }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed

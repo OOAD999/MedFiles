@@ -61,18 +61,16 @@
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="bp" max="32767" attributes="0"/>
                           <Component id="date" alignment="0" max="32767" attributes="0"/>
-                          <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="id" max="32767" attributes="0"/>
-                              <Component id="patientid" max="32767" attributes="0"/>
-                              <Component id="doctorid" alignment="0" max="32767" attributes="0"/>
-                              <Component id="height" alignment="0" max="32767" attributes="0"/>
-                              <Component id="weight" alignment="0" max="32767" attributes="0"/>
-                              <Component id="visit" alignment="0" max="32767" attributes="0"/>
-                              <Component id="cholesterol" alignment="0" max="32767" attributes="0"/>
-                              <Component id="note" alignment="0" max="32767" attributes="0"/>
-                              <Component id="diag" alignment="0" max="32767" attributes="0"/>
-                              <Component id="labnote" alignment="0" pref="121" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="id" max="32767" attributes="0"/>
+                          <Component id="patientid" max="32767" attributes="0"/>
+                          <Component id="doctorid" alignment="0" max="32767" attributes="0"/>
+                          <Component id="height" alignment="0" max="32767" attributes="0"/>
+                          <Component id="weight" alignment="0" max="32767" attributes="0"/>
+                          <Component id="visit" alignment="0" max="32767" attributes="0"/>
+                          <Component id="cholesterol" alignment="0" max="32767" attributes="0"/>
+                          <Component id="note" alignment="0" max="32767" attributes="0"/>
+                          <Component id="diag" alignment="0" max="32767" attributes="0"/>
+                          <Component id="labnote" alignment="0" pref="121" max="32767" attributes="0"/>
                           <Component id="location" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -90,9 +88,9 @@
                   <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="id" alignment="0" min="-2" pref="24" max="-2" attributes="0"/>
+                  <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">

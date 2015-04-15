@@ -7,11 +7,11 @@ package medfile;
 
 import Classes.Appointment;
 import Classes.Patient;
+import Classes.SearchModule;
 import Classes.User;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -23,16 +23,14 @@ import javax.swing.table.DefaultTableModel;
  * @author ashwinrameshkumar
  */
 public class viewAppointment extends javax.swing.JFrame {
-static Connection conn = null;
         DefaultTableModel model = null;
-            PreparedStatement stmt = null;
-            ResultSet rs = null;
-            String patient=null;
+        String patient=null;
         String doctor=null;
         String time = null;
         String created=null;
         String creator=null;
-        Appointment search = new Appointment();
+        SearchModule search = new SearchModule();
+        ResultSet rs;
     /**
      * Creates new form viewAppointment
      */
@@ -198,22 +196,22 @@ static Connection conn = null;
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
     try {
         model.setRowCount(0);
-
+        Appointment appt = new Appointment();
         if(!patientid.getText().equals("")) {
-            search.setPatient(new Patient(Integer.parseInt(patientid.getText())));
+            appt.setPatient(new Patient(Integer.parseInt(patientid.getText())));
         }
         if(!doctorid.getText().equals("")) {
-            search.setDoctor(new User(Integer.parseInt(doctorid.getText())));
+            appt.setDoctor(new User(Integer.parseInt(doctorid.getText())));
         }
-        search.searchAppt();
+        ArrayList<Appointment> results = search.searchAppt(appt);
         String patientid=null;
         String doctorid=null;
         String appointmenttime = null;
         String timecreated=null;
         String creatorid=null;
         int z=0;
-        for (int i = 0; i < search.getListOfAppts().size(); i++) {
-            Appointment tmp = search.getListOfAppts().get(i);
+        for (int i = 0; i < results.size(); i++) {
+            Appointment tmp = results.get(i);
             patientid = Integer.toString(tmp.getPatient().getPatientID());
             doctorid = Integer.toString(tmp.getDoctor().getId());
             appointmenttime = tmp.getApptTime().toString();
@@ -268,17 +266,7 @@ static Connection conn = null;
     }//GEN-LAST:event_ResultTabMouseClicked
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-    try {
-        // TODO add your handling code here:
-        
-        String sql= "DELETE * MedFiles.appointment a WHERE a.patientID = "+patient+" AND a.doctorID = "+doctor+" AND a.appointmentTime = "+time+" ANDa.timecreated = "+created+" AND a.creatorID = "+creator+";";
-        stmt = conn.prepareStatement(sql);
-        System.out.println(stmt);
-        stmt.executeUpdate();
-        JOptionPane.showMessageDialog(this,"Appointment Deleted");
-    } catch (SQLException ex) {
-        Logger.getLogger(viewAppointment.class.getName()).log(Level.SEVERE, null, ex);
-    }
+
     }//GEN-LAST:event_jButton4ActionPerformed
 
     /**

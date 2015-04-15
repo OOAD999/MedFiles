@@ -33,6 +33,8 @@ public class User {
     private String address;
     private SecurityProfile securityID;
     private String table = "user";
+    private DBconnect dbo;
+    private Search search;
 
     public User() {
     }
@@ -40,9 +42,8 @@ public class User {
     public User(int id) {
         this.id = id;
     }
-    public User(String email, String password) {
+    public User(String email) {
         this.email = email;
-        this.password = password;
     }
     /**
      * @return the id
@@ -272,90 +273,17 @@ public class User {
         joiner.add(this.getZip());
         return joiner.toString();
     }
-    
-    public User selectUser() throws SQLException {
-        DBconnect dbo = new DBconnect();       
-        dbo.connect();
-        PreparedStatement query = dbo.getCon().prepareStatement("SELECT * FROM " + dbo.getDbName() + "." + table
-            + " WHERE ID = ?");
-        query.setInt(1, this.id);
-        ResultSet results = dbo.select(query);
-        writeResultSet(results);
-        dbo.disconnect();
-        return this;
-    }
-    public User insertUser() throws SQLException {
-        
-        DBconnect dbo = new DBconnect();
-        dbo.connect();
-        PreparedStatement query = dbo.getCon().prepareStatement("INSERT INTO " + dbo.getDbName() + "." + table
-            + " (fname, lname, pnumber, address, ssn, securityID, emailID, userPassword) VALUES (?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-        query.setString(1, this.fname);
-        query.setString(2, this.lname);
-        query.setString(3, this.phone);
-        query.setString(4, this.address);
-        query.setString(5, this.SSN);
-        query.setInt(6, this.securityID.getId());
-        query.setString(7, this.email);
-        query.setString(8, this.password);
-
-        ResultSet results = dbo.insertUpdate(query);
-        if(results.next()) {
-            this.id = results.getInt(1);
-        }
-        dbo.disconnect();
-        return this;
-    }
-    
-    public User updateUser() throws SQLException {
-        
-        DBconnect dbo = new DBconnect();
-        dbo.connect();
-        PreparedStatement query = dbo.getCon().prepareStatement("UPDATE" + dbo.getDbName() + "." + table
-            + "SET fname = ?, lname = ?, pnumber = ?, address = ?, ssn = ?, securityID = ?, " +
-            "emailID = ?, userPassword = ? WHERE ID = ?");
-        query.setString(1, this.fname);
-        query.setString(2, this.lname);
-        query.setString(3, this.phone);
-        query.setString(4, this.address);
-        query.setString(5, this.SSN);
-        query.setInt(6, this.securityID.getId());
-        query.setString(7, this.email);
-        query.setString(8, this.password);
-        query.setInt(9, this.id);
-
-        ResultSet results = dbo.insertUpdate(query);
-        dbo.disconnect();
-        return this;
-    }
-    public User deleteUser() throws SQLException {
-        
-        DBconnect dbo = new DBconnect();
-        dbo.connect();
-        PreparedStatement query = dbo.getCon().prepareStatement("DELETE FROM " + dbo.getDbName() + "." + table +
-            " WHERE ID = ?");
-
-        query.setInt(1, this.id);
-        dbo.delete(query);
-        dbo.disconnect();
-        return this;
-    }
-    private void writeResultSet(ResultSet resultSet) throws SQLException {
-        while (resultSet.next()) {
-            this.id = resultSet.getInt("ID");
-            this.fname = resultSet.getString("fname");
-            this.lname = resultSet.getString("lname");
-            this.phone = resultSet.getString("pnumber");
-            this.SSN = resultSet.getString("ssn");
-            this.securityID = new SecurityProfile(resultSet.getInt("securityID"));
-            this.email = resultSet.getString("emailID");
-            this.password = resultSet.getString("userPassword");
-            
-            String[] address = resultSet.getString("address").split("|");
-            this.addr1 = address[0];
-            this.city = address[1];
-            this.state = address[2];
-            this.zip = address[3];
+    public User login(String password) throws SQLException {
+        search.searchUser(this);
+        if(this.password.equals(password)) {
+            return this;
+        }else {
+            return null;
         }
     }
+    
+    public String getDBTable() {
+        return this.table;
+    }
+    
 }

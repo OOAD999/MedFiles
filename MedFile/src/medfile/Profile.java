@@ -5,10 +5,11 @@
  */
 package medfile;
 
-import java.sql.SQLException;
+import Classes.DBconnect;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Classes.Patient;
+import Classes.User;
 
 /**
  *
@@ -19,12 +20,13 @@ public class Profile extends javax.swing.JFrame {
     /**
      * Creates new form Profile
      */
-    public Profile() throws SQLException {
+    public static Patient patient;
+    public static User user;
+    public Profile(User use, Patient pat) {
+        this.patient = pat;
+        this.user = use;
         initComponents();
-        
-        Patient patient = new Patient(1);
-        patient = patient.selectPatient();
-        
+
         EmailID.setText(patient.getEmail());
         Address.setText(patient.getFullAddress());
         Fname.setText(patient.getFName());
@@ -33,7 +35,6 @@ public class Profile extends javax.swing.JFrame {
         Insuranceprovider.setText(patient.getInsuranceProvider());
         Pnumber.setText(patient.getFormatPhone());
         dob.setText(patient.getDob().toString());      
-
     }
 
     /**
@@ -59,9 +60,9 @@ public class Profile extends javax.swing.JFrame {
         Insuranceprovider = new javax.swing.JLabel();
         InsuranceID = new javax.swing.JLabel();
         EmailID = new javax.swing.JLabel();
-        viewreport = new javax.swing.JButton();
+        viewRecords = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        exit = new javax.swing.JButton();
         Pnumber = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
 
@@ -82,10 +83,10 @@ public class Profile extends javax.swing.JFrame {
 
         jLabel7.setText("Insurance Member ID");
 
-        viewreport.setText("View Report");
-        viewreport.addActionListener(new java.awt.event.ActionListener() {
+        viewRecords.setText("View Records");
+        viewRecords.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                viewreportActionPerformed(evt);
+                viewRecordsActionPerformed(evt);
             }
         });
 
@@ -93,10 +94,10 @@ public class Profile extends javax.swing.JFrame {
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel9.setText("Profile Details");
 
-        jButton3.setText("Exit");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        exit.setText("Exit");
+        exit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                exitActionPerformed(evt);
             }
         });
 
@@ -134,11 +135,11 @@ public class Profile extends javax.swing.JFrame {
                         .addContainerGap(108, Short.MAX_VALUE)
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)))
+                        .addComponent(exit)))
                 .addGap(44, 44, 44))
             .addGroup(layout.createSequentialGroup()
                 .addGap(238, 238, 238)
-                .addComponent(viewreport, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(viewRecords, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -146,7 +147,7 @@ public class Profile extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3)
+                    .addComponent(exit)
                     .addComponent(jLabel9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -181,30 +182,25 @@ public class Profile extends javax.swing.JFrame {
                     .addComponent(EmailID, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
                 .addGap(51, 51, 51)
-                .addComponent(viewreport)
+                .addComponent(viewRecords)
                 .addGap(54, 54, 54))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
             // TODO add your handling code here:            
             dispose();
       
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_exitActionPerformed
 
-    private void viewreportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewreportActionPerformed
-        Userhomepage user = new Userhomepage();
-        String patientpass = user.patientID;
-        try {
-            RecordDetails recorddet = new RecordDetails();
-            dispose();
-            recorddet.setVisible(true);
-        } catch (SQLException ex) {
-            Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_viewreportActionPerformed
+    private void viewRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewRecordsActionPerformed
+        Userhomepage userHome = new Userhomepage(user, patient);
+        RecordDetails recorddet = new RecordDetails(patient);
+        dispose();
+        recorddet.setVisible(true);
+    }//GEN-LAST:event_viewRecordsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -232,11 +228,7 @@ public class Profile extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    new Profile().setVisible(true);
-                } catch (SQLException ex) {
-                    Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                    new Profile(user, patient).setVisible(true);
             }
         });
     }
@@ -250,7 +242,7 @@ public class Profile extends javax.swing.JFrame {
     public javax.swing.JLabel Lname;
     public javax.swing.JLabel Pnumber;
     public javax.swing.JLabel dob;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton exit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -260,6 +252,6 @@ public class Profile extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JButton viewreport;
+    private javax.swing.JButton viewRecords;
     // End of variables declaration//GEN-END:variables
 }

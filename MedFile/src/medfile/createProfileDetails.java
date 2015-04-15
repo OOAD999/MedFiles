@@ -7,9 +7,7 @@ package medfile;
 
 import Classes.Patient;
 import Classes.SecurityProfile;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import Classes.DBconnect;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
@@ -269,7 +267,6 @@ bg1.add(patient);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    try {
         // TODO add your handling code here:
         newUser = new Patient();
         newUser.setFName(fname.getText());
@@ -288,12 +285,8 @@ bg1.add(patient);
       {
           newUser.setSecurityID(new SecurityProfile(1));
       }
-      newUser.insertUser();
+    //  newUser.insertUser();
        JOptionPane.showMessageDialog(this, "Profile Successfully created");
-
-    } catch (SQLException ex) {
-        Logger.getLogger(createProfileDetails.class.getName()).log(Level.SEVERE, null, ex);
-    }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

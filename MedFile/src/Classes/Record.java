@@ -30,14 +30,12 @@ public class Record {
     private String docNotes;
     private String labNotes;
     private String table = "record";
-    private ArrayList<Record> records;
 
     public Record() {
-        this.records = new ArrayList<Record>();
+
     }
 
     public Record(int id, Patient patient) {
-        this.records = new ArrayList<Record>();
         this.id = id;
         this.patient = patient;
     }
@@ -210,113 +208,8 @@ public class Record {
         this.labNotes = labNotes;
     }
     
-    public ArrayList<Record> selectRecords(int patientID) throws SQLException {
-        DBconnect dbo = new DBconnect();
-        dbo.connect();
-        PreparedStatement query = dbo.getCon().prepareStatement("SELECT * FROM " + dbo.getDbName() + "." + table
-            + " WHERE pateintID = ?");
-        query.setInt(1, patientID);
-        ResultSet results = dbo.select(query);
-        writeResultSet(results);
-        dbo.disconnect();
-        if(!(this.records.isEmpty())) {
-            for(int i = 0; i < records.size(); i++) {
-                records.get(i).getPatient().selectPatient();
-                records.get(i).getDoctor().selectUser();
-            }
-        }
-        
-        return this.records;
+    public String getDBName() {
+        return this.table;
     }
     
-    public Record insertRecord() throws SQLException {
-        
-        DBconnect dbo = new DBconnect();
-        dbo.connect();
-        PreparedStatement query = dbo.getCon().prepareStatement("INSERT INTO " + dbo.getDbName() + "." + table
-            + "(pateintID, recordDate, doctorID, location, height, weight, bloodPressure, " +
-            "cholesterol, reasonforVisit, doctorDiagnosis, doctorNote, labNote) " +
-            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
-        query.setInt(1, this.patient.getPatientID());
-        query.setDate(2, new java.sql.Date(this.serviceDate.getTime()));
-        query.setInt(3, this.doctor.getId());
-        query.setString(4, this.doctor.getDelimitedAddress());
-        query.setString(5, this.height);
-        query.setString(6, this.weight);
-        query.setString(7, this.bloodPress);
-        query.setString(8, this.cholest);
-        query.setString(9, this.reason);
-        query.setString(10, this.diagnoses);
-        query.setString(11, this.docNotes);
-        query.setString(12, this.labNotes);
-
-        ResultSet results = dbo.insertUpdate(query);
-        if(results.next()) {
-            this.id = results.getInt(1);
-        }
-        dbo.disconnect();
-        return this;
-    }
-    public Record updateRecord() throws SQLException {
-        
-        DBconnect dbo = new DBconnect();
-        dbo.connect();
-        PreparedStatement query = dbo.getCon().prepareStatement("UPDATE " + dbo.getDbName() + "." + table
-            + "SET recordDate = ?, doctorID = ?, location = ?, height = ?, weight = ?, bloodPressure = ?, " +
-            "cholesterol = ?, reasonforVisit = ?, doctorDiagnosis = ?, doctorNote = ?, labNote = ? " +
-            "WHERE pateintID = ? AND ID = ?");
-
-        query.setDate(1, new java.sql.Date(this.serviceDate.getTime()));
-        query.setInt(2, this.doctor.getId());
-        query.setString(3, this.doctor.getDelimitedAddress());
-        query.setString(4, this.height);
-        query.setString(5, this.weight);
-        query.setString(6, this.bloodPress);
-        query.setString(7, this.cholest);
-        query.setString(8, this.reason);
-        query.setString(9, this.diagnoses);
-        query.setString(10, this.docNotes);
-        query.setString(11, this.labNotes);
-        query.setInt(12, this.patient.getPatientID());
-        query.setInt(13, this.id);
-
-        ResultSet results = dbo.insertUpdate(query);
-        if(results.next()) {
-            this.id = results.getInt(1);
-        }
-        dbo.disconnect();
-        return this;
-    }
-    public Record deleteRecord() throws SQLException {
-        
-        DBconnect dbo = new DBconnect();
-        dbo.connect();
-        PreparedStatement query = dbo.getCon().prepareStatement("DELETE FROM " + dbo.getDbName() + "." + table +
-            " WHERE pateintID = ? AND ID = ?");
-
-        query.setInt(1, this.patient.getPatientID());
-        query.setInt(2, this.id);
-        dbo.delete(query);
-        dbo.disconnect();
-        return this;
-    }
-    private void writeResultSet(ResultSet resultSet) throws SQLException {
-        while (resultSet.next()) {
-            Record temp = new Record();
-            temp.id = resultSet.getInt("ID");
-            temp.patient = new Patient(resultSet.getInt("ID"));
-            temp.serviceDate = resultSet.getDate("recordDate");
-            temp.doctor = new User(resultSet.getInt("doctorID"));
-            temp.height = resultSet.getString("height");
-            temp.weight = resultSet.getString("weight");
-            temp.bloodPress = resultSet.getString("bloodPressure");
-            temp.cholest = resultSet.getString("cholesterol");
-            temp.reason = resultSet.getString("reasonforVisit");
-            temp.diagnoses = resultSet.getString("doctorDiagnosis");
-            temp.docNotes = resultSet.getString("doctorNote");
-            temp.labNotes = resultSet.getString("labNote");
-            
-            this.records.add(temp);
-        }
-    }
 }

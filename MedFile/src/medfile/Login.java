@@ -5,32 +5,25 @@
  */
 package medfile;
 
+import Classes.DBconnect;
+import Classes.Patient;
 import Classes.User;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import static medfile.Userhomepage.conn;
 
 /**
  *
  * @author ashwinrameshkumar
  */
 public class Login extends javax.swing.JFrame {
-
-    PreparedStatement stmt = null;
-    static Connection conn = null;
-
     /**
      * Creates new form Login
      */
+    public static DBconnect dbo = new DBconnect();
     public Login() {
-        conn = Connect.getConnect();
         initComponents();
-
     }
 
     /**
@@ -45,9 +38,9 @@ public class Login extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         username = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        login = new javax.swing.JButton();
+        clear = new javax.swing.JButton();
+        exit = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         passwordfield = new javax.swing.JPasswordField();
         success = new javax.swing.JLabel();
@@ -66,24 +59,24 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Login");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        login.setText("Login");
+        login.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                loginActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Clear");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        clear.setText("Clear");
+        clear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                clearActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Exit");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        exit.setText("Exit");
+        exit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                exitActionPerformed(evt);
             }
         });
 
@@ -115,15 +108,15 @@ public class Login extends javax.swing.JFrame {
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(username)
                                         .addGroup(layout.createSequentialGroup()
-                                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(jButton2))
+                                            .addComponent(clear))
                                         .addComponent(passwordfield)))))
                         .addGroup(layout.createSequentialGroup()
                             .addGap(150, 150, 150)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton3))))
+                            .addComponent(exit))))
                 .addContainerGap(36, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -132,7 +125,7 @@ public class Login extends javax.swing.JFrame {
                 .addGap(13, 13, 13)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jButton3))
+                    .addComponent(exit))
                 .addGap(15, 15, 15)
                 .addComponent(jLabel4)
                 .addGap(28, 28, 28)
@@ -147,8 +140,8 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(success, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1))
+                    .addComponent(clear)
+                    .addComponent(login))
                 .addContainerGap(60, Short.MAX_VALUE))
         );
 
@@ -156,70 +149,52 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void usernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_usernameActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+    private void clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearActionPerformed
         username.setText("");
         passwordfield.setText("");
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_clearActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+    private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
         dispose();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_exitActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-            // TODO add your handling code here:
-            User objUser = new User();
-            
-            String user = username.getText();
+    private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
+            User objUser = new User(username.getText());
+
             String pass = passwordfield.getPassword().toString();
-            Boolean boo = objUser.login(user, pass);
-            String passstring = new String(pass);
-//            System.out.println(pass);
-//            String SQL = "SELECT emailID,userPassword from MedFiles.user where emailID = '" + user + "' and userPassword = '" + passstring + "';";
-//            System.out.println(SQL);
-//            stmt = conn.prepareStatement(SQL);
-//            System.out.println("SQL is " + stmt);
-//
-//            ResultSet rs = null;
-//            //  System.out.println(stmt);
-//
-//            String userid = null;
-//            String password = null;
-//
-//            rs = stmt.executeQuery();
-//            //System.out.println(rs);
-//
-//            while (rs.next()) {
-//
-//                userid = rs.getString("emailID");
-//                password = rs.getString("userPassword");
-  
-            if (boo==true) {
-                
-//                success.setText("Login Success"); 
+            try {
+                objUser = objUser.login(pass);
+            } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+ 
+            if (objUser != null) {
                 Login login = new Login();
                 
                 JOptionPane.showMessageDialog(this, "Login Success");
                 dispose();
                 
-                Userhomepage userhomepage = new Userhomepage();
-                
-                userhomepage.usernamepass.setText("Username"+" : "+username.getText());
-                userhomepage.setVisible(true);
-
-            } 
-//            else if(boo==false||user.equalsIgnoreCase("")||pass.equalsIgnoreCase(""))
-//            {
-//    JOptionPane.showMessageDialog(this, "Login Failed", "Error", JOptionPane.ERROR_MESSAGE);
-//            }
-//            }
-//          
-       
-    }//GEN-LAST:event_jButton1ActionPerformed
+                if(objUser.getSecurityID().getUserManLvl() == 2) {
+                    //Admin Home Page
+                    Adminhomepage admin = new Adminhomepage(objUser);
+                    admin.setVisible(true);
+                }
+                else if(objUser.getSecurityID().getRecordLvl() == 2) {
+                    //Doctor Homepage
+                    doctorHomepage doctor = new doctorHomepage();
+                    doctor.setVisible(true);
+                }
+                else {
+                    //Patient Home page
+                    Userhomepage userhomepage = new Userhomepage(objUser);
+                    userhomepage.usernamepass.setText("Username"+" : "+username.getText());
+                    userhomepage.setVisible(true);
+                }
+            }        
+    }//GEN-LAST:event_loginActionPerformed
 
     /**
      * @param args the command line arguments
@@ -257,13 +232,13 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton clear;
+    private javax.swing.JButton exit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JButton login;
     private javax.swing.JPasswordField passwordfield;
     private javax.swing.JLabel success;
     private javax.swing.JTextField username;

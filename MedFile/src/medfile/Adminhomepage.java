@@ -5,18 +5,18 @@
  */
 package medfile;
 
-import Classes.Patient;
+import Classes.User;
 
 /**
  *
  * @author ashwinrameshkumar
  */
 public class Adminhomepage extends javax.swing.JFrame {
-    static Patient user;
+    static User user;
     /**
      * Creates new form Adminhomepage
      */
-    public Adminhomepage(Patient user) {
+    public Adminhomepage(User user) {
         initComponents();
         this.user = user;
     }
@@ -111,7 +111,7 @@ public class Adminhomepage extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-         createAppointment createnew = new createAppointment();
+         createAppointment createnew = new createAppointment(user);
 //        dispose();
         createnew.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed

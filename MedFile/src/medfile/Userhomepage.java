@@ -5,10 +5,12 @@
  */
 package medfile;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import Classes.DBconnect;
+import Classes.Patient;
+import Classes.User;
 import java.sql.SQLException;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
@@ -18,20 +20,21 @@ import javax.swing.table.DefaultTableModel;
  * @author ashwinrameshkumar
  */
 public class Userhomepage extends javax.swing.JFrame {
-
-    PreparedStatement stmt = null;
-    static Connection conn;
-//        DefaultTableModel model = null;
-           static String patientID = null;
-
     /**
      * Creates new form Userhomepage
      */
-    public Userhomepage() {
+    public static DBconnect dbo = new DBconnect();
+    public static User user;
+    public static Patient patient;
+    public Userhomepage(User user) {
         initComponents();
-        conn = Connect.getConnect();
+        this.user = user;
     }
-
+    public Userhomepage(User user, Patient patient) {
+        initComponents();
+        this.user = user;
+        this.patient = patient;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -42,29 +45,29 @@ public class Userhomepage extends javax.swing.JFrame {
     private void initComponents() {
 
         usernamepass = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        logOut = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        deleteAppt = new javax.swing.JButton();
+        viewProfile = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
+        createAppt = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MedXFiles");
 
         usernamepass.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
 
-        jButton1.setText("LogOut");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        logOut.setText("LogOut");
+        logOut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                logOutActionPerformed(evt);
             }
         });
 
@@ -76,17 +79,17 @@ public class Userhomepage extends javax.swing.JFrame {
 
         jLabel5.setText("Location");
 
-        jButton2.setText("Delete appointment");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        deleteAppt.setText("Delete appointment");
+        deleteAppt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                deleteApptActionPerformed(evt);
             }
         });
 
-        jButton4.setText("View Profile");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        viewProfile.setText("View Profile");
+        viewProfile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                viewProfileActionPerformed(evt);
             }
         });
 
@@ -101,10 +104,10 @@ public class Userhomepage extends javax.swing.JFrame {
 
         jLabel10.setText("Location");
 
-        jButton5.setText("Create appointment");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        createAppt.setText("Create appointment");
+        createAppt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                createApptActionPerformed(evt);
             }
         });
 
@@ -114,7 +117,7 @@ public class Userhomepage extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(logOut)
                 .addGap(15, 15, 15))
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
@@ -135,14 +138,11 @@ public class Userhomepage extends javax.swing.JFrame {
                                         .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(24, 24, 24))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(createAppt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(24, 24, 24)))
+                    .addComponent(viewProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(deleteAppt, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap(88, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -150,7 +150,7 @@ public class Userhomepage extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
+                    .addComponent(logOut)
                     .addComponent(usernamepass, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
                 .addComponent(jLabel6)
@@ -172,92 +172,51 @@ public class Userhomepage extends javax.swing.JFrame {
                     .addComponent(jLabel10))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton5))
+                    .addComponent(deleteAppt)
+                    .addComponent(createAppt))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4)
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addComponent(viewProfile)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void viewProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewProfileActionPerformed
+        patient = new Patient(user.getId());
         try {
-            // TODO add your handling code here:
-            String username = usernamepass.getText().toString().trim().substring(10);
-            
-            String SQL = "SELECT a.fname,a.lname,a.pnumber,a.address,b.patientID,b.dob,b.insuranceProvider,b.insuranceMemberID from MedFiles.user a join MedFiles.patient b on a.ID = b.userID where emailID = '"+username.trim()+"';";
-
-            System.out.println(SQL);
-            stmt = conn.prepareStatement(SQL);
-            System.out.println("SQL is " + stmt);
-
-            ResultSet rs = null;
-            //  System.out.println(stmt);
-            String fname = null;
-            String lname = null;
-            String pnumber = null;
-            String address = null;
-            String dob = null;
-            String insuranceprovider = null;
-            String insurancememberid = null;
-
-            rs = stmt.executeQuery();
-            //System.out.println(rs);
-
-            while (rs.next()) {
-                patientID = rs.getString("patientID");
-                fname = rs.getString("fname");
-                lname = rs.getString("lname");
-                pnumber = rs.getString("pnumber");
-                address = rs.getString("address");
-                dob = rs.getString("dob");
-                insuranceprovider = rs.getString("insuranceProvider");
-                insurancememberid = rs.getString("insuranceMemberID");
-
-//             Resulttab.setValueAt(Book_id, z, 0);
-//             Resulttab.setValueAt(Title, z, 1);
-//             Resulttab.setValueAt(Author_name, z, 2);
-//             Resulttab.setValueAt(Branch_id, z, 3);
-//             Resulttab.setValueAt(Total, z, 4);
-//             Resulttab.setValueAt(Avail, z, 5);
-                Profile profile = new Profile();
-                profile.Fname.setText(fname);
-                profile.Lname.setText(lname);
-                profile.Address.setText(address);
-                profile.Pnumber.setText(pnumber);
-                profile.dob.setText(dob);
-                profile.Insuranceprovider.setText(insuranceprovider);
-                profile.InsuranceID.setText(insurancememberid);
-
-                profile.setVisible(true);
-
-            }
-
+            dbo.selectPatient(patient);
         } catch (SQLException ex) {
             Logger.getLogger(Userhomepage.class.getName()).log(Level.SEVERE, null, ex);
-    }//GEN-LAST:event_jButton4ActionPerformed
-    }
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+        }
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String dob = formatter.format(patient.getDob());
+        Profile profile = new Profile(user, patient);
+        profile.Fname.setText(patient.getFName());
+        profile.Lname.setText(patient.getLName());
+        profile.Address.setText(patient.getFullAddress());
+        profile.Pnumber.setText(patient.getPhone());
+        profile.dob.setText(dob);
+        profile.Insuranceprovider.setText(patient.getInsuranceProvider());
+        profile.InsuranceID.setText(patient.getInsuranceID());
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-        createAppointment appointment = new createAppointment();
+        profile.setVisible(true);
+    }//GEN-LAST:event_viewProfileActionPerformed
+
+    private void deleteApptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteApptActionPerformed
+
+    }//GEN-LAST:event_deleteApptActionPerformed
+
+    private void createApptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createApptActionPerformed
+        createAppointment appointment = new createAppointment(user, patient);
         appointment.setVisible(true);
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_createApptActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        
+    private void logOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutActionPerformed
         Login log = new Login();
         dispose();
-        log.setVisible(true);
-        
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
+        log.setVisible(true);    
+    }//GEN-LAST:event_logOutActionPerformed
 
     /**
      * @param args the command line arguments
@@ -289,16 +248,14 @@ public class Userhomepage extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Userhomepage().setVisible(true);
+                new Userhomepage(patient).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton createAppt;
+    private javax.swing.JButton deleteAppt;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -308,6 +265,8 @@ public class Userhomepage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JButton logOut;
     public javax.swing.JLabel usernamepass;
+    private javax.swing.JButton viewProfile;
     // End of variables declaration//GEN-END:variables
 }

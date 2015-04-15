@@ -6,11 +6,10 @@
 package medfile;
 
 import Classes.Patient;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import Classes.SearchModule;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,17 +21,13 @@ import javax.swing.table.DefaultTableModel;
  */
 public class patientSearch extends javax.swing.JFrame {
         DefaultTableModel model = null;
-                Connection conn = null;
-
-
     /**
      * Creates new form patientSearch
      */
+    public static SearchModule search = new SearchModule();
     public patientSearch() {
         initComponents();
         model = (DefaultTableModel) ResultTab.getModel();
-                conn = Connect.getConnect();
-
     }
 
     /**
@@ -53,8 +48,8 @@ public class patientSearch extends javax.swing.JFrame {
         InsuranceProvider = new javax.swing.JTextField();
         DOB = new javax.swing.JTextField();
         InsuranceID = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        retrieve = new javax.swing.JButton();
+        clear = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         ResultTab = new javax.swing.JTable();
         jButton3 = new javax.swing.JButton();
@@ -84,17 +79,17 @@ public class patientSearch extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Retrieve");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        retrieve.setText("Retrieve");
+        retrieve.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                retrieveActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Clear");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        clear.setText("Clear");
+        clear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                clearActionPerformed(evt);
             }
         });
 
@@ -121,9 +116,9 @@ public class patientSearch extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(256, 256, 256)
-                .addComponent(jButton1)
+                .addComponent(retrieve)
                 .addGap(26, 26, 26)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(clear, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jScrollPane1)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -173,8 +168,8 @@ public class patientSearch extends javax.swing.JFrame {
                     .addComponent(InsuranceID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(retrieve)
+                    .addComponent(clear))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -190,33 +185,36 @@ public class patientSearch extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_PatientIDActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_clearActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    try {
-        // TODO add your handling code here:
+    private void retrieveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retrieveActionPerformed
         model.setRowCount(0);
-        Patient search = new Patient();
+        Patient findPatient = new Patient();
         if(!PatientID.getText().equals("")) {
-            search.setPatientID(Integer.parseInt(PatientID.getText()));
+            findPatient.setPatientID(Integer.parseInt(PatientID.getText()));
         }
         if(!(DOB.getText().equals(""))) {
-            search.setDob(new Date(DOB.getText()));
+            findPatient.setDob(new Date(DOB.getText()));
         }
         if(!InsuranceProvider.getText().equals("")) {
-            search.setInsuranceProvider(InsuranceProvider.getText());
+            findPatient.setInsuranceProvider(InsuranceProvider.getText());
         }
         if(!InsuranceID.getText().equals("")) {
-            search.setInsuranceID(InsuranceID.getText());
+            findPatient.setInsuranceID(InsuranceID.getText());
         }
-        search.search();
+        ArrayList<Patient> results = new ArrayList<Patient>();
+            try {
+                results = search.searchPatients(findPatient);
+            } catch (SQLException ex) {
+                Logger.getLogger(patientSearch.class.getName()).log(Level.SEVERE, null, ex);
+            }
         
         String patientid=null;
         String userid=null;
@@ -226,8 +224,8 @@ public class patientSearch extends javax.swing.JFrame {
         int z=0;
         //System.out.println(rs);
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-        for (int i = 0; i < search.getListOfPatients().size(); i++) {
-            Patient tmp = search.getListOfPatients().get(i);
+        for (int i = 0; i < results.size(); i++) {
+            Patient tmp = results.get(i);
             patientid = Integer.toString(tmp.getPatientID());
             userid = Integer.toString(tmp.getId());
             dob = dateFormat.format(tmp.getDob());
@@ -252,10 +250,7 @@ public class patientSearch extends javax.swing.JFrame {
 //             z++;
             z++;
         }
-    } catch (SQLException ex) {
-        Logger.getLogger(patientSearch.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_retrieveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -298,8 +293,7 @@ public class patientSearch extends javax.swing.JFrame {
     public static javax.swing.JTextField InsuranceProvider;
     public static javax.swing.JTextField PatientID;
     private javax.swing.JTable ResultTab;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton clear;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -307,5 +301,6 @@ public class patientSearch extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton retrieve;
     // End of variables declaration//GEN-END:variables
 }
