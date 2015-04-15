@@ -173,7 +173,7 @@ public class createAppointment extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        try {
+    try {
             // TODO add your handling code here:
 
             Date dates = jDateChooser1.getDate();

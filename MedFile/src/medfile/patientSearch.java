@@ -22,6 +22,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class patientSearch extends javax.swing.JFrame {
         DefaultTableModel model = null;
+                Connection conn = null;
+
 
     /**
      * Creates new form patientSearch
@@ -29,6 +31,8 @@ public class patientSearch extends javax.swing.JFrame {
     public patientSearch() {
         initComponents();
         model = (DefaultTableModel) ResultTab.getModel();
+                conn = Connect.getConnect();
+
     }
 
     /**

@@ -29,7 +29,7 @@ public class DBconnect {
     private Logger log;
 
     public DBconnect() {
-        this.dbName = "medfiles";
+        this.dbName = "MedFiles";
         this.dbUser = "root";
         this.dbPassword = "a";
     }

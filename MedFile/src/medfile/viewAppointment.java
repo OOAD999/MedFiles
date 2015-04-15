@@ -258,7 +258,6 @@ static Connection conn = null;
             created = rs.getString("timecreated");
             creator= rs.getString("creatorID");
             
-            
         }
     } catch (SQLException ex) {
         Logger.getLogger(viewAppointment.class.getName()).log(Level.SEVERE, null, ex);
