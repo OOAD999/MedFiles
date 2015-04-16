@@ -7,17 +7,18 @@ package medfile;
 
 import Classes.Appointment;
 import Classes.DBconnect;
+import Classes.Doctor;
 import Classes.Patient;
 import Classes.User;
+import Classes.SearchModule;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
 /**
@@ -31,14 +32,29 @@ public class createAppointment extends javax.swing.JFrame {
     public static User user;
     public static Patient patient;
     public static DBconnect dbo = new DBconnect();
-    public createAppointment(User user) {
+    public static SearchModule search = new SearchModule();
+    public createAppointment(User user) throws SQLException {
         initComponents();
         this.user = user;
+        retrieveDoctors();
     }
-    public createAppointment(User user, Patient patient) {
+    public createAppointment(User user, Patient patient) throws SQLException {
         initComponents();
         this.user = user;
         this.patient = patient;
+        retrieveDoctors();
+    }
+    public void retrieveDoctors() throws SQLException {
+        ArrayList<Doctor> docs = search.searchAllDocs();
+        if(docs != null) {
+            DefaultComboBoxModel model = new DefaultComboBoxModel();
+            for(int i = 0; i < docs.size(); i++) {
+                Doctor tmp = docs.get(i);
+                dbo.selectDoctor(tmp);
+                model.addElement(tmp.getLName() + " :" + tmp.getDoctorID());
+            }
+            listDoctor.setModel(model);
+        }
     }
 
     /**
@@ -54,12 +70,12 @@ public class createAppointment extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         patientid = new javax.swing.JTextField();
-        doctorid = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         exit = new javax.swing.JButton();
         CreateAppt = new javax.swing.JButton();
         Clear = new javax.swing.JButton();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        listDoctor = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("New Appointment");
@@ -123,16 +139,15 @@ public class createAppointment extends javax.swing.JFrame {
                         .addGap(234, 234, 234)
                         .addComponent(CreateAppt, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Clear, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(doctorid, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-                                .addComponent(patientid))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(16, 16, 16)
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(Clear, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(patientid, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                            .addComponent(listDoctor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(160, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -149,7 +164,7 @@ public class createAppointment extends javax.swing.JFrame {
                 .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(doctorid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(listDoctor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
@@ -173,7 +188,6 @@ public class createAppointment extends javax.swing.JFrame {
         dispose();
 
     }//GEN-LAST:event_exitActionPerformed
-
     private void CreateApptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateApptActionPerformed
         Date dates = jDateChooser1.getDate();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -184,12 +198,25 @@ public class createAppointment extends javax.swing.JFrame {
         String appointmentdate = dateFormat.format(dates);
             
         Appointment appt = new Appointment();
+        Patient tmp = new Patient();
         appt.setCreatedTime(today);
         appt.setApptTime(jDateChooser1.getDate());
-        appt.setPatient(new Patient(Integer.parseInt(patientid.getText())));
-        appt.setDoctor(new User(Integer.parseInt(doctorid.getText())));
+        try {
+            tmp.setPatientID(Integer.parseInt(patientid.getText()));
+            tmp = dbo.selectPatient(tmp);
+            appt.setPatient(tmp);
+        } catch (SQLException ex) {
+            Logger.getLogger(createAppointment.class.getName()).log(Level.SEVERE, null, ex);
+        }  
         appt.setCreator(user);
 
+        String[] tmpString = listDoctor.getSelectedItem().toString().split(":");
+        Doctor tmpD = new Doctor(Integer.parseInt(tmpString[1]));
+        try {
+            appt.setDoctor(dbo.selectDoctor(tmpD));
+        } catch (SQLException ex) {
+            Logger.getLogger(createAppointment.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if(appointmentdate.compareTo(todaydate)<00)
         {
                JOptionPane.showMessageDialog(this, "Appointment date is before current date" , "Error", JOptionPane.ERROR_MESSAGE);
@@ -210,7 +237,6 @@ public class createAppointment extends javax.swing.JFrame {
 
     private void ClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClearActionPerformed
         patientid.setText("");
-        doctorid.setText("");
         jDateChooser1.setCalendar(null);
     }//GEN-LAST:event_ClearActionPerformed
 
@@ -244,7 +270,11 @@ public class createAppointment extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new createAppointment(user, patient).setVisible(true);
+                try {
+                    new createAppointment(user, patient).setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(createAppointment.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -252,13 +282,13 @@ public class createAppointment extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Clear;
     private javax.swing.JButton CreateAppt;
-    private javax.swing.JTextField doctorid;
     private javax.swing.JButton exit;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JComboBox listDoctor;
     private javax.swing.JTextField patientid;
     // End of variables declaration//GEN-END:variables
 }

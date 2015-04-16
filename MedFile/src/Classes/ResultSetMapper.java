@@ -20,8 +20,12 @@ public class ResultSetMapper {
     }
     public Appointment writeResultSet(ResultSet resultSet, Appointment appt) throws SQLException {
         while (resultSet.next()) {
-            appt.setPatient(new Patient(resultSet.getInt("ID")));
-            appt.setDoctor(new User(resultSet.getInt("doctorID")));
+            Patient tmp = new Patient();
+            User tmpU = new User();
+            tmp.setPatientID(resultSet.getInt("patientID"));
+            appt.setPatient(tmp);
+            tmpU = new User(resultSet.getInt("doctorID"));
+            appt.setDoctor(new Doctor(tmpU));
             appt.setApptTime(resultSet.getDate("appointmentTime"));
             appt.setCreatedTime(resultSet.getDate("timeCreated"));
             appt.setCreator(new User(resultSet.getInt("creatorID")));
@@ -64,8 +68,18 @@ public class ResultSetMapper {
             profile.setAppointmentLvl(resultSet.getInt("appointmentSecurity"));
             profile.setRecordLvl(resultSet.getInt("recordSecurity"));
             profile.setUserManLvl(resultSet.getInt("userManagmentSecurity"));
+            profile.setLabManLvl(resultSet.getInt("labManagmentSecurity"));
         }
         return profile;
+    }
+    public Doctor writeResultSet(ResultSet resultSet, Doctor doctor) throws SQLException {
+        while (resultSet.next()) {
+            doctor.setDoctorID(resultSet.getInt("ID"));
+            doctor.setId(resultSet.getInt("userID"));
+            doctor.setMax(resultSet.getInt("maxPatients"));
+            doctor.setCurrent(resultSet.getInt("currentPatients"));
+        }
+        return doctor;
     }
     public User writeResultSet(ResultSet resultSet, User user) throws SQLException {
         while (resultSet.next()) {
@@ -76,21 +90,17 @@ public class ResultSetMapper {
             user.setSSN(resultSet.getString("ssn"));
             user.setSecurityID(new SecurityProfile(resultSet.getInt("securityID")));
             user.setEmail(resultSet.getString("emailID"));
-            user.setPassword(resultSet.getString("userPassword"));
-            
-            String[] address = resultSet.getString("address").split("|");
-            user.setAddr1(address[0]);
-            user.setCity(address[1]);
-            user.setState(address[2]);
-            user.setZip(address[3]);
+            user.setPassword(resultSet.getString("userPassword"));            
+            user.setAddress(resultSet.getString("address"));
         }
         return user;
     }
     public ArrayList<Patient> writeResultPatientsList(ResultSet resultSet) throws SQLException {
         ArrayList<Patient> listOfPatients = new ArrayList<Patient>();
         while (resultSet.next()) {
-            Patient tmp = new Patient(resultSet.getInt("patientID"));
-            tmp.setId(resultSet.getInt("userID"));
+            User tmpU = new User(resultSet.getInt("userID"));
+            Patient tmp = new Patient(tmpU);
+            tmp.setPatientID(resultSet.getInt("patientID"));
             tmp.setDob(resultSet.getDate("dob"));
             tmp.setInsuranceProvider(resultSet.getString("insuranceProvider"));
             tmp.setInsuranceID(resultSet.getString("insuranceMemberID"));
@@ -102,13 +112,28 @@ public class ResultSetMapper {
         ArrayList<Appointment> listOfAppts = new ArrayList<Appointment>();
         while (resultSet.next()) {
             Appointment tmp = new Appointment();
-            tmp.setPatient(new Patient(resultSet.getInt("ID")));
-            tmp.setDoctor(new User(resultSet.getInt("doctorID")));
+            User tmpU = new User(resultSet.getInt("doctorID"));
+            Patient tmpP = new Patient();
+            tmpP.setPatientID(resultSet.getInt("patientID"));
+            tmp.setDoctor(new Doctor(tmpU));
+            tmp.setPatient(tmpP);
             tmp.setApptTime(resultSet.getDate("appointmentTime"));
             tmp.setCreatedTime(resultSet.getDate("timeCreated"));
-            tmp.setCreator(new Patient(resultSet.getInt("creatorID")));
+            tmp.setCreator(new User(resultSet.getInt("creatorID")));
             listOfAppts.add(tmp);
         }
         return listOfAppts;
+    }
+    public ArrayList<Doctor> writeResultDocList(ResultSet resultSet) throws SQLException {
+        ArrayList<Doctor> listOfDocs = new ArrayList<Doctor>();
+        while (resultSet.next()) {
+            Doctor tmp = new Doctor();
+            tmp.setDoctorID(resultSet.getInt("ID"));
+            tmp.setId(resultSet.getInt("userID"));
+            tmp.setMax(resultSet.getInt("maxPatients"));
+            tmp.setCurrent(resultSet.getInt("currentPatients"));
+            listOfDocs.add(tmp);
+        }
+        return listOfDocs;
     }
 }

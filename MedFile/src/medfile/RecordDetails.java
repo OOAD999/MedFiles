@@ -8,7 +8,6 @@ package medfile;
 
 import javax.swing.table.DefaultTableModel;
 import Classes.Record;
-import Classes.DBconnect;
 import Classes.Patient;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,13 +31,13 @@ public class RecordDetails extends javax.swing.JFrame {
         model = (DefaultTableModel)recordstable.getModel();
         
         ArrayList<Record> records = patient.getAllRecords();
-        if(!(records.isEmpty())) {
+        if(records != null) {
             for(int i = 0; i < records.size(); i++) {
                 Record tmp = records.get(i);
                 model.addRow(new Object[]{
                     tmp.getServiceDate().toString(),
                     tmp.getDoctor().getFName() + " " + tmp.getDoctor().getLName(),
-                    tmp.getDoctor().getFullAddress(),
+                    tmp.getDoctor().getAddress(),
                     tmp.getReason(),
                     tmp.getDiagnoses(),
                     tmp.getWeight(),
@@ -75,7 +74,7 @@ public class RecordDetails extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Date", "Patient ID", "Record Date", "Doctor ID ", "Location", "Height", "Weight", "Cholesterol", "Reason for Visit", "Doctor Diagnosis", "Doctor Note", "Lab Note"
+                "Date", "Doctor", "Location", "Reason for Visit", "Doctor Diagnosis", "Weight", "Height", "Blood Pressure", "Cholesterol", "Doctor Note", "Lab Note"
             }
         ));
         jScrollPane2.setViewportView(recordstable);

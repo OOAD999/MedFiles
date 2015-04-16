@@ -5,6 +5,7 @@
  */
 package medfile;
 
+import Classes.Appointment;
 import Classes.DBconnect;
 import Classes.Patient;
 import Classes.User;
@@ -13,6 +14,8 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -26,14 +29,31 @@ public class Userhomepage extends javax.swing.JFrame {
     public static DBconnect dbo = new DBconnect();
     public static User user;
     public static Patient patient;
-    public Userhomepage(User user) {
+    public Userhomepage(User user) throws SQLException {
         initComponents();
         this.user = user;
+        this.patient = new Patient(user);
+        dbo.selectPatient(patient);
+        loadAppointment();
     }
-    public Userhomepage(User user, Patient patient) {
+    public Userhomepage(User user, Patient patient) throws SQLException {
         initComponents();
         this.user = user;
         this.patient = patient;
+        loadAppointment();
+    }
+    public void loadAppointment() throws SQLException {
+        Appointment appt = new Appointment();
+        appt.setPatient(patient);
+        dbo.selectAppt(appt);
+        if(appt.getApptTime() != null) {
+            doctorText.setText(appt.getDoctor().getFName() + " " + appt.getDoctor().getLName());
+            dateText.setText(appt.getApptTime().toString());
+            locationText.setText(appt.getDoctor().getAddress());
+        }else {
+            apptContainer.setVisible(false);
+            apptLabel.setText("No Appointments Scheduled");
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -46,18 +66,18 @@ public class Userhomepage extends javax.swing.JFrame {
 
         usernamepass = new javax.swing.JLabel();
         logOut = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         deleteAppt = new javax.swing.JButton();
         viewProfile = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
         createAppt = new javax.swing.JButton();
+        apptContainer = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        doctorText = new javax.swing.JLabel();
+        dateText = new javax.swing.JLabel();
+        locationText = new javax.swing.JLabel();
+        apptLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MedXFiles");
@@ -70,14 +90,6 @@ public class Userhomepage extends javax.swing.JFrame {
                 logOutActionPerformed(evt);
             }
         });
-
-        jLabel2.setText("Doctor");
-
-        jLabel3.setText("Date");
-
-        jLabel4.setText("Time");
-
-        jLabel5.setText("Location");
 
         deleteAppt.setText("Delete appointment");
         deleteAppt.addActionListener(new java.awt.event.ActionListener() {
@@ -96,20 +108,61 @@ public class Userhomepage extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         jLabel6.setText("Next Appointment");
 
-        jLabel7.setText("Doctor's name");
-
-        jLabel8.setText("Date");
-
-        jLabel9.setText("Time ");
-
-        jLabel10.setText("Location");
-
         createAppt.setText("Create appointment");
         createAppt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 createApptActionPerformed(evt);
             }
         });
+
+        jLabel2.setText("Doctor");
+
+        jLabel3.setText("Date");
+
+        jLabel5.setText("Location");
+
+        doctorText.setText("Doctor's name");
+
+        dateText.setText("Date");
+
+        locationText.setText("Location");
+
+        javax.swing.GroupLayout apptContainerLayout = new javax.swing.GroupLayout(apptContainer);
+        apptContainer.setLayout(apptContainerLayout);
+        apptContainerLayout.setHorizontalGroup(
+            apptContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(apptContainerLayout.createSequentialGroup()
+                .addGroup(apptContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(apptContainerLayout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(doctorText, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(apptContainerLayout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(32, 32, 32)
+                        .addComponent(locationText, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, apptContainerLayout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(dateText, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 182, Short.MAX_VALUE))
+        );
+        apptContainerLayout.setVerticalGroup(
+            apptContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(apptContainerLayout.createSequentialGroup()
+                .addGroup(apptContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(doctorText))
+                .addGap(28, 28, 28)
+                .addGroup(apptContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(dateText))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addGroup(apptContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(locationText))
+                .addGap(24, 24, 24))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,28 +175,18 @@ public class Userhomepage extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(usernamepass, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                    .addComponent(apptLabel)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(usernamepass, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createSequentialGroup()
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING))
-                                    .addGap(72, 72, 72)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(createAppt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(24, 24, 24)))
-                    .addComponent(viewProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(deleteAppt, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap(88, Short.MAX_VALUE))
+                                .addComponent(createAppt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE))
+                            .addGap(128, 128, 128))
+                        .addComponent(viewProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(deleteAppt, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(apptContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(70, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -154,23 +197,11 @@ public class Userhomepage extends javax.swing.JFrame {
                     .addComponent(usernamepass, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
                 .addComponent(jLabel6)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel7))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel8))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel9))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel10))
-                .addGap(18, 18, 18)
+                .addGap(5, 5, 5)
+                .addComponent(apptLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(apptContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(deleteAppt)
                     .addComponent(createAppt))
@@ -183,33 +214,40 @@ public class Userhomepage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void viewProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewProfileActionPerformed
-        patient = new Patient(user.getId());
-        try {
-            dbo.selectPatient(patient);
-        } catch (SQLException ex) {
-            Logger.getLogger(Userhomepage.class.getName()).log(Level.SEVERE, null, ex);
-        }
         Format formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String dob = formatter.format(patient.getDob());
-        Profile profile = new Profile(user, patient);
-        profile.Fname.setText(patient.getFName());
-        profile.Lname.setText(patient.getLName());
-        profile.Address.setText(patient.getFullAddress());
-        profile.Pnumber.setText(patient.getPhone());
+        String dob = formatter.format(this.patient.getDob());
+        Profile profile = new Profile(this.user, this.patient);
+        profile.Fname.setText(this.patient.getFName());
+        profile.Lname.setText(this.patient.getLName());
+        profile.Address.setText(this.patient.getAddress());
+        profile.Pnumber.setText(this.patient.getPhone());
         profile.dob.setText(dob);
-        profile.Insuranceprovider.setText(patient.getInsuranceProvider());
-        profile.InsuranceID.setText(patient.getInsuranceID());
+        profile.Insuranceprovider.setText(this.patient.getInsuranceProvider());
+        profile.InsuranceID.setText(this.patient.getInsuranceID());
 
         profile.setVisible(true);
     }//GEN-LAST:event_viewProfileActionPerformed
 
     private void deleteApptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteApptActionPerformed
-
+        Appointment tmp = new Appointment();
+        tmp.setPatient(this.patient);
+        try {
+            dbo.deleteAppointment(tmp);
+        } catch (SQLException ex) {
+            Logger.getLogger(Userhomepage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        JOptionPane.showMessageDialog(this, "Appointment Canceled");
     }//GEN-LAST:event_deleteApptActionPerformed
 
     private void createApptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createApptActionPerformed
-        createAppointment appointment = new createAppointment(user, patient);
-        appointment.setVisible(true);
+        createAppointment appointment;
+        try {
+            appointment = new createAppointment(this.user, this.patient);
+            appointment.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(Userhomepage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_createApptActionPerformed
 
     private void logOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutActionPerformed
@@ -248,23 +286,27 @@ public class Userhomepage extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Userhomepage(patient).setVisible(true);
+                try {
+                    new Userhomepage(user, patient).setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Userhomepage.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel apptContainer;
+    private javax.swing.JLabel apptLabel;
     private javax.swing.JButton createAppt;
+    private javax.swing.JLabel dateText;
     private javax.swing.JButton deleteAppt;
-    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel doctorText;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel locationText;
     private javax.swing.JButton logOut;
     public javax.swing.JLabel usernamepass;
     private javax.swing.JButton viewProfile;

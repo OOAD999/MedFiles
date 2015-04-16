@@ -5,31 +5,26 @@
  */
 package medfile;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import Classes.DBconnect;
+import Classes.Patient;
+import Classes.Record;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import static medfile.viewRecords.conn;
 
 /**
  *
  * @author ashwinrameshkumar
  */
 public class createRecords extends javax.swing.JFrame {
-static Connection conn ;
-        PreparedStatement stmt = null;
-    /**
-     * Creates new form createRecords
+     /* Creates new form createRecords
      */
+    public static DBconnect dbo = new DBconnect();
     public createRecords() {
         initComponents();
-       conn = Connect.getConnect();
-
     }
 
     /**
@@ -51,7 +46,6 @@ static Connection conn ;
         location = new javax.swing.JTextField();
         weight = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        doctorid = new javax.swing.JTextField();
         patientid = new javax.swing.JTextField();
         height = new javax.swing.JTextField();
         bp = new javax.swing.JTextField();
@@ -67,27 +61,28 @@ static Connection conn ;
         labnote = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        exit = new javax.swing.JButton();
         date = new com.toedter.calendar.JDateChooser();
+        listDoctor = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         jLabel1.setText("Create Records");
 
-        jLabel3.setText("recordDate");
+        jLabel3.setText("Record Date");
 
-        jLabel4.setText("patientID");
+        jLabel4.setText("Patient ID");
 
-        jLabel5.setText("doctorID");
+        jLabel5.setText("Doctor");
 
-        jLabel6.setText("location");
+        jLabel6.setText("Location");
 
-        jLabel7.setText("height");
+        jLabel7.setText("Height");
 
-        jLabel8.setText("weight");
+        jLabel8.setText("Weight");
 
-        jLabel9.setText("bloodPressure");
+        jLabel9.setText("Blood Pressure");
 
         patientid.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -95,15 +90,21 @@ static Connection conn ;
             }
         });
 
-        jLabel10.setText("cholesterol");
+        height.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                heightActionPerformed(evt);
+            }
+        });
 
-        jLabel11.setText("reasonforVisit");
+        jLabel10.setText("Cholesterol");
 
-        jLabel12.setText("doctorDiagnosis");
+        jLabel11.setText("Reason For Visit");
 
-        jLabel13.setText("doctorNote");
+        jLabel12.setText("Doctor Diagnosis");
 
-        jLabel14.setText("labNote");
+        jLabel13.setText("Doctor's Notes");
+
+        jLabel14.setText("Lab Notes");
 
         cholesterol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -149,10 +150,10 @@ static Connection conn ;
             }
         });
 
-        jButton3.setText("Exit");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        exit.setText("Exit");
+        exit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                exitActionPerformed(evt);
             }
         });
 
@@ -181,33 +182,28 @@ static Connection conn ;
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(patientid, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(198, 198, 198)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel5)
+                        .addComponent(jLabel7)
+                        .addComponent(jLabel9))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel13)
+                        .addComponent(jLabel11)
+                        .addComponent(jLabel14)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(doctornote)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(198, 198, 198)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(94, 94, 94)
-                                .addComponent(doctornote))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel5)
-                                        .addComponent(jLabel7)
-                                        .addComponent(jLabel9))
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel13)
-                                        .addComponent(jLabel11)
-                                        .addComponent(jLabel14)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(doctorid, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(height, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(bp, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(visit, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(labnote, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(height, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                                .addComponent(bp, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                                .addComponent(visit, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(listDoctor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(labnote, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(247, 247, 247)
@@ -219,7 +215,7 @@ static Connection conn ;
                 .addGap(272, 272, 272)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(131, 131, 131)
-                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                .addComponent(exit, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
                 .addGap(14, 14, 14))
         );
         layout.setVerticalGroup(
@@ -228,37 +224,30 @@ static Connection conn ;
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(jButton3))
+                    .addComponent(exit))
+                .addGap(14, 14, 14)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(patientid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
+                    .addComponent(listDoctor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(patientid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(doctorid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
+                        .addGap(23, 23, 23)
                         .addComponent(jLabel3))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(19, 19, 19)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(jLabel6)
-                                            .addComponent(location, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel9)
-                                            .addComponent(bp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addComponent(jLabel7)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel6)
+                                    .addComponent(location, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel9)
+                                    .addComponent(bp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel7)
                                 .addComponent(height, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -282,7 +271,7 @@ static Connection conn ;
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton1)
                             .addComponent(jButton2))))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         pack();
@@ -304,10 +293,6 @@ static Connection conn ;
         // TODO add your handling code here:
     }//GEN-LAST:event_diagActionPerformed
 
-    private void doctornoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doctornoteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_doctornoteActionPerformed
-
     private void labnoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_labnoteActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_labnoteActionPerformed
@@ -315,7 +300,6 @@ static Connection conn ;
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         patientid.setText("");
-        doctorid.setText("");
         height.setText("");
         weight.setText("");
         location.setText("");
@@ -329,35 +313,47 @@ static Connection conn ;
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
         // TODO add your handling code here:
         dispose();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_exitActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    try {
         // TODO add your handling code here:
-        ResultSet rs= null;
         Date dates = date.getDate();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         
         Date today = new Date();
         
         String todaydate = dateFormat.format(today);
-        String appointmentdate = dateFormat.format(dates);
-        String SQL = "INSERT INTO MedFiles.record (patientID,recordDate,doctorID,location,height,weight,bloodPressure,cholesterol,reasonforVisit,doctorDiagnosis,doctorNote,labNote) VALUES( '"+ patientid.getText() +"', '" +appointmentdate +"', '"+ doctorid.getText() +"','"+ location.getText() +"', '"+ height.getText() +"', '"+ weight.getText() +"', '"+ bp.getText() +"', '"+ cholesterol.getText() +"', '"+ visit.getText() +"', '" + diag.getText() +"', '" + doctornote.getText() +"', '" + labnote.getText() +"');";
-   
-            stmt = conn.prepareStatement(SQL);
-            System.out.println(SQL);
+        String serviceDate = dateFormat.format(dates);
+        Record record = new Record();
+        record.setPatient(new Patient(Integer.parseInt(patientid.getText())));
+        record.setServiceDate(dates);
+       // record.setDoctor(new Doctor(Integer.parseInt(selectDoctor)));
+        record.getDoctor().setAddress(location.getText());
+        record.setWeight(weight.getText());
+        record.setBloodPress(bp.getText());
+        record.setCholest(cholesterol.getText());
+        record.setReason(visit.getText());
+        record.setDiagnoses(diag.getText());
+        record.setDocNotes(doctornote.getText());
+        record.setLabNotes(labnote.getText());
         
-            stmt.executeUpdate();
-            JOptionPane.showMessageDialog(this,"Record successfuly created");
-            
-        
-    } catch (SQLException ex) {
-        Logger.getLogger(createRecords.class.getName()).log(Level.SEVERE, null, ex);
-    }
+        try {
+            dbo.insertRecord(record);
+        } catch (SQLException ex) {
+            Logger.getLogger(createRecords.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void heightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_heightActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_heightActionPerformed
+
+    private void doctornoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doctornoteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_doctornoteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -399,12 +395,11 @@ static Connection conn ;
     private javax.swing.JTextField cholesterol;
     private com.toedter.calendar.JDateChooser date;
     private javax.swing.JTextField diag;
-    private javax.swing.JTextField doctorid;
     private javax.swing.JTextField doctornote;
+    private javax.swing.JButton exit;
     private javax.swing.JTextField height;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -419,6 +414,7 @@ static Connection conn ;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JTextField labnote;
+    private javax.swing.JComboBox listDoctor;
     private javax.swing.JTextField location;
     private javax.swing.JTextField patientid;
     private javax.swing.JTextField visit;

@@ -5,8 +5,6 @@
  */
 package medfile;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
 
 /**
@@ -14,15 +12,11 @@ import javax.swing.JOptionPane;
  * @author ashwinrameshkumar
  */
 public class UpdateRecords extends javax.swing.JFrame {
-static Connection conn ;
-        PreparedStatement stmt = null;
     /**
      * Creates new form UpdateRecords
      */
     public UpdateRecords() {
         initComponents();
-               conn = Connect.getConnect();
-
     }
 
     /**
@@ -47,7 +41,6 @@ static Connection conn ;
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         patientid = new javax.swing.JTextField();
-        doctorid = new javax.swing.JTextField();
         height = new javax.swing.JTextField();
         weight = new javax.swing.JTextField();
         cholesterol = new javax.swing.JTextField();
@@ -64,6 +57,7 @@ static Connection conn ;
         bp = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
+        listDoctor = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -119,6 +113,13 @@ static Connection conn ;
 
         jLabel14.setText("Blood Pressure");
 
+        listDoctor.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " " }));
+        listDoctor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                listDoctorActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -159,7 +160,6 @@ static Connection conn ;
                             .addComponent(date, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(id, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(patientid)
-                            .addComponent(doctorid)
                             .addComponent(height)
                             .addComponent(weight)
                             .addComponent(visit)
@@ -167,7 +167,8 @@ static Connection conn ;
                             .addComponent(note)
                             .addComponent(diag)
                             .addComponent(labnote, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
-                            .addComponent(location))))
+                            .addComponent(location)
+                            .addComponent(listDoctor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(108, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -185,11 +186,15 @@ static Connection conn ;
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(patientid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(19, 19, 19)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(doctorid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(16, 16, 16)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jLabel4)
+                        .addGap(19, 19, 19))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(listDoctor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel5)
                     .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -250,7 +255,6 @@ static Connection conn ;
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         patientid.setText("");
-        doctorid.setText("");
         height.setText("");
         weight.setText("");
         location.setText("");
@@ -266,6 +270,10 @@ static Connection conn ;
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void listDoctorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listDoctorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_listDoctorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -307,7 +315,6 @@ static Connection conn ;
     public javax.swing.JTextField cholesterol;
     public com.toedter.calendar.JDateChooser date;
     public javax.swing.JTextField diag;
-    public javax.swing.JTextField doctorid;
     public javax.swing.JTextField height;
     public javax.swing.JLabel id;
     private javax.swing.JButton jButton1;
@@ -328,6 +335,7 @@ static Connection conn ;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     public javax.swing.JTextField labnote;
+    private javax.swing.JComboBox listDoctor;
     public javax.swing.JTextField location;
     public javax.swing.JTextField note;
     public javax.swing.JTextField patientid;

@@ -5,11 +5,11 @@
  */
 package medfile;
 
-import Classes.DBconnect;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Classes.Patient;
 import Classes.User;
+import java.sql.SQLException;
 
 /**
  *
@@ -28,12 +28,12 @@ public class Profile extends javax.swing.JFrame {
         initComponents();
 
         EmailID.setText(patient.getEmail());
-        Address.setText(patient.getFullAddress());
+        Address.setText(patient.getAddress());
         Fname.setText(patient.getFName());
         Lname.setText(patient.getLName());
         InsuranceID.setText(patient.getInsuranceID());
         Insuranceprovider.setText(patient.getInsuranceProvider());
-        Pnumber.setText(patient.getFormatPhone());
+        Pnumber.setText(patient.getPhone());
         dob.setText(patient.getDob().toString());      
     }
 
@@ -137,10 +137,10 @@ public class Profile extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(exit)))
                 .addGap(44, 44, 44))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(238, 238, 238)
-                .addComponent(viewRecords, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(viewRecords, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(210, 210, 210))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,9 +181,9 @@ public class Profile extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(EmailID, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
-                .addGap(51, 51, 51)
+                .addGap(48, 48, 48)
                 .addComponent(viewRecords)
-                .addGap(54, 54, 54))
+                .addGap(57, 57, 57))
         );
 
         pack();
@@ -196,10 +196,15 @@ public class Profile extends javax.swing.JFrame {
     }//GEN-LAST:event_exitActionPerformed
 
     private void viewRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewRecordsActionPerformed
-        Userhomepage userHome = new Userhomepage(user, patient);
-        RecordDetails recorddet = new RecordDetails(patient);
+        RecordDetails recorddet;
+        try {
+            recorddet = new RecordDetails(this.patient);
+            recorddet.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
+        }
         dispose();
-        recorddet.setVisible(true);
+        
     }//GEN-LAST:event_viewRecordsActionPerformed
 
     /**

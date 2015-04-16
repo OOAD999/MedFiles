@@ -6,7 +6,6 @@
 package medfile;
 
 import Classes.DBconnect;
-import Classes.Patient;
 import Classes.User;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -164,7 +163,7 @@ public class Login extends javax.swing.JFrame {
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
             User objUser = new User(username.getText());
 
-            String pass = passwordfield.getPassword().toString();
+            String pass = new String(passwordfield.getPassword());
             try {
                 objUser = objUser.login(pass);
             } catch (SQLException ex) {
@@ -184,14 +183,19 @@ public class Login extends javax.swing.JFrame {
                 }
                 else if(objUser.getSecurityID().getRecordLvl() == 2) {
                     //Doctor Homepage
-                    doctorHomepage doctor = new doctorHomepage();
+                    doctorHomepage doctor = new doctorHomepage(objUser);
                     doctor.setVisible(true);
                 }
                 else {
                     //Patient Home page
-                    Userhomepage userhomepage = new Userhomepage(objUser);
-                    userhomepage.usernamepass.setText("Username"+" : "+username.getText());
-                    userhomepage.setVisible(true);
+                    Userhomepage userhomepage;
+                    try {
+                        userhomepage = new Userhomepage(objUser);
+                        userhomepage.usernamepass.setText("Username"+" : "+username.getText());
+                        userhomepage.setVisible(true);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }        
     }//GEN-LAST:event_loginActionPerformed

@@ -19,6 +19,7 @@ public class SecurityProfile {
     private int appointmentLvl;
     private int recordLvl;
     private int userManLvl;
+    private int labManLvl;
     String table = "securityprofile";
 
     public SecurityProfile() {
@@ -86,5 +87,19 @@ public class SecurityProfile {
     
     public String getDBTable() {
         return this.table;
+    }
+
+    /**
+     * @return the labManLvl
+     */
+    public int getLabManLvl() {
+        return labManLvl;
+    }
+
+    /**
+     * @param labManLvl the labManLvl to set
+     */
+    public void setLabManLvl(int labManLvl) {
+        this.labManLvl = labManLvl;
     }
 }

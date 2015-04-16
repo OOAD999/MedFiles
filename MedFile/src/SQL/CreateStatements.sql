@@ -16,7 +16,8 @@ create table `MedFiles`.`securityProfile`
 ID int UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 appointmentSecurity int,
 recordSecurity int,
-userManagmentSecurity int
+userManagmentSecurity int,
+labManagmentSecurity int
 );
 create table `MedFiles`.`patient`
 (
@@ -31,8 +32,8 @@ create table `MedFiles`.`appointment`
 (
 patientID int NOT NULL PRIMARY KEY,
 doctorID int NOT NULL UNIQUE KEY,
-appointmentTime time,
-timecreated time,
+appointmentTime DATETIME,
+timecreated DATETIME,
 creatorID int
 );
 
@@ -52,3 +53,25 @@ doctorDiagnosis varchar (250),
 doctorNote varchar (300),
 labNote varchar(300)
 );
+
+create table `MedFiles`.`doctor`
+(
+ID int UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+userID int,
+maxPatients int,
+currentPatients int
+CONSTRAINT fk_doctor_userID FOREIGN KEY (userID) 
+REFERENCES user(ID)
+);
+
+create table `MedFiles`.`doc_patient`
+(
+ID int UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+doctorID int,
+patientID int
+CONSTRAINT fk_DP_doctorID FOREIGN KEY (doctorID) 
+REFERENCES doctor(ID),
+CONSTRAINT fk_DP_patientID FOREIGN KEY (patientID) 
+REFERENCES patient(ID)
+);
+

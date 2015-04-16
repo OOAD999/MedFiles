@@ -20,6 +20,7 @@ public class SearchModule {
     private ResultSetMapper map = new ResultSetMapper();
     private ArrayList<Patient> listOfPatients;
     private ArrayList<Appointment> listOfAppts;
+    private ArrayList<Doctor> listOfDocs;
     public SearchModule() {
 
     }
@@ -29,7 +30,12 @@ public class SearchModule {
     public ArrayList<Patient> getListOfPatients() {
         return listOfPatients;
     }
-
+    public ArrayList<Appointment> getListOfAppts() {
+        return listOfAppts;
+    }
+    public ArrayList<Doctor> getListOfDocs() {
+        return listOfDocs;
+    }
     /**
      * @param listOfPatients the listOfPatients to set
      */
@@ -44,6 +50,7 @@ public class SearchModule {
         ResultSet results = dbo.select(query);
         user = map.writeResultSet(results, user);
         dbo.disconnect();
+        dbo.selectSecurity(user.getSecurityID());
         return user;
     }
     public ArrayList<Patient> searchPatients(Patient patient) throws SQLException {
@@ -66,7 +73,9 @@ public class SearchModule {
         dbo.disconnect();
         
         for(int i = 0; i < this.listOfPatients.size(); i++) {
-            dbo.selectUser(listOfPatients.get(i));
+            User tmp = new User(listOfPatients.get(i).getId());
+            dbo.selectUser(tmp);
+            this.listOfPatients.get(i).updateUserPatient(tmp);
         }
        
         return this.listOfPatients;
@@ -92,10 +101,35 @@ public class SearchModule {
         dbo.disconnect();
         
         for(int i = 0; i < this.listOfAppts.size(); i++) {
-            dbo.selectPatient(this.listOfAppts.get(i).getPatient());
-            dbo.selectUser(this.listOfAppts.get(i).getDoctor());
-            dbo.selectUser(this.listOfAppts.get(i).getCreator());
+            Appointment tmpAppt = this.listOfAppts.get(i);
+            tmpAppt.setPatient(dbo.selectPatient(tmpAppt.getPatient()));
+            tmpAppt.setCreator(dbo.selectUser(tmpAppt.getCreator()));
+            
+            User tmp = new User(tmpAppt.getDoctor().getId());
+            tmp = dbo.selectUser(tmp);
+            tmpAppt.getDoctor().updateUserDoctor(tmp);
         }
         return this.listOfAppts;
+    }
+    public ArrayList<Doctor> searchAllDocs() throws SQLException {
+        dbo.connect();
+        this.listOfDocs = new ArrayList<Doctor>();
+        PreparedStatement query = dbo.getCon().prepareStatement("SELECT * FROM " + dbo.getDbName() + "." + new Doctor().getDBTable()
+            + " WHERE currentPatients < maxPatients");
+
+        ResultSet results = dbo.select(query);
+        ArrayList<Integer> tmp = new ArrayList<Integer>();
+        while (results.next()) {
+            tmp.add(results.getInt("userID"));
+        }
+        dbo.disconnect();
+        for(int i = 0; i < tmp.size(); i++) {
+            User tu = new User(tmp.get(i));
+            Doctor td = new Doctor(dbo.selectUser(tu));
+            td = dbo.selectDoctor(td);
+            this.listOfDocs.add(td);
+        }
+
+        return this.listOfDocs;
     }
 }

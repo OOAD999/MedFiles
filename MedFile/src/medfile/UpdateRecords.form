@@ -63,7 +63,6 @@
                           <Component id="date" alignment="0" max="32767" attributes="0"/>
                           <Component id="id" max="32767" attributes="0"/>
                           <Component id="patientid" max="32767" attributes="0"/>
-                          <Component id="doctorid" alignment="0" max="32767" attributes="0"/>
                           <Component id="height" alignment="0" max="32767" attributes="0"/>
                           <Component id="weight" alignment="0" max="32767" attributes="0"/>
                           <Component id="visit" alignment="0" max="32767" attributes="0"/>
@@ -72,6 +71,7 @@
                           <Component id="diag" alignment="0" max="32767" attributes="0"/>
                           <Component id="labnote" alignment="0" pref="121" max="32767" attributes="0"/>
                           <Component id="location" alignment="0" max="32767" attributes="0"/>
+                          <Component id="listDoctor" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -97,12 +97,18 @@
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="patientid" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="doctorid" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+                      <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="listDoctor" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                   <Component id="date" min="-2" max="-2" attributes="0"/>
@@ -241,11 +247,6 @@
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JTextField" name="doctorid">
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
-      </AuxValues>
-    </Component>
     <Component class="javax.swing.JTextField" name="height">
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
@@ -334,6 +335,18 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Blood Pressure"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="listDoctor">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="1">
+            <StringItem index="0" value=" "/>
+          </StringArray>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="listDoctorActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

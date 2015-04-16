@@ -5,36 +5,25 @@
  */
 package Classes;
 
-import Classes.DBconnect;
-import com.mysql.jdbc.Statement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  *
  * @author softwareProject
  */
-public class Patient extends User{
-    private int patientID;
-    private Date dob;
-    private String insuranceProvider;
-    private String insuranceID;
-    private String table = "patient";
-    private ArrayList<Record> records;
-    private DBconnect dbo = new DBconnect();
-
-    public Patient() {
-        this.records = new ArrayList<Record>();
+public class Doctor extends User {
+    private int max = 3;
+    private int current;
+    private int doctorID;
+    private ArrayList<Patient> listOfPatients;
+    private String table = "doctor";
+    public Doctor() {
+        
     }
-
-    public Patient(int ID) {
-        super.setId(ID);
-        this.records = new ArrayList<Record>();
+    public Doctor(int id) {
+        this.doctorID = id;
     }
-    public Patient(User user) {
+    public Doctor(User user) {
         this.setId(user.getId());
         this.setFName(user.getFName());
         this.setLName(user.getLName());
@@ -44,61 +33,6 @@ public class Patient extends User{
         this.setEmail(user.getEmail());
         this.setPassword(user.getPassword());            
         this.setAddress(user.getAddress());
-    }
-    /**
-     * @return the patientID
-     */
-    public int getPatientID() {
-        return patientID;
-    }
-
-    /**
-     * @param patientID the patientID to set
-     */
-    public void setPatientID(int patientID) {
-        this.patientID = patientID;
-    }
-
-    /**
-     * @return the dob
-     */
-    public Date getDob() {
-        return dob;
-    }
-
-    /**
-     * @param dob the dob to set
-     */
-    public void setDob(Date dob) {
-        this.dob = dob;
-    }
-
-    /**
-     * @return the insuranceProvider
-     */
-    public String getInsuranceProvider() {
-        return insuranceProvider;
-    }
-
-    /**
-     * @param insuranceProvider the insuranceProvider to set
-     */
-    public void setInsuranceProvider(String insuranceProvider) {
-        this.insuranceProvider = insuranceProvider;
-    }
-
-    /**
-     * @return the insuranceID
-     */
-    public String getInsuranceID() {
-        return insuranceID;
-    }
-
-    /**
-     * @param insuranceID the insuranceID to set
-     */
-    public void setInsuranceID(String insuranceID) {
-        this.insuranceID = insuranceID;
     }
     /**
      * @return the id
@@ -302,20 +236,63 @@ public class Patient extends User{
     public String getDBTable() {
         return this.table;
     }
+
+    /**
+     * @return the max
+     */
+    public int getMax() {
+        return max;
+    }
+
+    /**
+     * @param max the max to set
+     */
+    public void setMax(int max) {
+        this.max = max;
+    }
+
+    /**
+     * @return the current
+     */
+    public int getCurrent() {
+        return current;
+    }
+
+    /**
+     * @param current the current to set
+     */
+    public void setCurrent(int current) {
+        this.current = current;
+    }
+
+    /**
+     * @return the doctorID
+     */
+    public int getDoctorID() {
+        return doctorID;
+    }
+
+    /**
+     * @param doctorID the doctorID to set
+     */
+    public void setDoctorID(int doctorID) {
+        this.doctorID = doctorID;
+    }
+
     /**
      * @return the listOfPatients
      */
-    public ArrayList<Record> getRecords() {
-        return this.records;
+    public ArrayList<Patient> getListOfPatients() {
+        return listOfPatients;
     }
-    public void setRecords(ArrayList<Record> records) {
-        this.records = records;
+
+    /**
+     * @param listOfPatients the listOfPatients to set
+     */
+    public void setListOfPatients(ArrayList<Patient> listOfPatients) {
+        this.listOfPatients = listOfPatients;
     }
-    public ArrayList<Record> getAllRecords() throws SQLException {
-        this.records = dbo.selectRecords(this);
-        return this.records;
-    }
-    public void updateUserPatient(User user) {
+    public void updateUserDoctor(User user) {
         this.setId(user.getId());
         this.setFName(user.getFName());
         this.setLName(user.getLName());
@@ -326,5 +303,4 @@ public class Patient extends User{
         this.setPassword(user.getPassword());            
         this.setAddress(user.getAddress());
     }
-
 }

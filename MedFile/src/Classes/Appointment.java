@@ -18,7 +18,7 @@ import java.util.Date;
  */
 public class Appointment {
     private Patient patient;
-    private User doctor;
+    private Doctor doctor;
     private Date apptTime;
     private Date createdTime;
     private User creator;
@@ -51,14 +51,14 @@ public class Appointment {
     /**
      * @return the doctor
      */
-    public User getDoctor() {
+    public Doctor getDoctor() {
         return doctor;
     }
 
     /**
      * @param doctor the doctor to set
      */
-    public void setDoctor(User doctor) {
+    public void setDoctor(Doctor doctor) {
         this.doctor = doctor;
     }
 

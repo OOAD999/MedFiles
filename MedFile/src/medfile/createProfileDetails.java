@@ -33,6 +33,9 @@ ButtonGroup bg1 = new ButtonGroup( );
 
 bg1.add(admin);
 bg1.add(patient);
+bg1.add(doctor);
+bg1.add(lab);
+
 
 }
 
@@ -68,6 +71,8 @@ bg1.add(patient);
         jLabel10 = new javax.swing.JLabel();
         admin = new javax.swing.JRadioButton();
         patient = new javax.swing.JRadioButton();
+        lab = new javax.swing.JRadioButton();
+        doctor = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -156,6 +161,21 @@ bg1.add(patient);
 
         patient.setText("Patient");
 
+        lab.setText("Lab");
+        lab.setAutoscrolls(true);
+
+        doctor.setText("Doctor");
+        doctor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                doctorMouseClicked(evt);
+            }
+        });
+        doctor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                doctorActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -190,14 +210,18 @@ bg1.add(patient);
                                     .addComponent(jLabel7))
                                 .addGap(166, 166, 166)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(admin)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(patient))
                                     .addComponent(ssn, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(address)
                                     .addComponent(emailid, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(password)))))
+                                    .addComponent(password)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(admin)
+                                            .addComponent(doctor))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lab)
+                                            .addComponent(patient)))))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(337, 337, 337)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -246,7 +270,11 @@ bg1.add(patient);
                     .addComponent(jLabel8)
                     .addComponent(admin)
                     .addComponent(patient))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(doctor)
+                    .addComponent(lab))
+                .addGap(41, 41, 41)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(emailid, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
@@ -260,7 +288,7 @@ bg1.add(patient);
                     .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4)
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -284,6 +312,14 @@ bg1.add(patient);
       else if (patient.isSelected())
       {
           newUser.setSecurityID(new SecurityProfile(1));
+      }
+      else if (doctor.isSelected())
+      {
+          newUser.setSecurityID(new SecurityProfile(3));
+      }
+      else if (lab.isSelected())
+      {
+          newUser.setSecurityID(new SecurityProfile(4));
       }
     //  newUser.insertUser();
        JOptionPane.showMessageDialog(this, "Profile Successfully created");
@@ -341,6 +377,14 @@ bg1.add(patient);
         
     }//GEN-LAST:event_adminMouseClicked
 
+    private void doctorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_doctorMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_doctorMouseClicked
+
+    private void doctorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doctorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_doctorActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -380,6 +424,7 @@ bg1.add(patient);
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField address;
     private javax.swing.JRadioButton admin;
+    private javax.swing.JRadioButton doctor;
     private javax.swing.JTextField emailid;
     private javax.swing.JTextField fname;
     private javax.swing.JButton jButton1;
@@ -395,6 +440,7 @@ bg1.add(patient);
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JRadioButton lab;
     private javax.swing.JTextField lname;
     private javax.swing.JTextField password;
     private javax.swing.JRadioButton patient;

@@ -5,10 +5,10 @@
  */
 package medfile;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import Classes.Patient;
+import Classes.Record;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
@@ -18,29 +18,27 @@ import javax.swing.table.DefaultTableModel;
  * @author ashwinrameshkumar
  */
 public class viewRecords extends javax.swing.JFrame {
-        DefaultTableModel model = null;
+    DefaultTableModel model = null;
         
-       static Connection conn ;
-        PreparedStatement stmt = null;
-        String id_pass = null;
-                    String patientID_pass = null;
-                    String recordDate_pass = null;
-                   String  doctorID_pass = null;
-                    String location_pass = null;
-                    String height_pass = null;
-                    String weight_pass = null;
-                    String bloodPressure_pass = null;
-                    String cholestrol_pass = null;
-                    String reasonforVisit_pass = null;
-                   String doctorDiagnosis_pass = null;
-                    String doctorNote_pass = null;
-                    String labNote_pass = null;
+    String id_pass = null;
+    String patientID_pass = null;
+    String recordDate_pass = null;
+    String doctorID_pass = null;
+    String location_pass = null;
+    String height_pass = null;
+    String weight_pass = null;
+    String bloodPressure_pass = null;
+    String cholestrol_pass = null;
+    String reasonforVisit_pass = null;
+    String doctorDiagnosis_pass = null;
+    String doctorNote_pass = null;
+    String labNote_pass = null;
+    Patient patient;
     /**
      * Creates new form viewRecords
      */
     public viewRecords() {
         initComponents();
-        conn = Connect.getConnect();
         model = (DefaultTableModel) ResultTab.getModel();
     }
 
@@ -58,10 +56,10 @@ public class viewRecords extends javax.swing.JFrame {
         patientID = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         doctorID = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        retrieve = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         ResultTab = new javax.swing.JTable();
-        jButton2 = new javax.swing.JButton();
+        edit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -72,10 +70,10 @@ public class viewRecords extends javax.swing.JFrame {
 
         jLabel3.setText("Doctor ID");
 
-        jButton1.setText("Retrieve");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        retrieve.setText("Retrieve");
+        retrieve.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                retrieveActionPerformed(evt);
             }
         });
 
@@ -84,7 +82,7 @@ public class viewRecords extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "patientID", "recordDate", "doctorID", "location", "height", "weight", "bloodPressure", "cholesterol", "reasonforVisit", "doctorDiagnosis", "doctorNote", "labNote"
+                "Date", "Doctor", "Location", "Reason For Visit", "Doctor Diagnosis", "Weight", "Height", "Blood Pressure", "Cholesterol", "Doctor Note", "Lab Note"
             }
         ));
         ResultTab.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -94,10 +92,10 @@ public class viewRecords extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(ResultTab);
 
-        jButton2.setText("Edit");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        edit.setText("Edit");
+        edit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                editActionPerformed(evt);
             }
         });
 
@@ -117,8 +115,8 @@ public class viewRecords extends javax.swing.JFrame {
                 .addComponent(patientID, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(157, 157, 157)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(edit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(retrieve, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(146, 146, 146)
                 .addComponent(jLabel3)
                 .addGap(30, 30, 30)
@@ -136,9 +134,9 @@ public class viewRecords extends javax.swing.JFrame {
                     .addComponent(patientID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(doctorID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(retrieve))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2)
+                .addComponent(edit)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -147,116 +145,65 @@ public class viewRecords extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-            try {
-                // TODO add your handling code here:
-                model.setRowCount(0);
-                // TODO add your handling code here:
+    private void retrieveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retrieveActionPerformed
+
+        model.setRowCount(0);
+
+        ArrayList<Record> records;
+        try {
+            patient = new Patient(Integer.parseInt(patientID.getText()));
+            records = patient.getAllRecords();
+        
+        if(!(records.isEmpty())) {
+            for(int i = 0; i < records.size(); i++) {
+                Record tmp = records.get(i);
                 
-                
-                String SQL= "SELECT a.ID,a.patientID,a.recordDate,a.doctorID,a.location,a.height,a.weight,a.bloodPressure,a.cholesterol,a.reasonforVisit,a.doctorDiagnosis,a.doctorNote,a.labNote from MedFiles.record a where a.patientID  like '%"+patientID.getText()+"%' AND a.doctorID like '%"+doctorID.getText()+"%' ;";
-                stmt = conn.prepareStatement(SQL);
-                System.out.println("SQL is "+stmt);
-                
-                ResultSet rs = null;
-                //  System.out.println(stmt);
-                String ID=null;
-                String patientID=null;
-                String recordDate = null;
-                String doctorID=null;
-                String location=null;
-                String height=null;
-                String weight=null;
-                String bloodPressure=null;
-                String cholestrol=null;
-                String reasonforVisit=null;
-                String doctorDiagnosis=null;
-                String doctorNote=null;
-                String labNote=null;
-                
-                int z=0;
-                rs = stmt.executeQuery();
-                //System.out.println(rs);
-                
-                while (rs.next()) {
-                    ID = rs.getString("ID");
-                    patientID = rs.getString("patientID");
-                    recordDate = rs.getString("recordDate");
-                    doctorID = rs.getString("doctorID");
-                    location = rs.getString("location");
-                    height = rs.getString("height");
-                    weight = rs.getString("weight");
-                    bloodPressure = rs.getString("bloodPressure");
-                    cholestrol = rs.getString("cholesterol");
-                    reasonforVisit = rs.getString("reasonforVisit");
-                    doctorDiagnosis = rs.getString("doctorDiagnosis");
-                    doctorNote = rs.getString("doctorNote");
-                    labNote = rs.getString("labNote");
-                    
-                    model.addRow(new Object[]{
-                        ID ,
-                        patientID ,
-                        recordDate ,
-                        doctorID,
-                        location ,
-                        height,
-                        weight ,
-                        bloodPressure ,
-                        cholestrol,
-                        reasonforVisit ,
-                        doctorDiagnosis ,
-                        doctorNote ,
-                        labNote
-                            
-                    });
-                    
-                    
-//             Resulttab.setValueAt(Book_id, z, 0);
-//             Resulttab.setValueAt(Title, z, 1);
-//             Resulttab.setValueAt(Author_name, z, 2);
-//             Resulttab.setValueAt(Branch_id, z, 3);
-//             Resulttab.setValueAt(Total, z, 4);
-//             Resulttab.setValueAt(Avail, z, 5);
-//             z++;
-                    z++;
-                }   } catch (SQLException ex) {
-                Logger.getLogger(viewRecords.class.getName()).log(Level.SEVERE, null, ex);
+                model.addRow(new Object[]{
+                    tmp.getServiceDate().toString(),
+                    tmp.getDoctor().getFName() + " " + tmp.getDoctor().getLName(),
+                    tmp.getDoctor().getAddress(),
+                    tmp.getReason(),
+                    tmp.getDiagnoses(),
+                    tmp.getWeight(),
+                    tmp.getHeight(),
+                    tmp.getBloodPress(),
+                    tmp.getCholest(),
+                    tmp.getDocNotes(),
+                    tmp.getLabNotes()
+                });
             }
-    }//GEN-LAST:event_jButton1ActionPerformed
+        }
+        } catch (SQLException ex) {
+            Logger.getLogger(viewRecords.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_retrieveActionPerformed
 
     private void ResultTabMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ResultTabMouseClicked
-            try {
-                // TODO add your handling code here:
-                ResultSet rs = null;
+        try {
                 int row = ResultTab.getSelectedRow();
-                String tableclick = (ResultTab.getModel().getValueAt(row,0).toString());
-                String SQL = "Select * from MedFiles.record where ID = '"+tableclick+"';";
-                stmt = conn.prepareStatement(SQL);
-                rs = stmt.executeQuery();
-                if(rs.next())
-                {
-                     id_pass = rs.getString("ID");
-                     patientID_pass = rs.getString("patientID");
-                     recordDate_pass = rs.getString("recordDate");
-                     doctorID_pass = rs.getString("doctorID");
-                     location_pass = rs.getString("location");
-                     height_pass = rs.getString("height");
-                     weight_pass = rs.getString("weight");
-                     bloodPressure_pass = rs.getString("bloodPressure");
-                     cholestrol_pass = rs.getString("cholesterol");
-                     reasonforVisit_pass = rs.getString("reasonforVisit");
-                    doctorDiagnosis_pass = rs.getString("doctorDiagnosis");
-                     doctorNote_pass = rs.getString("doctorNote");
-                     labNote_pass = rs.getString("labNote");
-                    System.out.println(id_pass);
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(viewRecords.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                int tableclick = (int)ResultTab.getModel().getValueAt(row,0);
         
+            Record tmp = patient.getAllRecords().get(tableclick);
+                id_pass = Integer.toString(tmp.getId());
+                patientID_pass = Integer.toString(tmp.getPatient().getPatientID());
+                recordDate_pass = tmp.getServiceDate().toString();
+                doctorID_pass = Integer.toString(tmp.getDoctor().getId());
+                location_pass = tmp.getDoctor().getAddress();
+                height_pass = tmp.getHeight();
+                weight_pass =  tmp.getWeight();
+                bloodPressure_pass = tmp.getBloodPress();
+                cholestrol_pass =  tmp.getCholest();
+                reasonforVisit_pass = tmp.getReason();
+                doctorDiagnosis_pass =  tmp.getDiagnoses();
+                doctorNote_pass = tmp.getDocNotes();
+                labNote_pass = tmp.getLabNotes();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(viewRecords.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_ResultTabMouseClicked
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editActionPerformed
         // TODO add your handling code here:
         UpdateRecords update = new UpdateRecords();
         
@@ -265,7 +212,7 @@ public class viewRecords extends javax.swing.JFrame {
         update.id.setText(id_pass);
         update.patientid.setText(patientID_pass);
 //        update.date.setDate(recordDate_pass.toString());
-        update.doctorid.setText(doctorID_pass);
+//        update.doctorid.setText(doctorID_pass);
         update.location.setText(location_pass);
         update.height.setText(height_pass);
         update.weight.setText(weight_pass);
@@ -277,7 +224,7 @@ public class viewRecords extends javax.swing.JFrame {
         update.diag.setText(doctorDiagnosis_pass);
  
 
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_editActionPerformed
 
     /**
      * @param args the command line arguments
@@ -317,12 +264,12 @@ public class viewRecords extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable ResultTab;
     private javax.swing.JTextField doctorID;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton edit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField patientID;
+    private javax.swing.JButton retrieve;
     // End of variables declaration//GEN-END:variables
 }

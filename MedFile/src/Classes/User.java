@@ -34,7 +34,7 @@ public class User {
     private SecurityProfile securityID;
     private String table = "user";
     private DBconnect dbo;
-    private Search search;
+    private SearchModule search = new SearchModule();
 
     public User() {
     }

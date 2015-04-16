@@ -6,6 +6,9 @@
 package medfile;
 
 import Classes.User;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -31,10 +34,10 @@ public class Adminhomepage extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        createProfile = new javax.swing.JButton();
+        createAppt = new javax.swing.JButton();
+        patientDetails = new javax.swing.JButton();
+        viewAppointment = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -42,28 +45,33 @@ public class Adminhomepage extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Welcome Admin");
 
-        jButton1.setText("Create Profile");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        createProfile.setText("Create Profile");
+        createProfile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                createProfileActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Create Appointment");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        createAppt.setText("Create Appointment");
+        createAppt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                createApptActionPerformed(evt);
             }
         });
 
-        jButton3.setText("View Patient details");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        patientDetails.setText("View Patient details");
+        patientDetails.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                patientDetailsActionPerformed(evt);
             }
         });
 
-        jButton4.setText("View Appointment");
+        viewAppointment.setText("View Appointment");
+        viewAppointment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewAppointmentActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -72,12 +80,12 @@ public class Adminhomepage extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(createProfile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(createAppt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(viewAppointment, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(patientDetails, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32))
             .addGroup(layout.createSequentialGroup()
                 .addGap(146, 146, 146)
@@ -91,37 +99,51 @@ public class Adminhomepage extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(59, 59, 59)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton3))
+                    .addComponent(createProfile)
+                    .addComponent(patientDetails))
                 .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton4))
+                    .addComponent(createAppt)
+                    .addComponent(viewAppointment))
                 .addContainerGap(98, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void createProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createProfileActionPerformed
         // TODO add your handling code here:
         createProfileDetails patientdet = new createProfileDetails();
         patientdet.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_createProfileActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void createApptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createApptActionPerformed
         // TODO add your handling code here:
-         createAppointment createnew = new createAppointment(user);
-//        dispose();
-        createnew.setVisible(true);
-    }//GEN-LAST:event_jButton2ActionPerformed
+         createAppointment createnew;
+        try {
+            createnew = new createAppointment(user);
+            createnew.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(Adminhomepage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_createApptActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void patientDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_patientDetailsActionPerformed
         // TODO add your handling code here:
         patientSearch search = new patientSearch();
         search.setVisible(true);
-    }//GEN-LAST:event_jButton3ActionPerformed
-
+    }//GEN-LAST:event_patientDetailsActionPerformed
+    private void viewAppointmentActionPerformed(java.awt.event.ActionEvent evt){ 
+        viewAppointment viewAppts;
+        try {
+            viewAppts = new viewAppointment();
+            viewAppts.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(Adminhomepage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
     /**
      * @param args the command line arguments
      */
@@ -158,10 +180,10 @@ public class Adminhomepage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton createAppt;
+    private javax.swing.JButton createProfile;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton patientDetails;
+    private javax.swing.JButton viewAppointment;
     // End of variables declaration//GEN-END:variables
 }

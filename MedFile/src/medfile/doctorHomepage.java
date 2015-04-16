@@ -5,6 +5,8 @@
  */
 package medfile;
 
+import Classes.User;
+
 /**
  *
  * @author ashwinrameshkumar
@@ -14,8 +16,10 @@ public class doctorHomepage extends javax.swing.JFrame {
     /**
      * Creates new form doctorHomepage
      */
-    public doctorHomepage() {
+    public static User user;
+    public doctorHomepage(User user) {
         initComponents();
+        this.user = user;
     }
 
     /**
@@ -28,33 +32,33 @@ public class doctorHomepage extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        viewRecords = new javax.swing.JButton();
+        createRecord = new javax.swing.JButton();
+        exit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         jLabel1.setText("Doctor Homepage");
 
-        jButton1.setText("View/Edit Records");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        viewRecords.setText("View/Edit Records");
+        viewRecords.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                viewRecordsActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Create Records");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        createRecord.setText("Create Records");
+        createRecord.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                createRecordActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Exit");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        exit.setText("Exit");
+        exit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                exitActionPerformed(evt);
             }
         });
 
@@ -66,13 +70,13 @@ public class doctorHomepage extends javax.swing.JFrame {
                 .addGap(141, 141, 141)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton3)
+                .addComponent(exit)
                 .addGap(17, 17, 17))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 123, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(viewRecords, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(createRecord, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(119, 119, 119))
         );
         layout.setVerticalGroup(
@@ -81,33 +85,33 @@ public class doctorHomepage extends javax.swing.JFrame {
                 .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jButton3))
+                    .addComponent(exit))
                 .addGap(53, 53, 53)
-                .addComponent(jButton1)
+                .addComponent(viewRecords)
                 .addGap(45, 45, 45)
-                .addComponent(jButton2)
+                .addComponent(createRecord)
                 .addContainerGap(93, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void viewRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewRecordsActionPerformed
         // TODO add your handling code here:
         viewRecords view = new viewRecords();
         view.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_viewRecordsActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void createRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createRecordActionPerformed
         // TODO add your handling code here:
         createRecords create = new createRecords();
         create.setVisible(true);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_createRecordActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
         // TODO add your handling code here:
         dispose();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_exitActionPerformed
 
     /**
      * @param args the command line arguments
@@ -139,15 +143,15 @@ public class doctorHomepage extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new doctorHomepage().setVisible(true);
+                new doctorHomepage(user).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton createRecord;
+    private javax.swing.JButton exit;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton viewRecords;
     // End of variables declaration//GEN-END:variables
 }

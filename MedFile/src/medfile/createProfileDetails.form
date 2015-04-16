@@ -58,15 +58,21 @@
                               </Group>
                               <EmptySpace min="-2" pref="166" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <Component id="admin" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="patient" min="-2" max="-2" attributes="0"/>
-                                  </Group>
                                   <Component id="ssn" alignment="1" max="32767" attributes="0"/>
                                   <Component id="address" max="32767" attributes="0"/>
                                   <Component id="emailid" alignment="1" max="32767" attributes="0"/>
                                   <Component id="password" max="32767" attributes="0"/>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="admin" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="doctor" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="lab" min="-2" max="-2" attributes="0"/>
+                                          <Component id="patient" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
                               </Group>
                           </Group>
                       </Group>
@@ -135,7 +141,12 @@
                   <Component id="admin" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="patient" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="doctor" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lab" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="emailid" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
                   <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -152,7 +163,7 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jButton4" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="41" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -277,6 +288,21 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Patient"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="lab">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Lab"/>
+        <Property name="autoscrolls" type="boolean" value="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="doctor">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Doctor"/>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="doctorMouseClicked"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="doctorActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
