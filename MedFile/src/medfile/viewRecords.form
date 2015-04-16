@@ -41,9 +41,9 @@
               </Group>
               <EmptySpace min="-2" pref="146" max="-2" attributes="0"/>
               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-              <Component id="doctorID" min="-2" pref="120" max="-2" attributes="0"/>
-              <EmptySpace pref="29" max="32767" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="listDoctor" min="-2" pref="116" max="-2" attributes="0"/>
+              <EmptySpace pref="59" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -57,8 +57,8 @@
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="patientID" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="doctorID" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="retrieve" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="listDoctor" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="edit" min="-2" max="-2" attributes="0"/>
@@ -87,10 +87,8 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Doctor ID"/>
+        <Property name="text" type="java.lang.String" value="Doctor"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="doctorID">
     </Component>
     <Component class="javax.swing.JButton" name="retrieve">
       <Properties>
@@ -138,6 +136,13 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="listDoctor">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="0"/>
+        </Property>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

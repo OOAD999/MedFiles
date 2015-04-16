@@ -5,13 +5,18 @@
  */
 package medfile;
 
+import Classes.DBconnect;
+import Classes.Doctor;
 import Classes.Patient;
 import Classes.Record;
+import Classes.SearchModule;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
+
 
 /**
  *
@@ -34,12 +39,25 @@ public class viewRecords extends javax.swing.JFrame {
     String doctorNote_pass = null;
     String labNote_pass = null;
     Patient patient;
+    SearchModule search = new SearchModule();
+    DBconnect dbo = new DBconnect();
+    
     /**
      * Creates new form viewRecords
      */
-    public viewRecords() {
+    public viewRecords() throws SQLException {
         initComponents();
         model = (DefaultTableModel) ResultTab.getModel();
+        ArrayList<Doctor> docs = search.searchAllDocs();
+        if(docs != null) {
+            DefaultComboBoxModel model = new DefaultComboBoxModel();
+            for(int i = 0; i < docs.size(); i++) {
+                Doctor tmp = docs.get(i);
+                dbo.selectDoctor(tmp);
+                model.addElement(tmp.getLName() + " :" + tmp.getDoctorID());
+            }
+            listDoctor.setModel(model);
+        }
     }
 
     /**
@@ -55,11 +73,11 @@ public class viewRecords extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         patientID = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        doctorID = new javax.swing.JTextField();
         retrieve = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         ResultTab = new javax.swing.JTable();
         edit = new javax.swing.JButton();
+        listDoctor = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,7 +86,7 @@ public class viewRecords extends javax.swing.JFrame {
 
         jLabel2.setText("Patient ID");
 
-        jLabel3.setText("Doctor ID");
+        jLabel3.setText("Doctor");
 
         retrieve.setText("Retrieve");
         retrieve.addActionListener(new java.awt.event.ActionListener() {
@@ -119,9 +137,9 @@ public class viewRecords extends javax.swing.JFrame {
                     .addComponent(retrieve, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(146, 146, 146)
                 .addComponent(jLabel3)
-                .addGap(30, 30, 30)
-                .addComponent(doctorID, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(listDoctor, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(59, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -133,8 +151,8 @@ public class viewRecords extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(patientID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
-                    .addComponent(doctorID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(retrieve))
+                    .addComponent(retrieve)
+                    .addComponent(listDoctor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(edit)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
@@ -151,8 +169,15 @@ public class viewRecords extends javax.swing.JFrame {
 
         ArrayList<Record> records;
         try {
-            patient = new Patient(Integer.parseInt(patientID.getText()));
+            patient = new Patient();
+            patient.setPatientID(Integer.parseInt(patientID.getText()));
             records = patient.getAllRecords();
+            
+            String[] tmpString = listDoctor.getSelectedItem().toString().split(":");
+            Doctor doctor = new Doctor(Integer.parseInt(tmpString[1]));
+
+            doctor = dbo.selectDoctor(doctor);
+
         
         if(!(records.isEmpty())) {
             for(int i = 0; i < records.size(); i++) {
@@ -205,14 +230,16 @@ public class viewRecords extends javax.swing.JFrame {
 
     private void editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editActionPerformed
         // TODO add your handling code here:
-        UpdateRecords update = new UpdateRecords();
-        
-        update.setVisible(true);
+        UpdateRecords update;
+        try {
+            update = new UpdateRecords();
+            update.setVisible(true);
+   
         dispose();
         update.id.setText(id_pass);
         update.patientid.setText(patientID_pass);
-//        update.date.setDate(recordDate_pass.toString());
-//        update.doctorid.setText(doctorID_pass);
+        update.date.setText(recordDate_pass);
+        update.doctorLabel.setText(doctorID_pass);
         update.location.setText(location_pass);
         update.height.setText(height_pass);
         update.weight.setText(weight_pass);
@@ -222,7 +249,9 @@ public class viewRecords extends javax.swing.JFrame {
         update.note.setText(doctorNote_pass);
         update.labnote.setText(labNote_pass);
         update.diag.setText(doctorDiagnosis_pass);
- 
+         } catch (SQLException ex) {
+            Logger.getLogger(viewRecords.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }//GEN-LAST:event_editActionPerformed
 
@@ -256,19 +285,23 @@ public class viewRecords extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new viewRecords().setVisible(true);
+                try {
+                    new viewRecords().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(viewRecords.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable ResultTab;
-    private javax.swing.JTextField doctorID;
     private javax.swing.JButton edit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JComboBox listDoctor;
     private javax.swing.JTextField patientID;
     private javax.swing.JButton retrieve;
     // End of variables declaration//GEN-END:variables
