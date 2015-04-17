@@ -8,37 +8,35 @@ package medfile;
 import Classes.Patient;
 import Classes.SecurityProfile;
 import Classes.DBconnect;
+import Classes.User;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author ashwinrameshkumar
- */
 public class createProfileDetails extends javax.swing.JFrame {
-    Patient newUser;
+
+    User newUser;
+    DBconnect dbo = new DBconnect();
+
     /**
      * Creates new form createPatientDetails
      */
     public createProfileDetails() {
         initComponents();
         groupButton();
-
+        cont.setVisible(false);
+        create.setVisible(false);
     }
-private void groupButton( ) {
 
-ButtonGroup bg1 = new ButtonGroup( );
-
-bg1.add(admin);
-bg1.add(patient);
-bg1.add(doctor);
-bg1.add(lab);
-
-
-}
-
+    private void groupButton() {
+        ButtonGroup bg1 = new ButtonGroup();
+        bg1.add(admin);
+        bg1.add(patient);
+        bg1.add(doctor);
+        bg1.add(lab);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -57,16 +55,16 @@ bg1.add(lab);
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        create = new javax.swing.JButton();
+        clear = new javax.swing.JButton();
         fname = new javax.swing.JTextField();
         lname = new javax.swing.JTextField();
         pnumber = new javax.swing.JTextField();
         address = new javax.swing.JTextField();
         ssn = new javax.swing.JTextField();
         emailid = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        exit = new javax.swing.JButton();
+        cont = new javax.swing.JButton();
         password = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         admin = new javax.swing.JRadioButton();
@@ -93,86 +91,62 @@ bg1.add(lab);
 
         jLabel9.setText("Email ID");
 
-        jButton1.setText("Create");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        create.setText("Create");
+        create.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                createActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Clear");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        clear.setText("Clear");
+        clear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                clearActionPerformed(evt);
             }
         });
 
-        lname.addActionListener(new java.awt.event.ActionListener() {
+        exit.setText("Exit");
+        exit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lnameActionPerformed(evt);
+                exitActionPerformed(evt);
             }
         });
 
-        address.addActionListener(new java.awt.event.ActionListener() {
+        cont.setText("Continue");
+        cont.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addressActionPerformed(evt);
-            }
-        });
-
-        ssn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ssnActionPerformed(evt);
-            }
-        });
-
-        emailid.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                emailidActionPerformed(evt);
-            }
-        });
-
-        jButton3.setText("Exit");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
-        jButton4.setText("Continue");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                contActionPerformed(evt);
             }
         });
 
         jLabel10.setText("User Password");
 
         admin.setText("Admin");
-        admin.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                adminMouseClicked(evt);
-            }
-        });
-        admin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                adminActionPerformed(evt);
+        admin.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                adminItemStateChanged(evt);
             }
         });
 
         patient.setText("Patient");
+        patient.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                patientItemStateChanged(evt);
+            }
+        });
 
         lab.setText("Lab");
         lab.setAutoscrolls(true);
-
-        doctor.setText("Doctor");
-        doctor.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                doctorMouseClicked(evt);
+        lab.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                labItemStateChanged(evt);
             }
         });
-        doctor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                doctorActionPerformed(evt);
+
+        doctor.setText("Doctor");
+        doctor.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                doctorItemStateChanged(evt);
             }
         });
 
@@ -186,7 +160,7 @@ bg1.add(lab);
                         .addGap(201, 201, 201)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3)
+                        .addComponent(exit)
                         .addGap(9, 9, 9))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(80, 80, 80)
@@ -225,11 +199,11 @@ bg1.add(lab);
                     .addGroup(layout.createSequentialGroup()
                         .addGap(337, 337, 337)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cont, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(create, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(clear, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 3, Short.MAX_VALUE)))))
                 .addGap(58, 58, 58))
         );
@@ -239,7 +213,7 @@ bg1.add(lab);
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jButton3))
+                    .addComponent(exit))
                 .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
@@ -284,49 +258,29 @@ bg1.add(lab);
                     .addComponent(jLabel10))
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1))
+                    .addComponent(clear)
+                    .addComponent(create))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4)
+                .addComponent(cont)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        newUser = new Patient();
-        newUser.setFName(fname.getText());
-        newUser.setLName(lname.getText());
-        newUser.setPhone(pnumber.getText());
-        newUser.setAddress(address.getText());
-        newUser.setSSN(ssn.getText());
-        newUser.setEmail(emailid.getText());
-        newUser.setPassword(password.getText());
-        
-      if(admin.isSelected())
-      {
-          newUser.setSecurityID(new SecurityProfile(2));
-      }     
-      else if (patient.isSelected())
-      {
-          newUser.setSecurityID(new SecurityProfile(1));
-      }
-      else if (doctor.isSelected())
-      {
-          newUser.setSecurityID(new SecurityProfile(3));
-      }
-      else if (lab.isSelected())
-      {
-          newUser.setSecurityID(new SecurityProfile(4));
-      }
-    //  newUser.insertUser();
-       JOptionPane.showMessageDialog(this, "Profile Successfully created");
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void createActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createActionPerformed
+        createUser();
+        try {
+            newUser = dbo.insertUser(newUser);
+            JOptionPane.showMessageDialog(this, "Profile Successfully created");
+            dispose();
+        } catch (SQLException ex) {
+            Logger.getLogger(createProfileDetails.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+    }//GEN-LAST:event_createActionPerformed
+
+    private void clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearActionPerformed
         fname.setText("");
         lname.setText("");
         address.setText("");
@@ -334,56 +288,82 @@ bg1.add(lab);
         emailid.setText("");
         ssn.setText("");
         ssn.setText("");
-                
-                
-        
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_clearActionPerformed
 
-    private void addressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addressActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_addressActionPerformed
-
-    private void ssnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ssnActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ssnActionPerformed
-
-    private void emailidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailidActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_emailidActionPerformed
-
-    private void lnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lnameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lnameActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+    private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
         dispose();
-        
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_exitActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-        dispose();
-        createPatientDetails profdet = new createPatientDetails(newUser);
-        profdet.setVisible(true);
-    }//GEN-LAST:event_jButton4ActionPerformed
+    private void contActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contActionPerformed
+        try {
+            createUser();
+            newUser = dbo.insertUser(newUser);
+            dispose();
+            createPatientDetails profdet = new createPatientDetails(new Patient(newUser));
+            profdet.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(createProfileDetails.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_contActionPerformed
+    private void createUser() {
+        newUser = new User();
+        newUser.setFName(fname.getText());
+        newUser.setLName(lname.getText());
+        newUser.setPhone(pnumber.getText());
+        newUser.setAddress(address.getText());
+        newUser.setSSN(ssn.getText());
+        newUser.setEmail(emailid.getText());
+        newUser.setPassword(password.getText());
 
-    private void adminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adminActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_adminActionPerformed
+        if (admin.isSelected()) {
+            newUser.setSecurityID(new SecurityProfile(2));
+        } else if (patient.isSelected()) {
+            newUser.setSecurityID(new SecurityProfile(1));
+        } else if (doctor.isSelected()) {
+            newUser.setSecurityID(new SecurityProfile(3));
+        } else if (lab.isSelected()) {
+            newUser.setSecurityID(new SecurityProfile(4));
+        }
+    }
+    private void patientItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_patientItemStateChanged
+        if (patient.isSelected()) {
+            cont.setVisible(true);
+            create.setVisible(false);
+        } else {
+            cont.setVisible(false);
+            create.setVisible(true);
+        }
+    }//GEN-LAST:event_patientItemStateChanged
 
-    private void adminMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_adminMouseClicked
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_adminMouseClicked
+    private void labItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_labItemStateChanged
+        if (lab.isSelected()) {
+            cont.setVisible(false);
+            create.setVisible(true);
+        } else {
+            cont.setVisible(false);
+            create.setVisible(false);
+        }
+    }//GEN-LAST:event_labItemStateChanged
 
-    private void doctorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_doctorMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_doctorMouseClicked
+    private void doctorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_doctorItemStateChanged
+        if (doctor.isSelected()) {
+            cont.setVisible(false);
+            create.setVisible(true);
+        } else {
+            cont.setVisible(false);
+            create.setVisible(false);
+        }
+    }//GEN-LAST:event_doctorItemStateChanged
 
-    private void doctorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doctorActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_doctorActionPerformed
+    private void adminItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_adminItemStateChanged
+        if (admin.isSelected()) {
+            cont.setVisible(false);
+            create.setVisible(true);
+        } else {
+            cont.setVisible(false);
+            create.setVisible(false);
+        }
+    }//GEN-LAST:event_adminItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -424,13 +404,13 @@ bg1.add(lab);
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField address;
     private javax.swing.JRadioButton admin;
+    private javax.swing.JButton clear;
+    private javax.swing.JButton cont;
+    private javax.swing.JButton create;
     private javax.swing.JRadioButton doctor;
     private javax.swing.JTextField emailid;
+    private javax.swing.JButton exit;
     private javax.swing.JTextField fname;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;

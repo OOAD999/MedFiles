@@ -9,15 +9,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-/**
- *
- * @author softwareProject
- */
 public class ResultSetMapper {
-    
+
     public ResultSetMapper() {
-        
+
     }
+
     public Appointment writeResultSet(ResultSet resultSet, Appointment appt) throws SQLException {
         while (resultSet.next()) {
             Patient tmp = new Patient();
@@ -32,16 +29,18 @@ public class ResultSetMapper {
         }
         return appt;
     }
+
     public Patient writeResultSet(ResultSet resultSet, Patient patient) throws SQLException {
         while (resultSet.next()) {
             patient.setPatientID(resultSet.getInt("patientID"));
             patient.setId(resultSet.getInt("userID"));
             patient.setDob(resultSet.getDate("dob"));
             patient.setInsuranceProvider(resultSet.getString("insuranceProvider"));
-            patient.setInsuranceID(resultSet.getString("insuranceMemberID"));                  
+            patient.setInsuranceID(resultSet.getString("insuranceMemberID"));
         }
         return patient;
     }
+
     public ArrayList<Record> writeResultSet(ResultSet resultSet, ArrayList<Record> records) throws SQLException {
         while (resultSet.next()) {
             Record temp = new Record();
@@ -57,11 +56,12 @@ public class ResultSetMapper {
             temp.setDiagnoses(resultSet.getString("doctorDiagnosis"));
             temp.setDocNotes(resultSet.getString("doctorNote"));
             temp.setLabNotes(resultSet.getString("labNote"));
-            
+
             records.add(temp);
         }
         return records;
     }
+
     public SecurityProfile writeResultSet(ResultSet resultSet, SecurityProfile profile) throws SQLException {
         while (resultSet.next()) {
             profile.setId(resultSet.getInt("ID"));
@@ -72,6 +72,7 @@ public class ResultSetMapper {
         }
         return profile;
     }
+
     public Doctor writeResultSet(ResultSet resultSet, Doctor doctor) throws SQLException {
         while (resultSet.next()) {
             doctor.setDoctorID(resultSet.getInt("ID"));
@@ -81,6 +82,7 @@ public class ResultSetMapper {
         }
         return doctor;
     }
+
     public User writeResultSet(ResultSet resultSet, User user) throws SQLException {
         while (resultSet.next()) {
             user.setId(resultSet.getInt("ID"));
@@ -90,11 +92,12 @@ public class ResultSetMapper {
             user.setSSN(resultSet.getString("ssn"));
             user.setSecurityID(new SecurityProfile(resultSet.getInt("securityID")));
             user.setEmail(resultSet.getString("emailID"));
-            user.setPassword(resultSet.getString("userPassword"));            
+            user.setPassword(resultSet.getString("userPassword"));
             user.setAddress(resultSet.getString("address"));
         }
         return user;
     }
+
     public ArrayList<Patient> writeResultPatientsList(ResultSet resultSet) throws SQLException {
         ArrayList<Patient> listOfPatients = new ArrayList<Patient>();
         while (resultSet.next()) {
@@ -108,6 +111,7 @@ public class ResultSetMapper {
         }
         return listOfPatients;
     }
+
     public ArrayList<Appointment> writeResultApptList(ResultSet resultSet) throws SQLException {
         ArrayList<Appointment> listOfAppts = new ArrayList<Appointment>();
         while (resultSet.next()) {
@@ -124,6 +128,7 @@ public class ResultSetMapper {
         }
         return listOfAppts;
     }
+
     public ArrayList<Doctor> writeResultDocList(ResultSet resultSet) throws SQLException {
         ArrayList<Doctor> listOfDocs = new ArrayList<Doctor>();
         while (resultSet.next()) {

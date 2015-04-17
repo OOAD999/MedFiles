@@ -14,21 +14,17 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author ashwinrameshkumar
- */
 public class Userhomepage extends javax.swing.JFrame {
+
     /**
      * Creates new form Userhomepage
      */
     public static DBconnect dbo = new DBconnect();
     public static User user;
     public static Patient patient;
+
     public Userhomepage(User user) throws SQLException {
         initComponents();
         this.user = user;
@@ -36,25 +32,28 @@ public class Userhomepage extends javax.swing.JFrame {
         dbo.selectPatient(patient);
         loadAppointment();
     }
+
     public Userhomepage(User user, Patient patient) throws SQLException {
         initComponents();
         this.user = user;
         this.patient = patient;
         loadAppointment();
     }
+
     public void loadAppointment() throws SQLException {
         Appointment appt = new Appointment();
         appt.setPatient(patient);
         dbo.selectAppt(appt);
-        if(appt.getApptTime() != null) {
+        if (appt.getApptTime() != null) {
             doctorText.setText(appt.getDoctor().getFName() + " " + appt.getDoctor().getLName());
             dateText.setText(appt.getApptTime().toString());
             locationText.setText(appt.getDoctor().getAddress());
-        }else {
+        } else {
             apptContainer.setVisible(false);
             apptLabel.setText("No Appointments Scheduled");
         }
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -247,13 +246,13 @@ public class Userhomepage extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(Userhomepage.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_createApptActionPerformed
 
     private void logOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutActionPerformed
         Login log = new Login();
         dispose();
-        log.setVisible(true);    
+        log.setVisible(true);
     }//GEN-LAST:event_logOutActionPerformed
 
     /**

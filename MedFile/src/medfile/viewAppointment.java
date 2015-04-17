@@ -9,7 +9,6 @@ import Classes.Appointment;
 import Classes.Doctor;
 import Classes.Patient;
 import Classes.SearchModule;
-import Classes.User;
 import Classes.DBconnect;
 import java.sql.SQLException;
 import java.sql.ResultSet;
@@ -17,24 +16,20 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-
-/**
- *
- * @author ashwinrameshkumar
- */
 public class viewAppointment extends javax.swing.JFrame {
-        DefaultTableModel model = null;
-        String patient=null;
-        String doctor=null;
-        String time = null;
-        String created=null;
-        String creator=null;
-        SearchModule search = new SearchModule();
-        DBconnect dbo = new DBconnect();
-        ResultSet rs;
+
+    DefaultTableModel model = null;
+    String patient = null;
+    String doctor = null;
+    String time = null;
+    String created = null;
+    String creator = null;
+    SearchModule search = new SearchModule();
+    DBconnect dbo = new DBconnect();
+    ResultSet rs;
+
     /**
      * Creates new form viewAppointment
      */
@@ -42,9 +37,9 @@ public class viewAppointment extends javax.swing.JFrame {
         initComponents();
         model = (DefaultTableModel) ResultTab.getModel();
         ArrayList<Doctor> docs = search.searchAllDocs();
-        if(docs != null) {
+        if (docs != null) {
             DefaultComboBoxModel model = new DefaultComboBoxModel();
-            for(int i = 0; i < docs.size(); i++) {
+            for (int i = 0; i < docs.size(); i++) {
                 Doctor tmp = docs.get(i);
                 dbo.selectDoctor(tmp);
                 model.addElement(tmp.getLName() + " :" + tmp.getDoctorID());
@@ -64,16 +59,16 @@ public class viewAppointment extends javax.swing.JFrame {
 
         jFormattedTextField1 = new javax.swing.JFormattedTextField();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        exit = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         patientid = new javax.swing.JTextField();
         viewAppointment = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        clear = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         ResultTab = new javax.swing.JTable();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        delete = new javax.swing.JButton();
+        update = new javax.swing.JButton();
         listDoctor = new javax.swing.JComboBox();
 
         jFormattedTextField1.setText("jFormattedTextField1");
@@ -83,10 +78,10 @@ public class viewAppointment extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         jLabel1.setText("View Appointments");
 
-        jButton1.setText("Exit");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        exit.setText("Exit");
+        exit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                exitActionPerformed(evt);
             }
         });
 
@@ -101,10 +96,10 @@ public class viewAppointment extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("Clear");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        clear.setText("Clear");
+        clear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                clearActionPerformed(evt);
             }
         });
 
@@ -123,20 +118,14 @@ public class viewAppointment extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(ResultTab);
 
-        jButton4.setText("Delete");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        delete.setText("Delete");
+        delete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                deleteActionPerformed(evt);
             }
         });
 
-        jButton5.setText("Update");
-
-        listDoctor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                listDoctorActionPerformed(evt);
-            }
-        });
+        update.setText("Update");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -146,7 +135,7 @@ public class viewAppointment extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(172, 172, 172)
-                .addComponent(jButton1)
+                .addComponent(exit)
                 .addGap(22, 22, 22))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -160,15 +149,15 @@ public class viewAppointment extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 164, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(update, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(listDoctor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(viewAppointment, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+                            .addComponent(clear, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
                             .addComponent(patientid, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE))))
                 .addGap(124, 124, 124))
         );
@@ -178,7 +167,7 @@ public class viewAppointment extends javax.swing.JFrame {
                 .addContainerGap(200, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jButton1))
+                    .addComponent(exit))
                 .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -193,11 +182,11 @@ public class viewAppointment extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(viewAppointment)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
+                .addComponent(clear)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5))
+                    .addComponent(delete)
+                    .addComponent(update))
                 .addGap(19, 19, 19)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -205,101 +194,88 @@ public class viewAppointment extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+    private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
         dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_exitActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+    private void clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearActionPerformed
         patientid.setText("");
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_clearActionPerformed
 
     private void viewAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewAppointmentActionPerformed
-    try {
-        model.setRowCount(0);
-        Appointment appt = new Appointment();
-        if(!patientid.getText().equals("")) {
-            Patient tmpP = new Patient();
-            tmpP.setPatientID(Integer.parseInt(patientid.getText()));
-            appt.setPatient(tmpP);
-        }
-        String[] tmpString = listDoctor.getSelectedItem().toString().split(":");
-        Doctor tmpD = new Doctor(Integer.parseInt(tmpString[1]));
         try {
-            appt.setDoctor(dbo.selectDoctor(tmpD));
+            model.setRowCount(0);
+            Appointment appt = new Appointment();
+            if (!patientid.getText().equals("")) {
+                Patient tmpP = new Patient();
+                tmpP.setPatientID(Integer.parseInt(patientid.getText()));
+                appt.setPatient(tmpP);
+            }
+            String[] tmpString = listDoctor.getSelectedItem().toString().split(":");
+            Doctor tmpD = new Doctor(Integer.parseInt(tmpString[1]));
+            try {
+                appt.setDoctor(dbo.selectDoctor(tmpD));
+            } catch (SQLException ex) {
+                Logger.getLogger(createAppointment.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ArrayList<Appointment> results = search.searchAppt(appt);
+            String patientid = null;
+            String doctorid = null;
+            String appointmenttime = null;
+            String timecreated = null;
+            String creatorid = null;
+            int z = 0;
+            for (int i = 0; i < results.size(); i++) {
+                Appointment tmp = results.get(i);
+                patientid = Integer.toString(tmp.getPatient().getPatientID());
+                doctorid = Integer.toString(tmp.getDoctor().getId());
+                appointmenttime = tmp.getApptTime().toString();
+                timecreated = tmp.getCreatedTime().toString();
+                creatorid = Integer.toString(tmp.getCreator().getId());
+
+                model.addRow(new Object[]{
+                    patientid,
+                    doctorid,
+                    appointmenttime,
+                    timecreated,
+                    creatorid
+
+                });
+                ResultTab.setValueAt(patientid, z, 0);
+                ResultTab.setValueAt(doctorid, z, 1);
+                ResultTab.setValueAt(appointmenttime, z, 2);
+                ResultTab.setValueAt(timecreated, z, 3);
+                ResultTab.setValueAt(creatorid, z, 4);
+                z++;
+            }
         } catch (SQLException ex) {
-            Logger.getLogger(createAppointment.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(viewAppointment.class.getName()).log(Level.SEVERE, null, ex);
         }
-        ArrayList<Appointment> results = search.searchAppt(appt);
-        String patientid=null;
-        String doctorid=null;
-        String appointmenttime = null;
-        String timecreated=null;
-        String creatorid=null;
-        int z=0;
-        for (int i = 0; i < results.size(); i++) {
-            Appointment tmp = results.get(i);
-            patientid = Integer.toString(tmp.getPatient().getPatientID());
-            doctorid = Integer.toString(tmp.getDoctor().getId());
-            appointmenttime = tmp.getApptTime().toString();
-            timecreated = tmp.getCreatedTime().toString();
-            creatorid = Integer.toString(tmp.getCreator().getId());
-            
-            model.addRow(new Object[]{
-                patientid,
-                doctorid,
-                appointmenttime,
-                timecreated,
-                creatorid
-                    
-            });
-            
-            
-            ResultTab.setValueAt(patientid, z, 0);
-            ResultTab.setValueAt(doctorid, z, 1);
-            ResultTab.setValueAt(appointmenttime, z, 2);
-            ResultTab.setValueAt(timecreated, z, 3);
-            ResultTab.setValueAt(creatorid, z, 4);
-//             z++;
-            z++;
-        }
-    } catch (SQLException ex) {
-        Logger.getLogger(viewAppointment.class.getName()).log(Level.SEVERE, null, ex);
-    }
     }//GEN-LAST:event_viewAppointmentActionPerformed
 
     private void ResultTabMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ResultTabMouseClicked
-    try {
-        // TODO add your handling code here:
-        int selectedRow = 0;
-        selectedRow = ResultTab.convertRowIndexToModel(ResultTab.getSelectedRow());
-        System.out.println("Selected Row:"+selectedRow);
-        //
-        
-        if(rs.absolute(selectedRow+1)){
-            patient = rs.getString("patientID");
-            doctor = rs.getString("doctorID");
-            time = rs.getString("appointmentTime");
-            created = rs.getString("timecreated");
-            creator= rs.getString("creatorID");
-            
+        try {
+            int selectedRow = 0;
+            selectedRow = ResultTab.convertRowIndexToModel(ResultTab.getSelectedRow());
+            System.out.println("Selected Row:" + selectedRow);
+
+            if (rs.absolute(selectedRow + 1)) {
+                patient = rs.getString("patientID");
+                doctor = rs.getString("doctorID");
+                time = rs.getString("appointmentTime");
+                created = rs.getString("timecreated");
+                creator = rs.getString("creatorID");
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(viewAppointment.class.getName()).log(Level.SEVERE, null, ex);
         }
-    } catch (SQLException ex) {
-        Logger.getLogger(viewAppointment.class.getName()).log(Level.SEVERE, null, ex);
-    }
-        
-                
 
     }//GEN-LAST:event_ResultTabMouseClicked
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
 
-    }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void listDoctorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listDoctorActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_listDoctorActionPerformed
+    }//GEN-LAST:event_deleteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -342,10 +318,9 @@ public class viewAppointment extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable ResultTab;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton clear;
+    private javax.swing.JButton delete;
+    private javax.swing.JButton exit;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -353,6 +328,7 @@ public class viewAppointment extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox listDoctor;
     public static javax.swing.JTextField patientid;
+    private javax.swing.JButton update;
     private javax.swing.JButton viewAppointment;
     // End of variables declaration//GEN-END:variables
 }

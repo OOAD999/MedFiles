@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package Classes;
-    
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,12 +12,8 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import jdk.nashorn.internal.runtime.Version;
 
-
-/**
- *
- * @author softwareProject
- */
 public class DBconnect {
+
     private Connection con;
     private Statement state;
     private PreparedStatement prepState;
@@ -41,40 +36,48 @@ public class DBconnect {
         this.dbUser = dbUser;
         this.dbPassword = dbPassword;
     }
-    
+
     /**
      * @return the dbName
      */
     public String getDbName() {
         return dbName;
     }
-    
+
     /**
      * @return the conn
      */
     public Connection getCon() {
         return con;
     }
-    
+
     public boolean connect() {
-       try {
+        try {
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + getDbName(), dbUser, dbPassword);
             return true;
-       } catch (Exception e) {
-        //    e.printStackTrace();
-            JOptionPane.showMessageDialog(null,""+e.getMessage(),"Connection Error",JOptionPane.WARNING_MESSAGE);
+        } catch (Exception e) {
+            //    e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "" + e.getMessage(), "Connection Error", JOptionPane.WARNING_MESSAGE);
             return false;
-        } 
+        }
     }
-    
+
     public void disconnect() {
-        try { resultSet.close(); } catch (Exception e) { /* ignored */ }
-        try { prepState.close(); } catch (Exception e) { /* ignored */ }
-        try { state.close(); } catch (Exception e) { /* ignored */ }
-        try { con.close(); } catch (Exception e) { /* ignored */ } 
+        try {
+            resultSet.close();
+        } catch (Exception e) { /* ignored */ }
+        try {
+            prepState.close();
+        } catch (Exception e) { /* ignored */ }
+        try {
+            state.close();
+        } catch (Exception e) { /* ignored */ }
+        try {
+            con.close();
+        } catch (Exception e) { /* ignored */ }
     }
-    
+
     public ResultSet select(PreparedStatement query) {
         if (this.connect()) {
             try {
@@ -84,11 +87,11 @@ public class DBconnect {
                 lgr.log(Level.SEVERE, ex.getMessage(), ex);
 
                 JOptionPane.showMessageDialog(null, "" + ex.getMessage(), "Communication Error", JOptionPane.WARNING_MESSAGE);
-            } 
+            }
         }
         return resultSet;
     }
-        
+
     public ResultSet insertUpdate(PreparedStatement query) {
         if (this.connect()) {
             try {
@@ -102,7 +105,7 @@ public class DBconnect {
         }
         return resultSet;
     }
-    
+
     public boolean delete(PreparedStatement query) {
         boolean result = false;
         if (this.connect()) {
@@ -117,10 +120,11 @@ public class DBconnect {
         }
         return result;
     }
-    public User selectUser(User user) throws SQLException {       
+
+    public User selectUser(User user) throws SQLException {
         this.connect();
         PreparedStatement query = con.prepareStatement("SELECT * FROM " + dbName + "." + user.getDBTable()
-            + " WHERE ID = ?");
+                + " WHERE ID = ?");
         query.setInt(1, user.getId());
         ResultSet results = this.select(query);
         user = map.writeResultSet(results, user);
@@ -128,10 +132,11 @@ public class DBconnect {
         this.selectSecurity(user.getSecurityID());
         return user;
     }
+
     public User insertUser(User user) throws SQLException {
         this.connect();
         PreparedStatement query = con.prepareStatement("INSERT INTO " + dbName + "." + user.getDBTable()
-            + " (fname, lname, pnumber, address, ssn, securityID, emailID, userPassword) VALUES (?,?,?,?,?,?,?,?)", com.mysql.jdbc.Statement.RETURN_GENERATED_KEYS);
+                + " (fname, lname, pnumber, address, ssn, securityID, emailID, userPassword) VALUES (?,?,?,?,?,?,?,?)", com.mysql.jdbc.Statement.RETURN_GENERATED_KEYS);
         query.setString(1, user.getFName());
         query.setString(2, user.getLName());
         query.setString(3, user.getPhone());
@@ -142,18 +147,18 @@ public class DBconnect {
         query.setString(8, user.getPassword());
 
         ResultSet results = this.insertUpdate(query);
-        if(results.next()) {
+        if (results.next()) {
             user.setId(results.getInt(1));
         }
         this.disconnect();
         return user;
     }
-    
+
     public User updateUser(User user) throws SQLException {
         this.connect();
         PreparedStatement query = con.prepareStatement("UPDATE" + dbName + "." + user.getDBTable()
-            + "SET fname = ?, lname = ?, pnumber = ?, address = ?, ssn = ?, securityID = ?, " +
-            "emailID = ?, userPassword = ? WHERE ID = ?");
+                + "SET fname = ?, lname = ?, pnumber = ?, address = ?, ssn = ?, securityID = ?, "
+                + "emailID = ?, userPassword = ? WHERE ID = ?", com.mysql.jdbc.Statement.RETURN_GENERATED_KEYS);
         query.setString(1, user.getFName());
         query.setString(2, user.getLName());
         query.setString(3, user.getPhone());
@@ -168,64 +173,67 @@ public class DBconnect {
         this.disconnect();
         return user;
     }
+
     public User deleteUser(User user) throws SQLException {
         this.connect();
-        PreparedStatement query = con.prepareStatement("DELETE FROM " + dbName + "." + user.getDBTable() +
-            " WHERE ID = ?");
+        PreparedStatement query = con.prepareStatement("DELETE FROM " + dbName + "." + user.getDBTable()
+                + " WHERE ID = ?");
 
         query.setInt(1, user.getId());
         this.delete(query);
         this.disconnect();
         return user;
     }
-        
+
     public SecurityProfile selectSecurity(SecurityProfile profile) throws SQLException {
         this.connect();
         PreparedStatement query = con.prepareStatement("SELECT * FROM " + dbName + "." + profile.getDBTable()
-            + " WHERE ID = ?");
+                + " WHERE ID = ?");
         query.setInt(1, profile.getId());
         ResultSet results = this.select(query);
         profile = map.writeResultSet(results, profile);
         this.disconnect();
         return profile;
     }
+
     public SecurityProfile insertProfile(SecurityProfile profile) throws SQLException {
         this.connect();
         PreparedStatement query = con.prepareStatement("INSERT INTO " + dbName + "." + profile.getDBTable()
-            + "(appointmentSecurity, recordSecurity, userManagmentSecurity) VALUES (?,?,?)", com.mysql.jdbc.Statement.RETURN_GENERATED_KEYS);
+                + "(appointmentSecurity, recordSecurity, userManagmentSecurity) VALUES (?,?,?)", com.mysql.jdbc.Statement.RETURN_GENERATED_KEYS);
         query.setInt(1, profile.getAppointmentLvl());
         query.setInt(2, profile.getRecordLvl());
         query.setInt(3, profile.getUserManLvl());
         ResultSet results = this.insertUpdate(query);
-        if(results.next()) {
+        if (results.next()) {
             profile.setId(results.getInt(1));
         }
         this.disconnect();
         return profile;
     }
-     public ArrayList<Record> selectRecords(Patient patient) throws SQLException {
+
+    public ArrayList<Record> selectRecords(Patient patient) throws SQLException {
         this.connect();
         PreparedStatement query = con.prepareStatement("SELECT * FROM " + dbName + "." + new Record().getDBName()
-            + " WHERE pateintID = ?");
+                + " WHERE pateintID = ?");
         query.setInt(1, patient.getPatientID());
         ResultSet results = this.select(query);
         patient.setRecords(map.writeResultSet(results, new ArrayList<Record>()));
         this.disconnect();
-        if(patient.getRecords() != null) {
-            for(int i = 0; i < patient.getRecords().size(); i++) {
+        if (patient.getRecords() != null) {
+            for (int i = 0; i < patient.getRecords().size(); i++) {
                 this.selectUser(patient.getRecords().get(i).getDoctor());
             }
         }
-        
+
         return patient.getRecords();
     }
-    
+
     public Record insertRecord(Record record) throws SQLException {
         this.connect();
         PreparedStatement query = con.prepareStatement("INSERT INTO " + dbName + "." + record.getDBName()
-            + "(pateintID, recordDate, doctorID, location, height, weight, bloodPressure, " +
-            "cholesterol, reasonforVisit, doctorDiagnosis, doctorNote, labNote) " +
-            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", com.mysql.jdbc.Statement.RETURN_GENERATED_KEYS);
+                + "(pateintID, recordDate, doctorID, location, height, weight, bloodPressure, "
+                + "cholesterol, reasonforVisit, doctorDiagnosis, doctorNote, labNote) "
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", com.mysql.jdbc.Statement.RETURN_GENERATED_KEYS);
         query.setInt(1, record.getPatient().getPatientID());
         query.setDate(2, new java.sql.Date(record.getServiceDate().getTime()));
         query.setInt(3, record.getDoctor().getId());
@@ -240,44 +248,43 @@ public class DBconnect {
         query.setString(12, record.getLabNotes());
 
         ResultSet results = this.insertUpdate(query);
-        if(results.next()) {
+        if (results.next()) {
             record.setId(results.getInt(1));
         }
         this.disconnect();
         return record;
     }
+
     public Record updateRecord(Record record) throws SQLException {
         this.connect();
         PreparedStatement query = con.prepareStatement("UPDATE " + dbName + "." + record.getDBName()
-            + "SET recordDate = ?, doctorID = ?, location = ?, height = ?, weight = ?, bloodPressure = ?, " +
-            "cholesterol = ?, reasonforVisit = ?, doctorDiagnosis = ?, doctorNote = ?, labNote = ? " +
-            "WHERE pateintID = ? AND ID = ?");
+                + " SET height = ?, weight = ?, bloodPressure = ?, "
+                + "cholesterol = ?, reasonforVisit = ?, doctorDiagnosis = ?, doctorNote = ?, labNote = ? "
+                + "WHERE pateintID = ? AND ID = ?", com.mysql.jdbc.Statement.RETURN_GENERATED_KEYS);
 
-        query.setDate(1, new java.sql.Date(record.getServiceDate().getTime()));
-        query.setInt(2, record.getDoctor().getId());
-        query.setString(3, record.getDoctor().getAddress());
-        query.setString(4, record.getHeight());
-        query.setString(5, record.getWeight());
-        query.setString(6, record.getBloodPress());
-        query.setString(7, record.getCholest());
-        query.setString(8, record.getReason());
-        query.setString(9, record.getDiagnoses());
-        query.setString(10, record.getDocNotes());
-        query.setString(11, record.getLabNotes());
-        query.setInt(12, record.getPatient().getPatientID());
-        query.setInt(13, record.getId());
+        query.setString(1, record.getHeight());
+        query.setString(2, record.getWeight());
+        query.setString(3, record.getBloodPress());
+        query.setString(4, record.getCholest());
+        query.setString(5, record.getReason());
+        query.setString(6, record.getDiagnoses());
+        query.setString(7, record.getDocNotes());
+        query.setString(8, record.getLabNotes());
+        query.setInt(9, record.getPatient().getPatientID());
+        query.setInt(10, record.getId());
 
         ResultSet results = this.insertUpdate(query);
-        if(results.next()) {
+        if (results.next()) {
             record.setId(results.getInt(1));
         }
         this.disconnect();
         return record;
     }
+
     public Record deleteRecord(Record record) throws SQLException {
         this.connect();
-        PreparedStatement query = con.prepareStatement("DELETE FROM " + dbName + "." + record.getDBName() +
-            " WHERE pateintID = ? AND ID = ?");
+        PreparedStatement query = con.prepareStatement("DELETE FROM " + dbName + "." + record.getDBName()
+                + " WHERE pateintID = ? AND ID = ?");
 
         query.setInt(1, record.getPatient().getPatientID());
         query.setInt(2, record.getId());
@@ -285,37 +292,39 @@ public class DBconnect {
         this.disconnect();
         return record;
     }
+
     public Patient selectPatient(Patient patient) throws SQLException {
         this.connect();
         PreparedStatement query = con.prepareStatement("SELECT * FROM " + dbName + "." + patient.getDBTable()
-            + " WHERE userID = ? OR patientID = ?");
-        query.setInt(1, patient.getId());   
+                + " WHERE userID = ? OR patientID = ?");
+        query.setInt(1, patient.getId());
         query.setInt(2, patient.getPatientID());
         ResultSet results = this.select(query);
         patient = map.writeResultSet(results, patient);
         this.disconnect();
         return patient;
     }
+
     public Patient insertPatient(Patient patient) throws SQLException {
         this.connect();
         PreparedStatement query = con.prepareStatement("INSERT INTO " + dbName + "." + patient.getDBTable()
-            + "(userID, dob, insuranceProvider, insuranceMemberID) VALUES (?,?,?,?)", com.mysql.jdbc.Statement.RETURN_GENERATED_KEYS);
+                + "(userID, dob, insuranceProvider, insuranceMemberID) VALUES (?,?,?,?)", com.mysql.jdbc.Statement.RETURN_GENERATED_KEYS);
         query.setInt(1, patient.getId());
         query.setDate(2, new java.sql.Date(patient.getDob().getTime()));
         query.setString(3, patient.getInsuranceProvider());
         query.setString(4, patient.getInsuranceID());
         ResultSet results = this.insertUpdate(query);
-        if(results.next()) {
+        if (results.next()) {
             patient.setPatientID(results.getInt(1));
         }
         this.disconnect();
         return patient;
     }
-    
+
     public Patient updatePatient(Patient patient) throws SQLException {
         this.connect();
         PreparedStatement query = con.prepareStatement("UPDATE " + dbName + "." + patient.getDBTable()
-            + "SET dob = ?, insuranceProvider = ?, insuranceMemberID = ? WHERE patientID = ?");
+                + "SET dob = ?, insuranceProvider = ?, insuranceMemberID = ? WHERE patientID = ?", com.mysql.jdbc.Statement.RETURN_GENERATED_KEYS);
 
         query.setDate(1, new java.sql.Date(patient.getDob().getTime()));
         query.setString(2, patient.getInsuranceProvider());
@@ -325,26 +334,28 @@ public class DBconnect {
         this.disconnect();
         return patient;
     }
+
     public Patient deletePatient(Patient patient) throws SQLException {
         this.connect();
-        PreparedStatement query = con.prepareStatement("DELETE FROM " + dbName + "." + patient.getDBTable() +
-            " WHERE patientID = ?");
+        PreparedStatement query = con.prepareStatement("DELETE FROM " + dbName + "." + patient.getDBTable()
+                + " WHERE patientID = ?");
 
         query.setInt(1, patient.getPatientID());
         this.delete(query);
         this.disconnect();
         return patient;
     }
+
     public Appointment selectAppt(Appointment appt) throws SQLException {
         this.connect();
         PreparedStatement query = con.prepareStatement("SELECT * FROM " + dbName + "." + appt.getDBName()
-            + " WHERE patientID = ?");
+                + " WHERE patientID = ?");
         query.setInt(1, appt.getPatient().getPatientID());
         ResultSet results = this.select(query);
         appt = map.writeResultSet(results, appt);
         this.disconnect();
-        
-        if(appt.getApptTime() != null) {
+
+        if (appt.getApptTime() != null) {
             User tmp = new User(appt.getDoctor().getId());
             Doctor tmpD;
             this.selectUser(tmp);
@@ -355,11 +366,11 @@ public class DBconnect {
         }
         return appt;
     }
-    
+
     public Appointment insertAppointment(Appointment appt) throws SQLException {
         this.connect();
         PreparedStatement query = con.prepareStatement("INSERT INTO " + dbName + "." + appt.getDBName()
-            + "(patientID, doctorID, appointmentTime, timecreated, creatorID) VALUES (?,?,?,?,?)", com.mysql.jdbc.Statement.RETURN_GENERATED_KEYS);
+                + "(patientID, doctorID, appointmentTime, timecreated, creatorID) VALUES (?,?,?,?,?)", com.mysql.jdbc.Statement.RETURN_GENERATED_KEYS);
         query.setInt(1, appt.getPatient().getPatientID());
         query.setInt(2, appt.getDoctor().getId());
         query.setDate(3, new java.sql.Date(appt.getApptTime().getTime()));
@@ -370,13 +381,13 @@ public class DBconnect {
         this.disconnect();
         return appt;
     }
-    
+
     public Appointment updateAppointment(Appointment appt) throws SQLException {
         this.connect();
         PreparedStatement query = con.prepareStatement("UPDATE " + dbName + "." + appt.getDBName()
-            + "SET doctorID = ?, appointmentTime = ?, timecreated = ?, creatorID = ? " +
-            "WHERE patientID = ?");
-        
+                + "SET doctorID = ?, appointmentTime = ?, timecreated = ?, creatorID = ? "
+                + "WHERE patientID = ?", com.mysql.jdbc.Statement.RETURN_GENERATED_KEYS);
+
         query.setInt(1, appt.getDoctor().getId());
         query.setDate(2, new java.sql.Date(appt.getApptTime().getTime()));
         query.setDate(3, new java.sql.Date(appt.getCreatedTime().getTime()));
@@ -386,28 +397,30 @@ public class DBconnect {
         this.disconnect();
         return appt;
     }
+
     public Appointment deleteAppointment(Appointment appt) throws SQLException {
         this.connect();
-        PreparedStatement query = con.prepareStatement("DELETE FROM " + dbName + "." + appt.getDBName() +
-            " WHERE patientID = ?");
+        PreparedStatement query = con.prepareStatement("DELETE FROM " + dbName + "." + appt.getDBName()
+                + " WHERE patientID = ?");
 
         query.setInt(1, appt.getPatient().getPatientID());
         this.delete(query);
         this.disconnect();
         return appt;
     }
+
     public Doctor selectDoctor(Doctor doc) throws SQLException {
         this.connect();
         PreparedStatement query = con.prepareStatement("SELECT * FROM " + dbName + "." + doc.getDBTable()
-            + " WHERE userID = ? OR ID = ?");
-        query.setInt(1, doc.getId());  
-        query.setInt(2, doc.getDoctorID()); 
+                + " WHERE userID = ? OR ID = ?");
+        query.setInt(1, doc.getId());
+        query.setInt(2, doc.getDoctorID());
         ResultSet results = this.select(query);
         doc = map.writeResultSet(results, doc);
-        
+
         //get list of Patients
         query = con.prepareStatement("SELECT * FROM " + dbName + "." + "doc_patient"
-            + " WHERE doctorID = ?");
+                + " WHERE doctorID = ?");
         query.setInt(1, doc.getDoctorID());
         results = this.select(query);
         ArrayList<Integer> tmp = new ArrayList<Integer>();
@@ -415,24 +428,47 @@ public class DBconnect {
             tmp.add(resultSet.getInt("patientID"));
         }
         this.disconnect();
-        for(int i = 0; i < tmp.size(); i++) {
+        for (int i = 0; i < tmp.size(); i++) {
             Patient tp = new Patient(tmp.get(i));
             tp = this.selectPatient(tp);
             doc.getListOfPatients().add(tp);
         }
-        
-        
+
         return doc;
     }
+
     public Doctor insertDoctor(Doctor doc) throws SQLException {
         this.connect();
         PreparedStatement query = con.prepareStatement("INSERT INTO " + dbName + "." + doc.getDBTable()
-            + "(userID, maxPatients, currentPatients) VALUES (?,?,?)", com.mysql.jdbc.Statement.RETURN_GENERATED_KEYS);
+                + "(userID, maxPatients, currentPatients) VALUES (?,?,?)", com.mysql.jdbc.Statement.RETURN_GENERATED_KEYS);
         query.setInt(1, doc.getId());
         query.setInt(2, doc.getMax());
         query.setInt(3, doc.getCurrent());
         ResultSet results = this.insertUpdate(query);
-        if(results.next()) {
+        if (results.next()) {
+            doc.setDoctorID(results.getInt(1));
+        }
+        this.disconnect();
+        return doc;
+    }
+
+    public Doctor addToDoctor(Patient patient, Doctor doc) throws SQLException {
+        this.connect();
+        PreparedStatement query = con.prepareStatement("INSERT " + dbName + "." + "doc_patient"
+                + " (doctorID, patientID) VALUES (?, ?)", com.mysql.jdbc.Statement.RETURN_GENERATED_KEYS);
+
+        query.setInt(1, doc.getDoctorID());
+        query.setInt(2, patient.getPatientID());
+        ResultSet results = this.insertUpdate(query);
+
+        doc.setCurrent(doc.getCurrent() + 1);
+        query = con.prepareStatement("UPDATE " + dbName + "." + doc.getDBTable()
+                + " SET currentPatients = ? WHERE ID = ?", com.mysql.jdbc.Statement.RETURN_GENERATED_KEYS);
+
+        query.setInt(1, doc.getCurrent());
+        query.setInt(2, doc.getId());
+        results = this.insertUpdate(query);
+        if (results.next()) {
             doc.setDoctorID(results.getInt(1));
         }
         this.disconnect();

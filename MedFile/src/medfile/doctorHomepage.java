@@ -6,17 +6,17 @@
 package medfile;
 
 import Classes.User;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-/**
- *
- * @author ashwinrameshkumar
- */
 public class doctorHomepage extends javax.swing.JFrame {
 
     /**
      * Creates new form doctorHomepage
      */
     public static User user;
+
     public doctorHomepage(User user) {
         initComponents();
         this.user = user;
@@ -97,19 +97,23 @@ public class doctorHomepage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void viewRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewRecordsActionPerformed
-        // TODO add your handling code here:
-        viewRecords view = new viewRecords();
-        view.setVisible(true);
+        try {
+            new viewRecords().setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(doctorHomepage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }//GEN-LAST:event_viewRecordsActionPerformed
 
     private void createRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createRecordActionPerformed
-        // TODO add your handling code here:
-        createRecords create = new createRecords();
-        create.setVisible(true);
+        try {
+            new createRecords().setVisible(true);;
+        } catch (SQLException ex) {
+            Logger.getLogger(doctorHomepage.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_createRecordActionPerformed
 
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
-        // TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_exitActionPerformed
 

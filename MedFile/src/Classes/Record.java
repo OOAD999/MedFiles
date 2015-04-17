@@ -5,18 +5,10 @@
  */
 package Classes;
 
-import Classes.DBconnect;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
 
-/**
- *
- * @author softwareProject
- */
 public class Record {
+
     private int id;
     private Patient patient;
     private Date serviceDate;
@@ -207,9 +199,9 @@ public class Record {
     public void setLabNotes(String labNotes) {
         this.labNotes = labNotes;
     }
-    
+
     public String getDBName() {
         return this.table;
     }
-    
+
 }

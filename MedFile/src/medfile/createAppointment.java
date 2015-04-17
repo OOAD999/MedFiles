@@ -15,17 +15,13 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Samhita
- */
 public class createAppointment extends javax.swing.JFrame {
+
     /**
      * Creates new form createAppointment
      */
@@ -33,22 +29,25 @@ public class createAppointment extends javax.swing.JFrame {
     public static Patient patient;
     public static DBconnect dbo = new DBconnect();
     public static SearchModule search = new SearchModule();
+
     public createAppointment(User user) throws SQLException {
         initComponents();
         this.user = user;
         retrieveDoctors();
     }
+
     public createAppointment(User user, Patient patient) throws SQLException {
         initComponents();
         this.user = user;
         this.patient = patient;
         retrieveDoctors();
     }
+
     public void retrieveDoctors() throws SQLException {
         ArrayList<Doctor> docs = search.searchAllDocs();
-        if(docs != null) {
+        if (docs != null) {
             DefaultComboBoxModel model = new DefaultComboBoxModel();
-            for(int i = 0; i < docs.size(); i++) {
+            for (int i = 0; i < docs.size(); i++) {
                 Doctor tmp = docs.get(i);
                 dbo.selectDoctor(tmp);
                 model.addElement(tmp.getLName() + " :" + tmp.getDoctorID());
@@ -87,12 +86,6 @@ public class createAppointment extends javax.swing.JFrame {
         jLabel2.setText("Patient ID");
 
         jLabel3.setText("Doctor ID ");
-
-        patientid.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                patientidActionPerformed(evt);
-            }
-        });
 
         jLabel4.setText("Appointment");
 
@@ -179,14 +172,8 @@ public class createAppointment extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void patientidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_patientidActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_patientidActionPerformed
-
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
-        // TODO add your handling code here:
         dispose();
-
     }//GEN-LAST:event_exitActionPerformed
     private void CreateApptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateApptActionPerformed
         Date dates = jDateChooser1.getDate();
@@ -196,7 +183,7 @@ public class createAppointment extends javax.swing.JFrame {
 
         String todaydate = dateFormat.format(today);
         String appointmentdate = dateFormat.format(dates);
-            
+
         Appointment appt = new Appointment();
         Patient tmp = new Patient();
         appt.setCreatedTime(today);
@@ -207,7 +194,7 @@ public class createAppointment extends javax.swing.JFrame {
             appt.setPatient(tmp);
         } catch (SQLException ex) {
             Logger.getLogger(createAppointment.class.getName()).log(Level.SEVERE, null, ex);
-        }  
+        }
         appt.setCreator(user);
 
         String[] tmpString = listDoctor.getSelectedItem().toString().split(":");
@@ -217,13 +204,10 @@ public class createAppointment extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(createAppointment.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if(appointmentdate.compareTo(todaydate)<00)
-        {
-               JOptionPane.showMessageDialog(this, "Appointment date is before current date" , "Error", JOptionPane.ERROR_MESSAGE);
+        if (appointmentdate.compareTo(todaydate) < 00) {
+            JOptionPane.showMessageDialog(this, "Appointment date is before current date", "Error", JOptionPane.ERROR_MESSAGE);
 
-        }
-        else
-        {
+        } else {
             try {
                 dbo.insertAppointment(appt);
             } catch (SQLException ex) {
@@ -231,7 +215,7 @@ public class createAppointment extends javax.swing.JFrame {
             }
             JOptionPane.showMessageDialog(this, "Appointment Successfully created");
             dispose();
-        }     
+        }
 
     }//GEN-LAST:event_CreateApptActionPerformed
 

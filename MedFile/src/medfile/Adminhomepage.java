@@ -10,12 +10,10 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author ashwinrameshkumar
- */
 public class Adminhomepage extends javax.swing.JFrame {
+
     static User user;
+
     /**
      * Creates new form Adminhomepage
      */
@@ -112,29 +110,26 @@ public class Adminhomepage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void createProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createProfileActionPerformed
-        // TODO add your handling code here:
         createProfileDetails patientdet = new createProfileDetails();
         patientdet.setVisible(true);
     }//GEN-LAST:event_createProfileActionPerformed
 
     private void createApptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createApptActionPerformed
-        // TODO add your handling code here:
-         createAppointment createnew;
+        createAppointment createnew;
         try {
             createnew = new createAppointment(user);
             createnew.setVisible(true);
         } catch (SQLException ex) {
             Logger.getLogger(Adminhomepage.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_createApptActionPerformed
 
     private void patientDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_patientDetailsActionPerformed
-        // TODO add your handling code here:
         patientSearch search = new patientSearch();
         search.setVisible(true);
     }//GEN-LAST:event_patientDetailsActionPerformed
-    private void viewAppointmentActionPerformed(java.awt.event.ActionEvent evt){ 
+    private void viewAppointmentActionPerformed(java.awt.event.ActionEvent evt) {
         viewAppointment viewAppts;
         try {
             viewAppts = new viewAppointment();
@@ -142,8 +137,9 @@ public class Adminhomepage extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(Adminhomepage.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
+
     /**
      * @param args the command line arguments
      */

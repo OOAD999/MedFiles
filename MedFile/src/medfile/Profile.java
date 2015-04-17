@@ -11,10 +11,6 @@ import Classes.Patient;
 import Classes.User;
 import java.sql.SQLException;
 
-/**
- *
- * @author ashwinrameshkumar
- */
 public class Profile extends javax.swing.JFrame {
 
     /**
@@ -22,6 +18,7 @@ public class Profile extends javax.swing.JFrame {
      */
     public static Patient patient;
     public static User user;
+
     public Profile(User use, Patient pat) {
         this.patient = pat;
         this.user = use;
@@ -34,7 +31,7 @@ public class Profile extends javax.swing.JFrame {
         InsuranceID.setText(patient.getInsuranceID());
         Insuranceprovider.setText(patient.getInsuranceProvider());
         Pnumber.setText(patient.getPhone());
-        dob.setText(patient.getDob().toString());      
+        dob.setText(patient.getDob().toString());
     }
 
     /**
@@ -190,9 +187,7 @@ public class Profile extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
-            // TODO add your handling code here:            
-            dispose();
-      
+        dispose();
     }//GEN-LAST:event_exitActionPerformed
 
     private void viewRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewRecordsActionPerformed
@@ -204,7 +199,7 @@ public class Profile extends javax.swing.JFrame {
             Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
         }
         dispose();
-        
+
     }//GEN-LAST:event_viewRecordsActionPerformed
 
     /**
@@ -227,13 +222,13 @@ public class Profile extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Profile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                    new Profile(user, patient).setVisible(true);
+                new Profile(user, patient).setVisible(true);
             }
         });
     }

@@ -7,22 +7,22 @@ package Classes;
 
 import java.util.ArrayList;
 
-/**
- *
- * @author softwareProject
- */
 public class Doctor extends User {
+
     private int max = 3;
     private int current;
     private int doctorID;
     private ArrayList<Patient> listOfPatients;
     private String table = "doctor";
+
     public Doctor() {
-        
+
     }
+
     public Doctor(int id) {
         this.doctorID = id;
     }
+
     public Doctor(User user) {
         this.setId(user.getId());
         this.setFName(user.getFName());
@@ -31,9 +31,10 @@ public class Doctor extends User {
         this.setSSN(user.getSSN());
         this.setSecurityID(user.getSecurityID());
         this.setEmail(user.getEmail());
-        this.setPassword(user.getPassword());            
+        this.setPassword(user.getPassword());
         this.setAddress(user.getAddress());
     }
+
     /**
      * @return the id
      */
@@ -47,6 +48,7 @@ public class Doctor extends User {
     public void setId(int id) {
         super.setId(id);
     }
+
     /**
      * @return the email
      */
@@ -88,8 +90,8 @@ public class Doctor extends User {
     public void setFName(String name) {
         super.setFName(name);
     }
-    
-        /**
+
+    /**
      * @return the name
      */
     public String getLName() {
@@ -109,12 +111,14 @@ public class Doctor extends User {
     public String getSSN() {
         return super.getSSN();
     }
+
     /**
      * @return the SSN
      */
     public String getMaskSSN() {
         return super.getMaskSSN();
     }
+
     /**
      * @param SSN the SSN to set
      */
@@ -128,7 +132,7 @@ public class Doctor extends User {
     public String getPhone() {
         return super.getPhone();
     }
-    
+
     /**
      * @return the phone
      */
@@ -157,82 +161,6 @@ public class Doctor extends User {
         super.setSecurityID(securityID);
     }
 
-    /**
-     * @return the addr1
-     */
-    public String getAddr1() {
-        return super.getAddr1();
-    }
-
-    /**
-     * @param addr1 the addr1 to set
-     */
-    public void setAddr1(String addr1) {
-        super.setAddr1(addr1);
-    }
-    
-    /**
-     * @return the addr2
-     */
-    public String getAddr2() {
-        return super.getAddr2();
-    }
-
-    /**
-     * @param addr2 the addr2 to set
-     */
-    public void setAddr2(String addr2) {
-        super.setAddr2(addr2);
-    }
-
-    /**
-     * @return the city
-     */
-    public String getCity() {
-        return super.getCity();
-    }
-
-    /**
-     * @param city the city to set
-     */
-    public void setCity(String city) {
-        super.setCity(city);
-    }
-
-    /**
-     * @return the state
-     */
-    public String getState() {
-        return super.getState();
-    }
-
-    /**
-     * @param state the state to set
-     */
-    public void setState(String state) {
-        super.setState(state);
-    }
-
-    /**
-     * @return the zip
-     */
-    public String getZip() {
-        return super.getZip();
-    }
-
-    /**
-     * @param zip the zip to set
-     */
-    public void setZip(String zip) {
-        super.setZip(zip);
-    }
-    
-    /**
-     * @return the full address
-     */
-    public String getFullAddress() {
-        return super.getFullAddress();
-    }
     public String getDBTable() {
         return this.table;
     }
@@ -292,6 +220,7 @@ public class Doctor extends User {
     public void setListOfPatients(ArrayList<Patient> listOfPatients) {
         this.listOfPatients = listOfPatients;
     }
+
     public void updateUserDoctor(User user) {
         this.setId(user.getId());
         this.setFName(user.getFName());
@@ -300,7 +229,7 @@ public class Doctor extends User {
         this.setSSN(user.getSSN());
         this.setSecurityID(user.getSecurityID());
         this.setEmail(user.getEmail());
-        this.setPassword(user.getPassword());            
+        this.setPassword(user.getPassword());
         this.setAddress(user.getAddress());
     }
 }

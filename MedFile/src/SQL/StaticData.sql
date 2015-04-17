@@ -1,5 +1,11 @@
 INSERT INTO securityProfile (appointmentSecurity, recordSecurity, userManagmentSecurity)
-    VALUES (2, 1, 0)
+    VALUES (2, 1, 0, 0)
+INSERT INTO securityProfile (appointmentSecurity, recordSecurity, userManagmentSecurity)
+    VALUES (2, 2, 2, 0)
+INSERT INTO securityProfile (appointmentSecurity, recordSecurity, userManagmentSecurity)
+    VALUES (0, 2, 0, 0)
+INSERT INTO securityProfile (appointmentSecurity, recordSecurity, userManagmentSecurity)
+    VALUES (0, 2, 0, 2)
 
 INSERT INTO user (fname, lname, pnumber, address, ssn, securityID, emailID, userPassword)
     VALUES ('John', 'Smith', '2148675309', '123 Cherry Rd|Dallas|Tx|75080', '147852369', 1, 'a@a.com', '12345678')

@@ -5,16 +5,8 @@
  */
 package Classes;
 
-import Classes.DBconnect;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-/**
- *
- * @author softwareProject
- */
 public class SecurityProfile {
+
     private int id;
     private int appointmentLvl;
     private int recordLvl;
@@ -84,7 +76,7 @@ public class SecurityProfile {
     public void setUserManLvl(int userManLvl) {
         this.userManLvl = userManLvl;
     }
-    
+
     public String getDBTable() {
         return this.table;
     }

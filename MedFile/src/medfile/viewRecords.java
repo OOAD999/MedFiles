@@ -17,31 +17,14 @@ import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 
-
-/**
- *
- * @author ashwinrameshkumar
- */
 public class viewRecords extends javax.swing.JFrame {
+
     DefaultTableModel model = null;
-        
-    String id_pass = null;
-    String patientID_pass = null;
-    String recordDate_pass = null;
-    String doctorID_pass = null;
-    String location_pass = null;
-    String height_pass = null;
-    String weight_pass = null;
-    String bloodPressure_pass = null;
-    String cholestrol_pass = null;
-    String reasonforVisit_pass = null;
-    String doctorDiagnosis_pass = null;
-    String doctorNote_pass = null;
-    String labNote_pass = null;
     Patient patient;
+    Record selectedRecord;
     SearchModule search = new SearchModule();
     DBconnect dbo = new DBconnect();
-    
+
     /**
      * Creates new form viewRecords
      */
@@ -49,9 +32,9 @@ public class viewRecords extends javax.swing.JFrame {
         initComponents();
         model = (DefaultTableModel) ResultTab.getModel();
         ArrayList<Doctor> docs = search.searchAllDocs();
-        if(docs != null) {
+        if (docs != null) {
             DefaultComboBoxModel model = new DefaultComboBoxModel();
-            for(int i = 0; i < docs.size(); i++) {
+            for (int i = 0; i < docs.size(); i++) {
                 Doctor tmp = docs.get(i);
                 dbo.selectDoctor(tmp);
                 model.addElement(tmp.getLName() + " :" + tmp.getDoctorID());
@@ -172,87 +155,54 @@ public class viewRecords extends javax.swing.JFrame {
             patient = new Patient();
             patient.setPatientID(Integer.parseInt(patientID.getText()));
             records = patient.getAllRecords();
-            
+
             String[] tmpString = listDoctor.getSelectedItem().toString().split(":");
             Doctor doctor = new Doctor(Integer.parseInt(tmpString[1]));
 
             doctor = dbo.selectDoctor(doctor);
 
-        
-        if(!(records.isEmpty())) {
-            for(int i = 0; i < records.size(); i++) {
-                Record tmp = records.get(i);
-                
-                model.addRow(new Object[]{
-                    tmp.getServiceDate().toString(),
-                    tmp.getDoctor().getFName() + " " + tmp.getDoctor().getLName(),
-                    tmp.getDoctor().getAddress(),
-                    tmp.getReason(),
-                    tmp.getDiagnoses(),
-                    tmp.getWeight(),
-                    tmp.getHeight(),
-                    tmp.getBloodPress(),
-                    tmp.getCholest(),
-                    tmp.getDocNotes(),
-                    tmp.getLabNotes()
-                });
+            if (!(records.isEmpty())) {
+                for (int i = 0; i < records.size(); i++) {
+                    Record tmp = records.get(i);
+
+                    model.addRow(new Object[]{
+                        tmp.getServiceDate().toString(),
+                        tmp.getDoctor().getFName() + " " + tmp.getDoctor().getLName(),
+                        tmp.getDoctor().getAddress(),
+                        tmp.getReason(),
+                        tmp.getDiagnoses(),
+                        tmp.getWeight(),
+                        tmp.getHeight(),
+                        tmp.getBloodPress(),
+                        tmp.getCholest(),
+                        tmp.getDocNotes(),
+                        tmp.getLabNotes()
+                    });
+                }
             }
-        }
         } catch (SQLException ex) {
             Logger.getLogger(viewRecords.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_retrieveActionPerformed
 
     private void ResultTabMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ResultTabMouseClicked
+        int row = ResultTab.getSelectedRow();
         try {
-                int row = ResultTab.getSelectedRow();
-                int tableclick = (int)ResultTab.getModel().getValueAt(row,0);
-        
-            Record tmp = patient.getAllRecords().get(tableclick);
-                id_pass = Integer.toString(tmp.getId());
-                patientID_pass = Integer.toString(tmp.getPatient().getPatientID());
-                recordDate_pass = tmp.getServiceDate().toString();
-                doctorID_pass = Integer.toString(tmp.getDoctor().getId());
-                location_pass = tmp.getDoctor().getAddress();
-                height_pass = tmp.getHeight();
-                weight_pass =  tmp.getWeight();
-                bloodPressure_pass = tmp.getBloodPress();
-                cholestrol_pass =  tmp.getCholest();
-                reasonforVisit_pass = tmp.getReason();
-                doctorDiagnosis_pass =  tmp.getDiagnoses();
-                doctorNote_pass = tmp.getDocNotes();
-                labNote_pass = tmp.getLabNotes();
-
+            this.selectedRecord = patient.getAllRecords().get(row);
+            this.selectedRecord.setPatient(this.patient);
         } catch (SQLException ex) {
             Logger.getLogger(viewRecords.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_ResultTabMouseClicked
 
     private void editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editActionPerformed
-        // TODO add your handling code here:
         UpdateRecords update;
         try {
-            update = new UpdateRecords();
+            update = new UpdateRecords(this.selectedRecord);
             update.setVisible(true);
-   
-        dispose();
-        update.id.setText(id_pass);
-        update.patientid.setText(patientID_pass);
-        update.date.setText(recordDate_pass);
-        update.doctorLabel.setText(doctorID_pass);
-        update.location.setText(location_pass);
-        update.height.setText(height_pass);
-        update.weight.setText(weight_pass);
-        update.bp.setText(bloodPressure_pass);
-        update.cholesterol.setText(cholestrol_pass);
-        update.visit.setText(reasonforVisit_pass);
-        update.note.setText(doctorNote_pass);
-        update.labnote.setText(labNote_pass);
-        update.diag.setText(doctorDiagnosis_pass);
-         } catch (SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(viewRecords.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }//GEN-LAST:event_editActionPerformed
 
     /**

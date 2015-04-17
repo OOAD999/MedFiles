@@ -12,15 +12,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author ashwinrameshkumar
- */
 public class Login extends javax.swing.JFrame {
+
     /**
      * Creates new form Login
      */
     public static DBconnect dbo = new DBconnect();
+
     public Login() {
         initComponents();
     }
@@ -51,12 +49,6 @@ public class Login extends javax.swing.JFrame {
         jLabel1.setText("UserName/EmailID");
 
         jLabel2.setText("Password");
-
-        username.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                usernameActionPerformed(evt);
-            }
-        });
 
         login.setText("Login");
         login.addActionListener(new java.awt.event.ActionListener() {
@@ -147,10 +139,6 @@ public class Login extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void usernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameActionPerformed
-
-    }//GEN-LAST:event_usernameActionPerformed
-
     private void clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearActionPerformed
         username.setText("");
         passwordfield.setText("");
@@ -161,43 +149,41 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_exitActionPerformed
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
-            User objUser = new User(username.getText());
+        User objUser = new User(username.getText());
 
-            String pass = new String(passwordfield.getPassword());
-            try {
-                objUser = objUser.login(pass);
-            } catch (SQLException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        String pass = new String(passwordfield.getPassword());
+        try {
+            objUser = objUser.login(pass);
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        if (objUser != null) {
+            Login login = new Login();
+
+            JOptionPane.showMessageDialog(this, "Login Success");
+            dispose();
+
+            if (objUser.getSecurityID().getUserManLvl() == 2) {
+                //Admin Home Page
+                Adminhomepage admin = new Adminhomepage(objUser);
+                admin.setVisible(true);
+            } else if (objUser.getSecurityID().getRecordLvl() == 2) {
+                //Doctor Homepage
+                doctorHomepage doctor = new doctorHomepage(objUser);
+                doctor.setVisible(true);
+            } else {
+                //Patient Home page
+                Userhomepage userhomepage;
+                try {
+                    userhomepage = new Userhomepage(objUser);
+                    userhomepage.usernamepass.setText("Username" + " : " + username.getText());
+                    userhomepage.setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
- 
-            if (objUser != null) {
-                Login login = new Login();
-                
-                JOptionPane.showMessageDialog(this, "Login Success");
-                dispose();
-                
-                if(objUser.getSecurityID().getUserManLvl() == 2) {
-                    //Admin Home Page
-                    Adminhomepage admin = new Adminhomepage(objUser);
-                    admin.setVisible(true);
-                }
-                else if(objUser.getSecurityID().getRecordLvl() == 2) {
-                    //Doctor Homepage
-                    doctorHomepage doctor = new doctorHomepage(objUser);
-                    doctor.setVisible(true);
-                }
-                else {
-                    //Patient Home page
-                    Userhomepage userhomepage;
-                    try {
-                        userhomepage = new Userhomepage(objUser);
-                        userhomepage.usernamepass.setText("Username"+" : "+username.getText());
-                        userhomepage.setVisible(true);
-                    } catch (SQLException ex) {
-                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }        
+        }
     }//GEN-LAST:event_loginActionPerformed
 
     /**

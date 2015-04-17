@@ -6,27 +6,38 @@
 package medfile;
 
 import Classes.DBconnect;
-import Classes.Doctor;
+import Classes.Record;
 import Classes.SearchModule;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author ashwinrameshkumar
- */
 public class UpdateRecords extends javax.swing.JFrame {
+
     /**
      * Creates new form UpdateRecords
      */
     DBconnect dbo = new DBconnect();
     SearchModule search = new SearchModule();
-    public UpdateRecords() throws SQLException {
+    public static Record record;
+
+    public UpdateRecords(Record record) throws SQLException {
         initComponents();
+        this.record = record;
+        id.setText(Integer.toString(record.getId()));
+        patientid.setText(Integer.toString(record.getPatient().getPatientID()));
+        date.setText(record.getServiceDate().toString());
+        doctorLabel.setText(record.getDoctor().getFName() + " " + record.getDoctor().getLName());
+        location.setText(record.getDoctor().getAddress());
+        height.setText(record.getHeight());
+        weight.setText(record.getWeight());
+        bp.setText(record.getBloodPress());
+        cholesterol.setText(record.getCholest());
+        visit.setText(record.getReason());
+        note.setText(record.getDocNotes());
+        labnote.setText(record.getLabNotes());
+        diag.setText(record.getDiagnoses());
     }
 
     /**
@@ -50,7 +61,6 @@ public class UpdateRecords extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        patientid = new javax.swing.JTextField();
         height = new javax.swing.JTextField();
         weight = new javax.swing.JTextField();
         cholesterol = new javax.swing.JTextField();
@@ -59,15 +69,16 @@ public class UpdateRecords extends javax.swing.JFrame {
         diag = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         update = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        clear = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         labnote = new javax.swing.JTextField();
-        location = new javax.swing.JTextField();
         bp = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         doctorLabel = new javax.swing.JLabel();
         date = new javax.swing.JLabel();
+        patientid = new javax.swing.JLabel();
+        location = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -110,10 +121,10 @@ public class UpdateRecords extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("Clear");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        clear.setText("Clear");
+        clear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                clearActionPerformed(evt);
             }
         });
 
@@ -139,7 +150,7 @@ public class UpdateRecords extends javax.swing.JFrame {
                         .addGap(111, 111, 111)
                         .addComponent(update)
                         .addGap(34, 34, 34)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(clear, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(71, 71, 71)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -161,7 +172,6 @@ public class UpdateRecords extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(bp)
                             .addComponent(id, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(patientid)
                             .addComponent(height)
                             .addComponent(weight)
                             .addComponent(visit)
@@ -169,9 +179,10 @@ public class UpdateRecords extends javax.swing.JFrame {
                             .addComponent(note)
                             .addComponent(diag)
                             .addComponent(labnote, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
-                            .addComponent(location)
                             .addComponent(doctorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(date, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(date, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(patientid, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(location, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(108, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -188,8 +199,8 @@ public class UpdateRecords extends javax.swing.JFrame {
                 .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(patientid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(22, 22, 22)
+                    .addComponent(patientid, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
                     .addComponent(doctorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -231,17 +242,17 @@ public class UpdateRecords extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel7)
                     .addComponent(labnote, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(location, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel13))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel13)
+                    .addComponent(location, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
+                    .addComponent(clear)
                     .addComponent(update))
                 .addContainerGap())
         );
@@ -250,12 +261,10 @@ public class UpdateRecords extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+    private void clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearActionPerformed
         height.setText("");
         weight.setText("");
         location.setText("");
@@ -265,10 +274,24 @@ public class UpdateRecords extends javax.swing.JFrame {
         diag.setText("");
         note.setText("");
         labnote.setText("");
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_clearActionPerformed
 
     private void updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateActionPerformed
-
+        record.setHeight(height.getText());
+        record.setWeight(weight.getText());
+        record.setBloodPress(bp.getText());
+        record.setCholest(cholesterol.getText());
+        record.setReason(visit.getText());
+        record.setDocNotes(note.getText());
+        record.setLabNotes(labnote.getText());
+        record.setDiagnoses(diag.getText());
+        try {
+            dbo.updateRecord(record);
+        } catch (SQLException ex) {
+            Logger.getLogger(UpdateRecords.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        JOptionPane.showMessageDialog(this, "Record Updated");
+        dispose();
     }//GEN-LAST:event_updateActionPerformed
 
     /**
@@ -302,7 +325,7 @@ public class UpdateRecords extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new UpdateRecords().setVisible(true);
+                    new UpdateRecords(record).setVisible(true);
                 } catch (SQLException ex) {
                     Logger.getLogger(UpdateRecords.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -313,13 +336,13 @@ public class UpdateRecords extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTextField bp;
     public javax.swing.JTextField cholesterol;
+    private javax.swing.JButton clear;
     public javax.swing.JLabel date;
     public javax.swing.JTextField diag;
     public javax.swing.JLabel doctorLabel;
     public javax.swing.JTextField height;
     public javax.swing.JLabel id;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -335,9 +358,9 @@ public class UpdateRecords extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     public javax.swing.JTextField labnote;
-    public javax.swing.JTextField location;
+    private javax.swing.JLabel location;
     public javax.swing.JTextField note;
-    public javax.swing.JTextField patientid;
+    public javax.swing.JLabel patientid;
     private javax.swing.JButton update;
     public javax.swing.JTextField visit;
     public javax.swing.JTextField weight;

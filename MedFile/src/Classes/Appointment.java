@@ -5,18 +5,11 @@
  */
 package Classes;
 
-import Classes.DBconnect;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
-/**
- *
- * @author softwareProject
- */
 public class Appointment {
+
     private Patient patient;
     private Doctor doctor;
     private Date apptTime;
@@ -103,6 +96,7 @@ public class Appointment {
     public void setCreator(User creator) {
         this.creator = creator;
     }
+
     public String getDBName() {
         return this.table;
     }

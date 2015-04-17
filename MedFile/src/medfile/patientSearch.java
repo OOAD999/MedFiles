@@ -15,16 +15,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author ashwinrameshkumar
- */
 public class patientSearch extends javax.swing.JFrame {
-        DefaultTableModel model = null;
+
+    DefaultTableModel model = null;
     /**
      * Creates new form patientSearch
      */
     public static SearchModule search = new SearchModule();
+
     public patientSearch() {
         initComponents();
         model = (DefaultTableModel) ResultTab.getModel();
@@ -49,10 +47,9 @@ public class patientSearch extends javax.swing.JFrame {
         DOB = new javax.swing.JTextField();
         InsuranceID = new javax.swing.JTextField();
         retrieve = new javax.swing.JButton();
-        clear = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         ResultTab = new javax.swing.JTable();
-        jButton3 = new javax.swing.JButton();
+        exit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -67,29 +64,10 @@ public class patientSearch extends javax.swing.JFrame {
 
         jLabel5.setText("Insurance ID");
 
-        PatientID.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PatientIDActionPerformed(evt);
-            }
-        });
-
-        DOB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DOBActionPerformed(evt);
-            }
-        });
-
         retrieve.setText("Retrieve");
         retrieve.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 retrieveActionPerformed(evt);
-            }
-        });
-
-        clear.setText("Clear");
-        clear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearActionPerformed(evt);
             }
         });
 
@@ -103,10 +81,10 @@ public class patientSearch extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(ResultTab);
 
-        jButton3.setText("Exit");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        exit.setText("Exit");
+        exit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                exitActionPerformed(evt);
             }
         });
 
@@ -114,12 +92,6 @@ public class patientSearch extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(256, 256, 256)
-                .addComponent(retrieve)
-                .addGap(26, 26, 26)
-                .addComponent(clear, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jScrollPane1)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -127,7 +99,7 @@ public class patientSearch extends javax.swing.JFrame {
                         .addGap(306, 306, 306)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 215, Short.MAX_VALUE)
-                        .addComponent(jButton3))
+                        .addComponent(exit))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -146,6 +118,10 @@ public class patientSearch extends javax.swing.JFrame {
                             .addComponent(DOB)
                             .addComponent(InsuranceID, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE))))
                 .addGap(25, 25, 25))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(292, 292, 292)
+                .addComponent(retrieve)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -153,7 +129,7 @@ public class patientSearch extends javax.swing.JFrame {
                 .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jButton3))
+                    .addComponent(exit))
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -167,9 +143,7 @@ public class patientSearch extends javax.swing.JFrame {
                     .addComponent(InsuranceProvider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(InsuranceID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(retrieve)
-                    .addComponent(clear))
+                .addComponent(retrieve)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -177,51 +151,38 @@ public class patientSearch extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void DOBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DOBActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_DOBActionPerformed
-
-    private void PatientIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PatientIDActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_PatientIDActionPerformed
-
-    private void clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_clearActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+    private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
         dispose();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_exitActionPerformed
 
     private void retrieveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retrieveActionPerformed
         model.setRowCount(0);
         Patient findPatient = new Patient();
-        if(!PatientID.getText().equals("")) {
+        if (!PatientID.getText().equals("")) {
             findPatient.setPatientID(Integer.parseInt(PatientID.getText()));
         }
-        if(!(DOB.getText().equals(""))) {
+        if (!(DOB.getText().equals(""))) {
             findPatient.setDob(new Date(DOB.getText()));
         }
-        if(!InsuranceProvider.getText().equals("")) {
+        if (!InsuranceProvider.getText().equals("")) {
             findPatient.setInsuranceProvider(InsuranceProvider.getText());
         }
-        if(!InsuranceID.getText().equals("")) {
+        if (!InsuranceID.getText().equals("")) {
             findPatient.setInsuranceID(InsuranceID.getText());
         }
         ArrayList<Patient> results = new ArrayList<Patient>();
-            try {
-                results = search.searchPatients(findPatient);
-            } catch (SQLException ex) {
-                Logger.getLogger(patientSearch.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        
-        String patientid=null;
-        String userid=null;
+        try {
+            results = search.searchPatients(findPatient);
+        } catch (SQLException ex) {
+            Logger.getLogger(patientSearch.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        String patientid = null;
+        String userid = null;
         String dob = null;
-        String insuranceprovider=null;
-        String insuranceid=null;
-        int z=0;
+        String insuranceprovider = null;
+        String insuranceid = null;
+        int z = 0;
         //System.out.println(rs);
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
         for (int i = 0; i < results.size(); i++) {
@@ -231,22 +192,21 @@ public class patientSearch extends javax.swing.JFrame {
             dob = dateFormat.format(tmp.getDob());
             insuranceprovider = tmp.getInsuranceProvider();
             insuranceid = tmp.getInsuranceID();
-            
+
             model.addRow(new Object[]{
                 patientid,
                 userid,
                 dob,
                 insuranceprovider,
                 insuranceid
-                    
+
             });
-            
-            
-             ResultTab.setValueAt(patientid, z, 0);
-             ResultTab.setValueAt(userid, z, 1);
-             ResultTab.setValueAt(dob, z, 2);
-             ResultTab.setValueAt(insuranceprovider, z, 3);
-             ResultTab.setValueAt(insuranceid, z, 4);
+
+            ResultTab.setValueAt(patientid, z, 0);
+            ResultTab.setValueAt(userid, z, 1);
+            ResultTab.setValueAt(dob, z, 2);
+            ResultTab.setValueAt(insuranceprovider, z, 3);
+            ResultTab.setValueAt(insuranceid, z, 4);
 //             z++;
             z++;
         }
@@ -293,8 +253,7 @@ public class patientSearch extends javax.swing.JFrame {
     public static javax.swing.JTextField InsuranceProvider;
     public static javax.swing.JTextField PatientID;
     private javax.swing.JTable ResultTab;
-    private javax.swing.JButton clear;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton exit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
