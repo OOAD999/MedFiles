@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Doctor extends User {
 
     private int max = 3;
-    private int current;
+    private int current = 0;
     private int doctorID;
     private ArrayList<Patient> listOfPatients;
     private String table = "doctor";

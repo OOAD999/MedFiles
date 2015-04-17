@@ -10,12 +10,16 @@ import Classes.Doctor;
 import Classes.Patient;
 import Classes.SearchModule;
 import Classes.DBconnect;
+import Classes.User;
 import java.sql.SQLException;
-import java.sql.ResultSet;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class viewAppointment extends javax.swing.JFrame {
@@ -28,8 +32,6 @@ public class viewAppointment extends javax.swing.JFrame {
     String creator = null;
     SearchModule search = new SearchModule();
     DBconnect dbo = new DBconnect();
-    ResultSet rs;
-
     /**
      * Creates new form viewAppointment
      */
@@ -126,6 +128,11 @@ public class viewAppointment extends javax.swing.JFrame {
         });
 
         update.setText("Update");
+        update.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -254,28 +261,55 @@ public class viewAppointment extends javax.swing.JFrame {
     }//GEN-LAST:event_viewAppointmentActionPerformed
 
     private void ResultTabMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ResultTabMouseClicked
-        try {
-            int selectedRow = 0;
-            selectedRow = ResultTab.convertRowIndexToModel(ResultTab.getSelectedRow());
-            System.out.println("Selected Row:" + selectedRow);
-
-            if (rs.absolute(selectedRow + 1)) {
-                patient = rs.getString("patientID");
-                doctor = rs.getString("doctorID");
-                time = rs.getString("appointmentTime");
-                created = rs.getString("timecreated");
-                creator = rs.getString("creatorID");
-
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(viewAppointment.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        int selectedRow = ResultTab.getSelectedRow();
+        selectedRow = ResultTab.convertRowIndexToModel(ResultTab.getSelectedRow());
+        patient = ResultTab.getValueAt(selectedRow, 0).toString();
+        doctor = ResultTab.getValueAt(selectedRow, 1).toString();
+        time = ResultTab.getValueAt(selectedRow, 2).toString();
+        created = ResultTab.getValueAt(selectedRow, 3).toString();
+        creator = ResultTab.getValueAt(selectedRow, 4).toString();
 
     }//GEN-LAST:event_ResultTabMouseClicked
 
     private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
-
+        try {
+            Appointment appt = new Appointment();
+            Patient tmp = new Patient();
+            Doctor tmpD = new Doctor();
+            tmp.setPatientID(Integer.parseInt(this.patient));
+            appt.setPatient(tmp);
+            tmpD.setId(Integer.parseInt(this.doctor));
+            
+            dbo.deleteAppointment(appt);
+            JOptionPane.showMessageDialog(this, "Appointment Canceled");
+        } catch (SQLException ex) {
+            Logger.getLogger(viewAppointment.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_deleteActionPerformed
+
+    private void updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateActionPerformed
+        try {
+            Format formatter = new SimpleDateFormat("dd-MM-yyyy");
+            
+            Appointment appt = new Appointment();
+            Patient tmp = new Patient();
+            Doctor tmpD = new Doctor();
+            tmp.setPatientID(Integer.parseInt(this.patient));
+            tmp = dbo.selectPatient(tmp);
+            appt.setPatient(tmp);
+            tmpD.setId(Integer.parseInt(this.doctor));
+            tmpD = dbo.selectDoctor(tmpD);
+            appt.setDoctor(tmpD);
+            appt.setApptTime(new Date(formatter.format(this.time)));
+            appt.setCreatedTime(new Date(formatter.format(this.created)));
+            appt.setCreator(new User(Integer.parseInt(this.creator)));
+            
+            dbo.updateAppointment(appt);
+            JOptionPane.showMessageDialog(this, "Appointment Updated");
+        } catch (SQLException ex) {
+            Logger.getLogger(viewAppointment.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_updateActionPerformed
 
     /**
      * @param args the command line arguments

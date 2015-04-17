@@ -8,6 +8,7 @@ package medfile;
 import Classes.Patient;
 import Classes.SecurityProfile;
 import Classes.DBconnect;
+import Classes.Doctor;
 import Classes.User;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -269,9 +270,13 @@ public class createProfileDetails extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void createActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createActionPerformed
-        createUser();
         try {
-            newUser = dbo.insertUser(newUser);
+            createUser();
+            this.newUser = dbo.insertUser(this.newUser);
+            if (doctor.isSelected()) {
+                Doctor doc = new Doctor(this.newUser);
+                doc = dbo.insertDoctor(doc);
+            }
             JOptionPane.showMessageDialog(this, "Profile Successfully created");
             dispose();
         } catch (SQLException ex) {
@@ -305,7 +310,7 @@ public class createProfileDetails extends javax.swing.JFrame {
             Logger.getLogger(createProfileDetails.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_contActionPerformed
-    private void createUser() {
+    private void createUser() throws SQLException {
         newUser = new User();
         newUser.setFName(fname.getText());
         newUser.setLName(lname.getText());
