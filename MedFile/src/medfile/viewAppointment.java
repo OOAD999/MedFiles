@@ -12,7 +12,7 @@ import Classes.SearchModule;
 import Classes.DBconnect;
 import Classes.User;
 import java.sql.SQLException;
-import java.text.Format;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -289,7 +289,7 @@ public class viewAppointment extends javax.swing.JFrame {
 
     private void updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateActionPerformed
         try {
-            Format formatter = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             
             Appointment appt = new Appointment();
             Patient tmp = new Patient();
@@ -300,13 +300,15 @@ public class viewAppointment extends javax.swing.JFrame {
             tmpD.setId(Integer.parseInt(this.doctor));
             tmpD = dbo.selectDoctor(tmpD);
             appt.setDoctor(tmpD);
-            appt.setApptTime(new Date(formatter.format(this.time)));
-            appt.setCreatedTime(new Date(formatter.format(this.created)));
+            appt.setApptTime(formatter.parse(this.time));
+            appt.setCreatedTime(new Date());
             appt.setCreator(new User(Integer.parseInt(this.creator)));
             
             dbo.updateAppointment(appt);
             JOptionPane.showMessageDialog(this, "Appointment Updated");
         } catch (SQLException ex) {
+            Logger.getLogger(viewAppointment.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
             Logger.getLogger(viewAppointment.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_updateActionPerformed

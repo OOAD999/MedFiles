@@ -130,9 +130,8 @@ public class Adminhomepage extends javax.swing.JFrame {
         search.setVisible(true);
     }//GEN-LAST:event_patientDetailsActionPerformed
     private void viewAppointmentActionPerformed(java.awt.event.ActionEvent evt) {
-        viewAppointment viewAppts;
         try {
-            viewAppts = new viewAppointment();
+            viewAppointment viewAppts = new viewAppointment();
             viewAppts.setVisible(true);
         } catch (SQLException ex) {
             Logger.getLogger(Adminhomepage.class.getName()).log(Level.SEVERE, null, ex);

@@ -12,7 +12,7 @@ public class Doctor extends User {
     private int max = 3;
     private int current = 0;
     private int doctorID;
-    private ArrayList<Patient> listOfPatients;
+    private ArrayList<Patient> listOfPatients = new ArrayList<Patient>();
     private String table = "doctor";
 
     public Doctor() {

@@ -385,7 +385,7 @@ public class DBconnect {
     public Appointment updateAppointment(Appointment appt) throws SQLException {
         this.connect();
         PreparedStatement query = con.prepareStatement("UPDATE " + dbName + "." + appt.getDBName()
-                + "SET doctorID = ?, appointmentTime = ?, timecreated = ?, creatorID = ? "
+                + " SET doctorID = ?, appointmentTime = ?, timecreated = ?, creatorID = ? "
                 + "WHERE patientID = ?", com.mysql.jdbc.Statement.RETURN_GENERATED_KEYS);
 
         query.setInt(1, appt.getDoctor().getId());
